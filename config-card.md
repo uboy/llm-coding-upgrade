@@ -1,6 +1,6 @@
 # Config Card — Производственная конфигурация
 
-> Актуально на 2026-04-24. За sampling-параметрами — в `decision-log.md`.
+> Актуально на 2026-04-28. За sampling-параметрами — в `decision-log.md`.
 
 ## V100 — Qwen3.5-122B-A10B (кодинг + reasoning)
 
@@ -20,11 +20,13 @@
 ```
 --n-gpu-layers 100
 --ctx-size 589824           # 2 слота × 294912 токенов
+--batch-size 2048           # PP throughput
+--ubatch-size 512           # micro-batch (безопасный для VRAM)
 --split-mode layer
 --tensor-split 1,1,1
 --parallel 2
---cache-type-k q8_0
---cache-type-v q8_0
+--cache-type-k q4_0         # -3.5 GiB vs Q8_0, без потери качества
+--cache-type-v q4_0
 --jinja                     # нативный chat template для tool-calling
 --reasoning on              # thinking-модель
 --temp 0.6
@@ -35,14 +37,14 @@
 --override-kv qwen35moe.context_length=int:589824  # снять hard cap на n_ctx_train
 ```
 
-### VRAM (факт, 2026-04-24, parallel=2, ctx=589824)
+### VRAM (факт, 2026-04-28, parallel=2, ctx=589824, KV Q4_0)
 
 ```
-GPU0: 31,412/32,768 MiB (95.8%)  — bottleneck
-GPU1: 28,042/32,768 MiB (85.6%)
-GPU2: 27,520/32,768 MiB (84.0%)
-Total: 86,974/98,304 MiB (88.5%)
-KV total: ~7,344 MiB (Q8, ctx=589824, 12 attn слоёв, 2 слота)
+GPU0: 29,515/32,768 MiB (90.0%)  — 2,1 GiB свободно
+GPU1: 26,580/32,768 MiB (81.1%)  — 5,5 GiB свободно
+GPU2: 26,057/32,768 MiB (79.5%)  — 6,0 GiB свободно
+Total: 82,152/98,304 MiB (83.6%)
+KV total: ~4,185 MiB (Q4_0, ctx=589824, 12 attn слоёв, 2 слота) — было 7,344 MiB при Q8_0
 Веса: ~72 GiB (Q4_K_M)
 ```
 

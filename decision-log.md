@@ -824,6 +824,6 @@ KV cache Q4_0 вместо Q8_0 экономит ~50% памяти KV cache. Д�
 - BM thinking overflow mitigation — протестировать с max_tokens=12000 и/или `/no_think`
 - Cold-start после рестарта V100 (~20-100s) — принят как рабочее ограничение
 - V100 prompt processing bottleneck (~25 tok/s на длинных промптах) — аппаратное ограничение (PCIe, no NVLink)
-- UD-Q4_K_XL для Qwen3.5-122B-A10B — проверить наличие на HuggingFace (unsloth)
+- UD-Q4_K_XL для Qwen3.5-122B-A10B — **доступен** на HuggingFace (unsloth), ~77 GiB, 3 шарда. Стоит скачать и сравнить качество с Q4_K_M.
 - KV cache Q4_0 — протестировать экономию ~3.5 GiB vs падение качества
 - ik_llama.cpp для CC 7.0 — оценить целесообразность сборки

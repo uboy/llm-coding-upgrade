@@ -397,13 +397,20 @@ def opencode_run(case_dir: Path, title: str, prompt: str, timeout_seconds: int) 
     return find_session_by_title(title)
 
 
-def run_visible_tests(case_dir: Path) -> dict[str, Any]:
-    command = python_cmd() + ["-m", "unittest", "discover", "-s", "tests", "-v"]
+def default_test_command() -> list[str]:
+    return python_cmd() + ["-m", "unittest", "discover", "-s", "tests", "-v"]
+
+
+def run_visible_tests(case_dir: Path, command: list[str] | None = None) -> dict[str, Any]:
+    command = command or default_test_command()
     try:
         completed = run_command(command, cwd=case_dir)
         output = completed.stdout + completed.stderr
-        passed = "OK" in output and "FAILED" not in output
-        return {"passed": passed, "output": output, "returncode": completed.returncode}
+        if command == default_test_command():
+            passed = "OK" in output and "FAILED" not in output
+        else:
+            passed = completed.returncode == 0
+        return {"passed": passed, "output": output, "returncode": completed.returncode, "command": command}
     except subprocess.CalledProcessError as exc:
         print_process_output(exc)
         output = (exc.stdout or "") + (exc.stderr or "")
@@ -411,6 +418,7 @@ def run_visible_tests(case_dir: Path) -> dict[str, Any]:
             "passed": False,
             "output": output,
             "returncode": exc.returncode,
+            "command": command,
             "error": exception_payload(exc),
         }
 
@@ -482,18 +490,71 @@ def hidden_check_json_patch(case_dir: Path) -> dict[str, Any]:
     return {"passed": not issues, "details": issues or ["ok"]}
 
 
+def hidden_check_rate_limiter(case_dir: Path) -> dict[str, Any]:
+    module = import_from_path("rate_limiter_hidden", case_dir / "rate_limiter.py")
+
+    class Clock:
+        def __init__(self) -> None:
+            self.t = 0.0
+
+        def now(self) -> float:
+            return self.t
+
+        def advance(self, seconds: float) -> None:
+            self.t += seconds
+
+    clock = Clock()
+    limiter = module.SlidingWindowRateLimiter(2, 1.0, now_func=clock.now)
+    first = limiter.allow("u")
+    clock.advance(0.5)
+    second = limiter.allow("u")
+    clock.advance(0.5)
+    third = limiter.allow("u")
+    fourth = limiter.allow("u")
+    other_user = limiter.allow("other")
+    passed = [first, second, third, fourth, other_user] == [True, True, True, False, True]
+    return {
+        "passed": passed,
+        "details": {
+            "first": first,
+            "second": second,
+            "third": third,
+            "fourth": fourth,
+            "other_user": other_user,
+        },
+    }
+
+
 HIDDEN_CHECKS = {
     "ttl_cache_expired_lru": hidden_check_ttl_cache,
     "env_template_default_on_resolved_empty": hidden_check_env_template,
     "json_patch_semantics": hidden_check_json_patch,
+    "rate_limiter_window_boundary": hidden_check_rate_limiter,
 }
 
 
 def run_hidden_check(hidden_name: str, case_dir: Path) -> dict[str, Any]:
+    if not hidden_name:
+        return {"passed": True, "details": ["not_configured"], "skipped": True}
     try:
         return HIDDEN_CHECKS[hidden_name](case_dir)
     except Exception as exc:  # pragma: no cover - exercised by suite on real model failures
         return failed_check_result(exc, stage=f"hidden_check:{hidden_name}")
+
+
+def collect_protected_hashes(root: Path) -> dict[str, str]:
+    hashes: dict[str, str] = {}
+    for path in root.rglob("*"):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(root)
+        if rel.parts and rel.parts[0] == "tests":
+            hashes[str(rel)] = sha256_file(path)
+    return hashes
+
+
+def compute_formal_solution(visible: dict[str, Any], hidden: dict[str, Any], test_hashes_unchanged: bool) -> bool:
+    return bool(visible["passed"] and hidden["passed"] and test_hashes_unchanged)
 
 
 def collect_session_metrics(session: dict[str, Any]) -> dict[str, Any]:
@@ -532,7 +593,7 @@ def evaluate_case(run_root: Path, model_id: str, case: dict[str, Any]) -> dict[s
     copy_fixture(case, case_dir)
 
     fixture_dir = Path(EVALS_CONFIG["fixture_root"]) / case["fixture"]
-    fixture_hashes = {str(path.relative_to(fixture_dir)): sha256_file(path) for path in fixture_dir.rglob("*.py")}
+    fixture_hashes = collect_protected_hashes(fixture_dir)
 
     title = f"{run_root.name}-{model_id}-{case['id']}"
     session_id: str | None = None
@@ -552,13 +613,14 @@ def evaluate_case(run_root: Path, model_id: str, case: dict[str, Any]) -> dict[s
         except Exception as exc:
             case_errors.append({"stage": "export_session", **exception_payload(exc)})
 
-    visible = run_visible_tests(case_dir)
+    visible = run_visible_tests(case_dir, command=case.get("test_command"))
 
-    workspace_hashes = {str(path.relative_to(case_dir)): sha256_file(path) for path in case_dir.rglob("tests/*.py")}
-    hashes_unchanged = all(workspace_hashes.get(rel) == digest for rel, digest in fixture_hashes.items() if rel.startswith("tests/"))
+    workspace_hashes = collect_protected_hashes(case_dir)
+    hashes_unchanged = all(workspace_hashes.get(rel) == digest for rel, digest in fixture_hashes.items())
 
-    hidden_name = case["hidden_check"]
+    hidden_name = case.get("hidden_check", "")
     hidden = run_hidden_check(hidden_name, case_dir)
+    formal_solution = compute_formal_solution(visible, hidden, hashes_unchanged)
 
     if session is not None:
         export_path = run_root / model_id / "exports" / f"{case['id']}.json"
@@ -573,6 +635,7 @@ def evaluate_case(run_root: Path, model_id: str, case: dict[str, Any]) -> dict[s
         "visible_tests": visible,
         "test_hashes_unchanged": hashes_unchanged,
         "hidden_check": hidden,
+        "formal_solution": formal_solution,
         "case_dir": str(case_dir),
         "solution_file": case["solution_file"],
         "errors": case_errors,
@@ -611,7 +674,7 @@ def compare_results(results: dict[str, Any], output_dir: Path) -> tuple[Path, Pa
                 stages = ",".join(item["stage"] for item in case["errors"])
                 suffix = f", errors={stages}"
             lines.append(
-                f"  - `{case['id']}`: visible={case['visible_tests']['passed']}, hidden={case['hidden_check']['passed']}, wall={case['metrics']['wall_s']}s, turns={case['metrics']['turns']}{suffix}"
+                f"  - `{case['id']}`: visible={case['visible_tests']['passed']}, hidden={case['hidden_check']['passed']}, formal={case['formal_solution']}, wall={case['metrics']['wall_s']}s, turns={case['metrics']['turns']}{suffix}"
             )
         if model_result.get("error"):
             lines.append(
@@ -689,7 +752,10 @@ def cmd_list_models(args: argparse.Namespace) -> int:
 
 def cmd_list_cases(args: argparse.Namespace) -> int:
     for case in EVALS_CONFIG["cases"]:
-        print(f"{case['id']}\tfixture={case['fixture']}\thidden_check={case['hidden_check']}")
+        print(
+            f"{case['id']}\tfixture={case['fixture']}\tlanguage={case.get('language','-')}"
+            f"\tdifficulty={case.get('difficulty','-')}\thidden_check={case.get('hidden_check','-')}"
+        )
     return 0
 
 
@@ -716,7 +782,10 @@ def cmd_plan(args: argparse.Namespace) -> int:
         )
     print("Cases:")
     for case in EVALS_CONFIG["cases"]:
-        print(f"- {case['id']} (timeout={case['timeout_seconds']}s, hidden={case['hidden_check']})")
+        print(
+            f"- {case['id']} (lang={case.get('language','-')}, timeout={case['timeout_seconds']}s, "
+            f"hidden={case.get('hidden_check','-')}, test_command={case.get('test_command', default_test_command())})"
+        )
     return 0
 
 

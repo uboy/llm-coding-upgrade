@@ -115,6 +115,20 @@ class ExportSessionTests(unittest.TestCase):
 
 
 class VisibleAndHiddenFailureHandlingTests(unittest.TestCase):
+    def test_run_visible_tests_uses_zero_exit_for_custom_command(self) -> None:
+        completed = subprocess.CompletedProcess(
+            ["bash", "tests/run.sh"],
+            0,
+            stdout="compiled and ran\n",
+            stderr="",
+        )
+
+        with mock.patch.object(model_suite, "run_command", return_value=completed):
+            result = model_suite.run_visible_tests(Path("/tmp/case"), command=["bash", "tests/run.sh"])
+
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["command"], ["bash", "tests/run.sh"])
+
     def test_run_visible_tests_records_failed_output_without_raising(self) -> None:
         failure = subprocess.CalledProcessError(
             1,
@@ -167,6 +181,43 @@ class VisibleAndHiddenFailureHandlingTests(unittest.TestCase):
         self.assertTrue(result["visible_tests"]["passed"])
         self.assertFalse(result["hidden_check"]["passed"])
         self.assertIn("ValueError", result["hidden_check"]["details"][0])
+        self.assertFalse(result["formal_solution"])
+
+    def test_evaluate_case_without_hidden_check_marks_formal_solution_from_visible(self) -> None:
+        case = {
+            "id": "case05_cpp_lru_cache",
+            "fixture": "case05_cpp_lru_cache",
+            "solution_file": "lru_cache.hpp",
+            "timeout_seconds": 300,
+            "prompt": "solve",
+            "test_command": ["bash", "tests/run.sh"],
+        }
+        run_root = Path("/tmp/run-root")
+        exported_session = {
+            "messages": [
+                {
+                    "info": {
+                        "role": "assistant",
+                        "time": {"created": 1000, "completed": 2000},
+                        "tokens": {"input": 10, "output": 5, "cache": {"read": 0}},
+                    },
+                    "parts": [{"type": "text", "text": "done"}],
+                }
+            ]
+        }
+
+        with mock.patch.object(model_suite, "copy_fixture"), \
+             mock.patch.object(model_suite, "sha256_file", return_value="abc"), \
+             mock.patch.object(model_suite, "opencode_run", return_value="ses_x"), \
+             mock.patch.object(model_suite, "export_session", return_value=exported_session), \
+             mock.patch.object(model_suite, "run_visible_tests", return_value={"passed": True, "output": "", "returncode": 0, "command": ["bash", "tests/run.sh"]}), \
+             mock.patch.object(Path, "rglob", return_value=[]), \
+             mock.patch.object(Path, "write_text"):
+            result = model_suite.evaluate_case(run_root, "model-x", case)
+
+        self.assertTrue(result["hidden_check"]["passed"])
+        self.assertTrue(result["hidden_check"]["skipped"])
+        self.assertTrue(result["formal_solution"])
 
 
 class StackEnvGenerationTests(unittest.TestCase):
@@ -261,6 +312,48 @@ class HiddenCheckCompatibilityTests(unittest.TestCase):
 
         self.assertTrue(result["passed"])
         self.assertEqual(result["details"], {"a": 1, "b": None, "c": 3})
+
+    def test_hidden_check_rate_limiter_validates_boundary_behavior(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            case_dir = Path(tmp)
+            (case_dir / "rate_limiter.py").write_text(
+                "\n".join(
+                    [
+                        "from collections import defaultdict, deque",
+                        "import time",
+                        "",
+                        "class SlidingWindowRateLimiter:",
+                        "    def __init__(self, max_requests, window_seconds, now_func=None):",
+                        "        if max_requests <= 0 or window_seconds <= 0:",
+                        "            raise ValueError('invalid configuration')",
+                        "        self.max_requests = max_requests",
+                        "        self.window_seconds = window_seconds",
+                        "        self.now_func = now_func or time.monotonic",
+                        "        self.requests = defaultdict(deque)",
+                        "",
+                        "    def allow(self, user_id):",
+                        "        now = self.now_func()",
+                        "        window_start = now - self.window_seconds",
+                        "        bucket = self.requests[user_id]",
+                        "        while bucket and bucket[0] <= window_start:",
+                        "            bucket.popleft()",
+                        "        if len(bucket) >= self.max_requests:",
+                        "            return False",
+                        "        bucket.append(now)",
+                        "        return True",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            result = model_suite.hidden_check_rate_limiter(case_dir)
+
+        self.assertTrue(result["passed"])
+        self.assertEqual(
+            result["details"],
+            {"first": True, "second": True, "third": True, "fourth": False, "other_user": True},
+        )
 
 
 class ModelSuiteResilienceTests(unittest.TestCase):

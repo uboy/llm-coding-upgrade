@@ -14,3 +14,4 @@ runs/
 .vscode/
 *.swp
 *.swo
+__pycache__/

@@ -1,0 +1,75 @@
+{
+  "run_id": "max-tokens-16k-test",
+  "max_tokens": 16384,
+  "model": "qwen",
+  "generated_at": "20260428T165806Z",
+  "results": [
+    {
+      "case_id": "case01_ttl_cache",
+      "completion_tokens": 1836,
+      "wall_time_s": 47.605,
+      "tps": 39.96749049547607,
+      "reasoning_chars": 4912,
+      "content_chars": 2643,
+      "finish_reason": "stop",
+      "test_result": {
+        "has_tests": true,
+        "ran": true,
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "get_returns_stored_value (test_ttl_cache.TTLCacheTests) ... ok\ntest_lru_eviction_prefers_oldest_live_item (test_ttl_cache.TTLCacheTests) ... ok\ntest_missing_key_returns_default_and_counts_miss (test_ttl_cache.TTLCacheTests) ... ERROR\ntest_per_item_ttl_override (test_ttl_cache.TTLCacheTests) ... ok\n\n======================================================================\nERROR: test_missing_key_returns_default_and_counts_miss (test_ttl_cache.TTLCacheTests)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/data/home/<user>/proj/llm-coding-upgrade/runs/max-tokens-16k-test/case01_ttl_cache/tests/test_ttl_cache.py\", line 28, in test_missing_key_returns_default_and_counts_miss\n    self.assertEqual(self.cache.get(\"missing\", \"fallback\"), \"fallback\")\nTypeError: TTLCache.get() takes 2 positional arguments but 3 were given\n\n----------------------------------------------------------------------\nRan 6 tests in 0.000s\n\nFAILED (errors=1)\n",
+        "passed": false
+      },
+      "speed_check": null
+    },
+    {
+      "case_id": "case02_env_template",
+      "completion_tokens": 1539,
+      "wall_time_s": 38.898,
+      "tps": 41.13012762606445,
+      "reasoning_chars": 5141,
+      "content_chars": 2729,
+      "finish_reason": "stop",
+      "test_result": {
+        "has_tests": true,
+        "ran": true,
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "test_cycle_raises (test_env_template.TemplateResolverTests) ... ok\ntest_default_is_used_for_missing_or_empty_value (test_env_template.TemplateResolverTests) ... ok\ntest_dollar_escape_is_supported (test_env_template.TemplateResolverTests) ... ok\ntest_missing_variable_raises (test_env_template.TemplateResolverTests) ... ok\ntest_nested_references_are_resolved (test_env_template.TemplateResolverTests) ... ok\ntest_plain_values_are_preserved (test_env_template.TemplateResolverTests) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.001s\n\nOK\n",
+        "passed": true
+      },
+      "speed_check": null
+    },
+    {
+      "case_id": "case03_json_patch",
+      "completion_tokens": 3754,
+      "wall_time_s": 93.147,
+      "tps": 41.02126067250762,
+      "reasoning_chars": 9661,
+      "content_chars": 7362,
+      "finish_reason": "stop",
+      "test_result": {
+        "has_tests": true,
+        "ran": true,
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "test_add_append_to_list (test_json_patch.JsonPatchTests) ... ok\ntest_add_insert_into_list (test_json_patch.JsonPatchTests) ... ok\ntest_escaped_pointer_tokens (test_json_patch.JsonPatchTests) ... ok\ntest_invalid_path_raises (test_json_patch.JsonPatchTests) ... ok\ntest_remove_list_item (test_json_patch.JsonPatchTests) ... ok\ntest_replace_nested_key (test_json_patch.JsonPatchTests) ... ok\ntest_test_operation_failure_raises (test_json_patch.JsonPatchTests) ... ok\ntest_test_operation_success (test_json_patch.JsonPatchTests) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.001s\n\nOK\n",
+        "passed": true
+      },
+      "speed_check": null
+    },
+    {
+      "case_id": "speed_numbers",
+      "completion_tokens": 6124,
+      "wall_time_s": 153.474,
+      "tps": 40.16701792365285,
+      "reasoning_chars": 21126,
+      "content_chars": 230,
+      "finish_reason": "stop",
+      "test_result": {
+        "has_tests": false
+      },
+      "speed_check": true
+    }
+  ]
+}

@@ -2,6 +2,7 @@
   "results_root": "/data/home/<user>/proj/llm-coding-upgrade/runs",
   "fixture_root": "/data/home/<user>/proj/llm-coding-upgrade/eval-fixtures",
   "base_stack_env": "/data/home/<user>/proj/llm-coding-upgrade/stack.env",
+  "max_tokens": 16384,
   "direct_benchmarks": [
     {
       "id": "warmup",

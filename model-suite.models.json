@@ -1,0 +1,105 @@
+{
+  "default_candidate_ids": [
+    "qwen3-coder-next-q5ks",
+    "qwen3-coder-next-q4km",
+    "qwen35-35b-a3b-q5km",
+    "qwen35-122b-a10b-q4km"
+  ],
+  "models": [
+    {
+      "id": "qwen3-coder-next-q5ks",
+      "label": "Qwen3-Coder-Next Q5_K_S",
+      "hf_repo": "unsloth/Qwen3-Coder-Next-GGUF",
+      "hf_include": [
+        "Q5_K_S/*"
+      ],
+      "local_dir": "/data/shared/<user>/models/Qwen3-Coder-Next-GGUF",
+      "path_glob": "Q5_K_S/*.gguf",
+      "runtime": {
+        "ctx_size": 196608,
+        "parallel": 1,
+        "tensor_split": "2,2,1",
+        "split_mode": "layer",
+        "gpu_layers": 100,
+        "fit": "on"
+      },
+      "notes": "Current baseline"
+    },
+    {
+      "id": "qwen3-coder-next-q4km",
+      "label": "Qwen3-Coder-Next Q4_K_M",
+      "hf_repo": "Qwen/Qwen3-Coder-Next-GGUF",
+      "hf_include": [
+        "Qwen3-Coder-Next-Q4_K_M/*"
+      ],
+      "local_dir": "/data/shared/<user>/models/Qwen3-Coder-Next-GGUF",
+      "path_glob": "Qwen3-Coder-Next-Q4_K_M/*.gguf",
+      "runtime": {
+        "ctx_size": 196608,
+        "parallel": 1,
+        "tensor_split": "2,2,1",
+        "split_mode": "layer",
+        "gpu_layers": 100,
+        "fit": "on"
+      },
+      "notes": "Faster same-family comparison point"
+    },
+    {
+      "id": "qwen35-35b-a3b-q5km",
+      "label": "Qwen3.5-35B-A3B Q5_K_M",
+      "hf_repo": "AesSedai/Qwen3.5-35B-A3B-GGUF",
+      "hf_include": [
+        "Q5_K_M/*"
+      ],
+      "local_dir": "/data/shared/<user>/models/Qwen3.5-35B-A3B-GGUF",
+      "path_glob": "Q5_K_M/*.gguf",
+      "runtime": {
+        "ctx_size": 196608,
+        "parallel": 1,
+        "tensor_split": "1,1,1",
+        "split_mode": "layer",
+        "gpu_layers": 100,
+        "fit": "on"
+      },
+      "notes": "Quality/speed balance candidate"
+    },
+    {
+      "id": "qwen35-35b-a3b-q6k",
+      "label": "Qwen3.5-35B-A3B Q6_K",
+      "hf_repo": "AesSedai/Qwen3.5-35B-A3B-GGUF",
+      "hf_include": [
+        "Q6_K/*"
+      ],
+      "local_dir": "/data/shared/<user>/models/Qwen3.5-35B-A3B-GGUF",
+      "path_glob": "Q6_K/*.gguf",
+      "runtime": {
+        "ctx_size": 196608,
+        "parallel": 1,
+        "tensor_split": "1,1,1",
+        "split_mode": "layer",
+        "gpu_layers": 100,
+        "fit": "on"
+      },
+      "notes": "Higher-quality candidate with likely higher latency"
+    },
+    {
+      "id": "qwen35-122b-a10b-q4km",
+      "label": "Qwen3.5-122B-A10B Q4_K_M",
+      "hf_repo": "unsloth/Qwen3.5-122B-A10B-GGUF",
+      "hf_include": [
+        "Q4_K_M/*"
+      ],
+      "local_dir": "/data/shared/<user>/models/Qwen3.5-122B-A10B-GGUF",
+      "path_glob": "Q4_K_M/*.gguf",
+      "runtime": {
+        "ctx_size": 131072,
+        "parallel": 1,
+        "tensor_split": "1,1,1",
+        "split_mode": "layer",
+        "gpu_layers": 100,
+        "fit": "on"
+      },
+      "notes": "122B experiment on a conservative 128K context to preserve VRAM headroom"
+    }
+  ]
+}

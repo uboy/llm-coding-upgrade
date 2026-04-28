@@ -1,0 +1,51 @@
+{
+  "results_root": "/data/home/<user>/proj/llm-coding-upgrade/runs",
+  "fixture_root": "/data/home/<user>/proj/llm-coding-upgrade/eval-fixtures",
+  "base_stack_env": "/data/home/<user>/proj/llm-coding-upgrade/stack.env",
+  "direct_benchmarks": [
+    {
+      "id": "warmup",
+      "prompt": "Reply with exactly: ok",
+      "max_tokens": 8,
+      "record": false
+    },
+    {
+      "id": "short_numbers",
+      "prompt": "Write the numbers from 1 to 20 separated by spaces, and nothing else.",
+      "max_tokens": 64,
+      "record": true
+    },
+    {
+      "id": "edge_case_brainstorm",
+      "prompt": "You are reviewing a Python cache implementation. List exactly 5 edge cases that would break a naive TTL plus LRU cache. Use one short bullet per line.",
+      "max_tokens": 160,
+      "record": true
+    }
+  ],
+  "cases": [
+    {
+      "id": "case01_ttl_cache",
+      "fixture": "case01_ttl_cache",
+      "solution_file": "ttl_cache.py",
+      "timeout_seconds": 300,
+      "prompt": "Implement the missing ttl_cache.py according to README.md. Do not modify tests. Run python3 -m unittest discover -s tests -v until all tests pass, then summarize what you changed in 3-5 bullets.",
+      "hidden_check": "ttl_cache_expired_lru"
+    },
+    {
+      "id": "case02_env_template",
+      "fixture": "case02_env_template",
+      "solution_file": "env_template.py",
+      "timeout_seconds": 300,
+      "prompt": "Implement the missing env_template.py according to README.md. Do not modify tests. Run python3 -m unittest discover -s tests -v until all tests pass, then summarize what you changed in 3-5 bullets.",
+      "hidden_check": "env_template_default_on_resolved_empty"
+    },
+    {
+      "id": "case03_json_patch",
+      "fixture": "case03_json_patch",
+      "solution_file": "json_patch.py",
+      "timeout_seconds": 360,
+      "prompt": "Implement the missing json_patch.py according to README.md. Do not modify tests. Run python3 -m unittest discover -s tests -v until all tests pass, then summarize what you changed in 3-5 bullets.",
+      "hidden_check": "json_patch_semantics"
+    }
+  ]
+}

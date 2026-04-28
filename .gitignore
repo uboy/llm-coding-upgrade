@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Runs / logs (generated output)
+runs/
+
+# Claude Code
+.claude/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

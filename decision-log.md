@@ -842,11 +842,57 @@ KV cache Q4_0 вместо Q8_0 экономит ~50% памяти KV cache. Д�
 
 **Вывод:** Не оправдывает сложность поддержки. Стандартный llama.cpp сопоставим по скорости.
 
+### D-037. max_tokens=16384 — критический параметр для think-режима (2026-04-28)
+
+Статус: **принято**
+
+**Проблема:**
+
+При max_tokens=5000 thinking-модели (qwen и qwen36) тратили весь completion budget на reasoning chain, не выдавая ни строчки кода. Все Python fixtures показывали content=0 chars при reasoning=17-22K chars. Это объясняло результаты 0/0 visible/hidden tests — модели «думали» до упора и не успевали начать писать.
+
+**Эксперимент:**
+
+Увеличение max_tokens с 5000 до 16384 для single-shot API вызовов (non-agentic).
+
+**Результаты — `qwen` (Qwen3.5-122B-A10B, V100):**
+
+| Task | max_tokens=5000 | max_tokens=16384 | Wall time |
+|------|-----------------|-------------------|-----------|
+| `case01_ttl_cache` | 0 chars, 0/0 tests | **2643 chars, 5/6 tests** | 47.6s |
+| `case02_env_template` | 0 chars, 0/0 tests | **2729 chars, PASS** | 38.9s |
+| `case03_json_patch` | 0 chars, 0/0 tests | **7362 chars, PASS** | 93.1s |
+| `speed_numbers` | 0 chars, FAIL | **230 chars, PASS** | 153.5s |
+
+Decode speed: ~41 tok/s (без изменений). Finish reason: `stop` (модель сама завершает, не упираясь в лимит).
+
+**Результаты — `qwen36` (Qwen3.6-35B-A3B, BM):**
+
+| Task | max_tokens=5000 | max_tokens=16384 | Wall time |
+|------|-----------------|-------------------|-----------|
+| `case01_ttl_cache` | 0 chars, 0/0 tests | 1882 chars, FAIL | 43.6s |
+| `case02_env_template` | 0 chars, 0/0 tests | 1715 chars, FAIL | 67.0s |
+| `case03_json_patch` | 0 chars, 0/0 tests | **5439 chars, PASS** | 82.3s |
+| `speed_numbers` | 0 chars, FAIL | **230 chars, PASS** | 28.1s |
+
+Decode speed: ~130 tok/s. Case01/02 — код выдаётся, но с багами (3B active params не хватает для корректной реализации hard/medium задач).
+
+**Выводы:**
+
+1. **max_tokens=5000 — неприемлемо для think-режима.** Это гарантированный 0 chars content на coding задачах.
+2. **max_tokens=16384 — минимальный разумный бюджет** для think-режима. Даёт reasoning ~5-10K chars + код ~2-7K chars.
+3. У `qwen` (122B/10B active) — 2 из 3 Python fixtures PASS, 1 near-pass (5/6). Модель способна решать hard задачи при достаточном budget.
+4. У `qwen36` (35B/3B active) — та же проблема с token budget, частичное восстановление (1 PASS, 2 FAIL с багами). Ограничение здесь уже в модели (3B active), не в budget.
+5. Проблема не связана с KV precision (Q4_0 vs Q8_0), sampling-параметрами или моделью — это чисто token budget.
+
+**Изменения:**
+- `model-suite.evals.json`: добавлено `"max_tokens": 16384`
+- Результаты: `runs/max-tokens-16k-test/`, `runs/max-tokens-16k-test-qwen36/`
+
 ---
 
 ## Открытые вопросы
 
 - DeepSeek V4-Flash GGUF availability — перепроверить через ~1 неделю (unsloth/bartowski)
-- BM thinking overflow mitigation — протестировать с max_tokens=12000 и/или `/no_think`
+- ~~BM thinking overflow mitigation — протестировать с max_tokens=12000 и/или `/no_think`~~ → **resolved D-037**: max_tokens=16384 решает проблему для обеих моделей; qwen36 всё равно ограничен 3B active params
 - Cold-start после рестарта V100 (~20-100s) — принят как рабочее ограничение
 - V100 prompt processing bottleneck (~25 tok/s на длинных промптах) — аппаратное ограничение (PCIe, no NVLink)

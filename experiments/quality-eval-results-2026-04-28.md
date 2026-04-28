@@ -83,6 +83,17 @@ Notation: `V/H` = `visible tests` / `hidden check`.
 | `case03_json_patch` | 0 chars | 7362 chars (PASS) | +7362, **PASS** |
 | `speed_numbers` | 0 chars | 230 chars (PASS) | +230, **PASS** |
 
+### max_tokens=16384: `qwen` vs `qwen36`
+
+| Task | `qwen` (10B active) | `qwen36` (3B active) |
+|------|----------------------|----------------------|
+| `case01_ttl_cache` | **5/6 tests** (2643 chars) | FAIL (1882 chars, bugs) |
+| `case02_env_template` | **PASS** (2729 chars) | FAIL (1715 chars, bugs) |
+| `case03_json_patch` | **PASS** (7362 chars) | **PASS** (5439 chars) |
+| `speed_numbers` | **PASS** (230 chars) | **PASS** (230 chars) |
+
+> Обе модели имеют одну и ту же проблему с token budget при max_tokens=5000 (content=0). При max_tokens=16384 `qwen` (10B active) решает 2.5 из 3 задач, `qwen36` (3B active) — только 1 из 3. Разрыв объясняется размером активных параметров, не budget.
+
 ## Strict executable suite: multi-language single-shot tasks
 
 (max_tokens=5000)

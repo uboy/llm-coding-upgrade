@@ -100,6 +100,8 @@ const server = http.createServer((clientReq, clientRes) => {
       \`[proxy] \${clientReq.method} \${url} -> \${TARGET_HOST}:\${TARGET_PORT}\${targetPath} (\${rawBody.length} bytes)\`
     );
 
+    let upstreamResponded = false;
+
     const proxyReq = http.request(
       {
         hostname: TARGET_HOST,
@@ -112,12 +114,48 @@ const server = http.createServer((clientReq, clientRes) => {
         },
       },
       (proxyRes) => {
+        upstreamResponded = true;
+        // Clear connect timeout — we got headers, upstream is alive
+        clearTimeout(connectTimer);
+
+        // Response timeout: 600s (10 min) for long LLM generations
+        proxyRes.setTimeout(600000, () => {
+          console.error("[timeout] upstream response stalled");
+          proxyRes.destroy(new Error("upstream response timeout"));
+        });
+
         const headers = { ...proxyRes.headers };
         headers["access-control-allow-origin"] = "*";
         clientRes.writeHead(proxyRes.statusCode, headers);
         proxyRes.pipe(clientRes);
+
+        // Handle upstream disconnecting mid-stream
+        proxyRes.on("error", (err) => {
+          console.error(\`[upstream error] \${err.message}\`);
+          if (!clientRes.writableEnded) {
+            clientRes.end();
+          }
+        });
       }
     );
+
+    // Connect timeout: 10s — fail fast if upstream is unreachable
+    // Uses socket event to detect actual TCP connect, not inactivity timer
+    const connectTimer = setTimeout(() => {
+      console.error("[timeout] upstream connect timeout");
+      proxyReq.destroy(new Error("connect timeout"));
+    }, 10000);
+
+    proxyReq.on("socket", (socket) => {
+      if (socket.connecting) {
+        socket.once("connect", () => {
+          clearTimeout(connectTimer);
+        });
+      } else {
+        // Already connected (keep-alive)
+        clearTimeout(connectTimer);
+      }
+    });
 
     proxyReq.on("error", (err) => {
       console.error(\`[error] \${err.message}\`);
@@ -127,6 +165,17 @@ const server = http.createServer((clientReq, clientRes) => {
       clientRes.end(
         JSON.stringify({ error: { message: \`Proxy error: \${err.message}\` } })
       );
+    });
+
+    // If client disconnects prematurely (before upstream responded),
+    // abort upstream request to free resources
+    // Note: clientReq "close" fires when the readable side finishes, which
+    // is normal after reading the request body. We detect real client
+    // disconnection via the writable response side closing.
+    clientRes.on("close", () => {
+      if (!upstreamResponded && !proxyReq.destroyed) {
+        proxyReq.destroy();
+      }
     });
 
     proxyReq.write(rawBody);

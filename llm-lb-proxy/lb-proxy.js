@@ -200,6 +200,8 @@ const server = http.createServer((clientReq, clientRes) => {
         `[lb] ${clientReq.method} ${url} -> ${backendLabel(backend)}${targetPath} (${rawBody.length} bytes, healthy=${backend.healthy}, attempt=${attempt})`
       );
 
+      let upstreamResponded = false;
+
       const proxyReq = http.request(
         {
           hostname: backend.host,
@@ -212,7 +214,17 @@ const server = http.createServer((clientReq, clientRes) => {
           },
         },
         (proxyRes) => {
+          upstreamResponded = true;
+          clearTimeout(connectTimer);
           markBackendHealthy(backend);
+
+          // Response timeout: 600s (10 min) for long LLM generations
+          proxyRes.setTimeout(600000, () => {
+            console.error(
+              `[lb timeout] upstream response stalled backend=${backendLabel(backend)}`
+            );
+            proxyRes.destroy(new Error("upstream response timeout"));
+          });
 
           const headers = { ...proxyRes.headers };
           headers["access-control-allow-origin"] = "*";
@@ -220,10 +232,37 @@ const server = http.createServer((clientReq, clientRes) => {
           headers["x-lb-attempt"] = String(attempt);
           clientRes.writeHead(proxyRes.statusCode, headers);
           proxyRes.pipe(clientRes);
+
+          // Handle upstream disconnecting mid-stream
+          proxyRes.on("error", (err) => {
+            console.error(
+              `[lb upstream error] backend=${backendLabel(backend)} ${err.message}`
+            );
+            if (!clientRes.writableEnded) {
+              clientRes.end();
+            }
+          });
         }
       );
 
+      // Connect timeout: 10s — fail fast if backend is unreachable
+      const connectTimer = setTimeout(() => {
+        console.error(
+          `[lb timeout] connect timeout backend=${backendLabel(backend)}`
+        );
+        proxyReq.destroy(new Error("connect timeout"));
+      }, 10000);
+
+      proxyReq.on("socket", (socket) => {
+        if (socket.connecting) {
+          socket.once("connect", () => clearTimeout(connectTimer));
+        } else {
+          clearTimeout(connectTimer);
+        }
+      });
+
       proxyReq.on("error", (err) => {
+        clearTimeout(connectTimer);
         console.error(
           `[lb error] backend=${backendLabel(backend)} attempt=${attempt} ${err.message}`
         );
@@ -243,6 +282,13 @@ const server = http.createServer((clientReq, clientRes) => {
         clientRes.end(
           JSON.stringify({ error: { message: `LB proxy error: ${err.message}` } })
         );
+      });
+
+      // If client disconnects prematurely, abort upstream request
+      clientRes.on("close", () => {
+        if (!upstreamResponded && !proxyReq.destroyed) {
+          proxyReq.destroy();
+        }
       });
 
       proxyReq.write(rawBody);

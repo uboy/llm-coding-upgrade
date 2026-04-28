@@ -1,0 +1,29 @@
+{
+  "ok": true,
+  "wall_time_s": 32.729,
+  "usage": {
+    "completion_tokens": 4237,
+    "prompt_tokens": 71,
+    "total_tokens": 4308,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "timings": {
+    "cache_n": 0,
+    "prompt_n": 71,
+    "prompt_ms": 112.78,
+    "prompt_per_token_ms": 1.5884507042253522,
+    "prompt_per_second": 629.5442454335874,
+    "predicted_n": 4237,
+    "predicted_ms": 32503.134,
+    "predicted_per_token_ms": 7.671261269766344,
+    "predicted_per_second": 130.35666037619634
+  },
+  "reasoning_chars": 13065,
+  "content_chars": 230,
+  "finish_reason": "stop",
+  "completion_tps_client": 130.35666037619634,
+  "reasoning_preview": "Here's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Task:** Write the numbers from 1 to 80 separated by spaces.\n   - **Constraint 1:** \"and nothing else.\"\n   - **Constraint 2:** \"IMPORTANT: Your entire response must be ONLY the source code of the solution file. Do NOT wrap it in markdown fences. Do NOT add explanations. Think step-by-step first, then output the complete file contents.\"\n   - **Wait, there's a contradiction/conflict in constraints:** \n     - First part says: \"Write the ",
+  "content_preview": "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80"
+}

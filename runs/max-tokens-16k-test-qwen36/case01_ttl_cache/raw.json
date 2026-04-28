@@ -1,0 +1,29 @@
+{
+  "ok": true,
+  "wall_time_s": 57.501,
+  "usage": {
+    "completion_tokens": 7688,
+    "prompt_tokens": 340,
+    "total_tokens": 8028,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "timings": {
+    "cache_n": 0,
+    "prompt_n": 340,
+    "prompt_ms": 235.212,
+    "prompt_per_token_ms": 0.6918,
+    "prompt_per_second": 1445.5044810638913,
+    "predicted_n": 7688,
+    "predicted_ms": 57144.183,
+    "predicted_per_token_ms": 7.432906217481789,
+    "predicted_per_second": 134.53687840807873
+  },
+  "reasoning_chars": 26330,
+  "content_chars": 2418,
+  "finish_reason": "stop",
+  "completion_tps_client": 134.53687840807873,
+  "reasoning_preview": "The user wants me to implement a `TTLCache` class in Python based on specific requirements.\nI need to produce a single file `ttl_cache.py` containing the implementation.\nI must not modify tests, but I don't see the tests provided. However, the requirements are detailed enough to implement the class.\nI need to use only the standard library.\nThe cache needs LRU eviction, TTL support, lazy expiration, stats tracking, and specific method signatures.\n\nLet's break down the requirements:\n1. Class `TTLC",
+  "content_preview": "import time\nfrom collections import OrderedDict\n\nclass TTLCache:\n    def __init__(self, maxsize: int, ttl_seconds: float, now_func=None):\n        self.maxsize = maxsize\n        self.default_ttl = ttl_seconds\n        self.now_func = now_func or time.time\n        self._cache = OrderedDict()\n        self._stats = {'hits': 0, 'misses': 0, 'evictions': 0, 'expirations': 0}\n\n    def _now(self):\n        return self.now_func()\n\n    def _clean_expired(self):\n        now = self._now()\n        expired_keys"
+}

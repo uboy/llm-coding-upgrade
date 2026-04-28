@@ -1,0 +1,29 @@
+{
+  "ok": true,
+  "wall_time_s": 63.425,
+  "usage": {
+    "completion_tokens": 8107,
+    "prompt_tokens": 313,
+    "total_tokens": 8420,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "timings": {
+    "cache_n": 0,
+    "prompt_n": 313,
+    "prompt_ms": 226.18,
+    "prompt_per_token_ms": 0.7226198083067092,
+    "prompt_per_second": 1383.8535679547265,
+    "predicted_n": 8107,
+    "predicted_ms": 63116.344,
+    "predicted_per_token_ms": 7.785413099790304,
+    "predicted_per_second": 128.4453358071564
+  },
+  "reasoning_chars": 30973,
+  "content_chars": 1257,
+  "finish_reason": "stop",
+  "completion_tps_client": 128.4453358071564,
+  "reasoning_preview": "Here's a thinking process:\n\n1.  **Understand the Goal**: The user wants me to implement `env_template.py` that passes a given test suite (which I don't see, but I can infer from the requirements). The implementation must export `resolve_templates(mapping: dict[str, str]) -> dict[str, str]` and `TemplateResolutionError`.\n\n2.  **Analyze Requirements**:\n   - Template syntax:\n     - `${NAME}`: substitute referenced key from mapping.\n     - `${NAME:-default}`: use `default` if `NAME` is missing or re",
+  "content_preview": "import re\n\nclass TemplateResolutionError(Exception):\n    pass\n\ndef resolve_templates(mapping: dict[str, str]) -> dict[str, str]:\n    result = {}\n    for key in mapping:\n        visited = set()\n        result[key] = _resolve_value(mapping[key], mapping, visited)\n    return result\n\ndef _resolve_value(value: str, mapping: dict[str, str], visited: set) -> str:\n    pattern = r'\\$\\{([^}]+)\\}|\\$\\$'\n    def replacer(match):\n        if match.group(2) is not None:\n            return '$'\n        content = "
+}

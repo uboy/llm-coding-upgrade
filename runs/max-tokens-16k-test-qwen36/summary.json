@@ -1,0 +1,75 @@
+{
+  "run_id": "max-tokens-16k-test",
+  "max_tokens": 16384,
+  "model": "qwen36",
+  "generated_at": "20260428T183241Z",
+  "results": [
+    {
+      "case_id": "case01_ttl_cache",
+      "completion_tokens": 7688,
+      "wall_time_s": 57.501,
+      "tps": 134.53687840807873,
+      "reasoning_chars": 26330,
+      "content_chars": 2418,
+      "finish_reason": "stop",
+      "test_result": {
+        "has_tests": true,
+        "ran": true,
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "urns_stored_value (test_ttl_cache.TTLCacheTests) ... ok\ntest_lru_eviction_prefers_oldest_live_item (test_ttl_cache.TTLCacheTests) ... ok\ntest_missing_key_returns_default_and_counts_miss (test_ttl_cache.TTLCacheTests) ... ERROR\ntest_per_item_ttl_override (test_ttl_cache.TTLCacheTests) ... ok\n\n======================================================================\nERROR: test_missing_key_returns_default_and_counts_miss (test_ttl_cache.TTLCacheTests)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/data/home/<user>/proj/llm-coding-upgrade/runs/max-tokens-16k-test-qwen36/case01_ttl_cache/tests/test_ttl_cache.py\", line 28, in test_missing_key_returns_default_and_counts_miss\n    self.assertEqual(self.cache.get(\"missing\", \"fallback\"), \"fallback\")\nTypeError: TTLCache.get() takes 2 positional arguments but 3 were given\n\n----------------------------------------------------------------------\nRan 6 tests in 0.000s\n\nFAILED (errors=1)\n",
+        "passed": false
+      },
+      "speed_check": null
+    },
+    {
+      "case_id": "case02_env_template",
+      "completion_tokens": 8107,
+      "wall_time_s": 63.425,
+      "tps": 128.4453358071564,
+      "reasoning_chars": 30973,
+      "content_chars": 1257,
+      "finish_reason": "stop",
+      "test_result": {
+        "has_tests": true,
+        "ran": true,
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "s/max-tokens-16k-test-qwen36/case02_env_template/tests/test_env_template.py\", line 20, in test_nested_references_are_resolved\n    result = resolve_templates(source)\n  File \"/data/home/<user>/proj/llm-coding-upgrade/runs/max-tokens-16k-test-qwen36/case02_env_template/env_template.py\", line 10, in resolve_templates\n    result[key] = _resolve_value(mapping[key], mapping, visited)\n  File \"/data/home/<user>/proj/llm-coding-upgrade/runs/max-tokens-16k-test-qwen36/case02_env_template/env_template.py\", line 41, in _resolve_value\n    return re.sub(pattern, replacer, value)\n  File \"/usr/lib/python3.10/re.py\", line 209, in sub\n    return _compile(pattern, flags).sub(repl, string, count)\n  File \"/data/home/<user>/proj/llm-coding-upgrade/runs/max-tokens-16k-test-qwen36/case02_env_template/env_template.py\", line 16, in replacer\n    if match.group(2) is not None:\nIndexError: no such group\n\n----------------------------------------------------------------------\nRan 6 tests in 0.002s\n\nFAILED (errors=5)\n",
+        "passed": false
+      },
+      "speed_check": null
+    },
+    {
+      "case_id": "case03_json_patch",
+      "completion_tokens": 13393,
+      "wall_time_s": 102.814,
+      "tps": 130.68115667293912,
+      "reasoning_chars": 50892,
+      "content_chars": 4673,
+      "finish_reason": "stop",
+      "test_result": {
+        "has_tests": true,
+        "ran": true,
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "test_add_append_to_list (test_json_patch.JsonPatchTests) ... ok\ntest_add_insert_into_list (test_json_patch.JsonPatchTests) ... ok\ntest_escaped_pointer_tokens (test_json_patch.JsonPatchTests) ... ok\ntest_invalid_path_raises (test_json_patch.JsonPatchTests) ... ok\ntest_remove_list_item (test_json_patch.JsonPatchTests) ... ok\ntest_replace_nested_key (test_json_patch.JsonPatchTests) ... ok\ntest_test_operation_failure_raises (test_json_patch.JsonPatchTests) ... ok\ntest_test_operation_success (test_json_patch.JsonPatchTests) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.001s\n\nOK\n",
+        "passed": true
+      },
+      "speed_check": null
+    },
+    {
+      "case_id": "speed_numbers",
+      "completion_tokens": 4237,
+      "wall_time_s": 32.729,
+      "tps": 130.35666037619634,
+      "reasoning_chars": 13065,
+      "content_chars": 230,
+      "finish_reason": "stop",
+      "test_result": {
+        "has_tests": false
+      },
+      "speed_check": true
+    }
+  ]
+}

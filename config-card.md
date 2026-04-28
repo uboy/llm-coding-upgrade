@@ -48,10 +48,10 @@ KV total: ~4,185 MiB (Q4_0, ctx=589824, 12 attn слоёв, 2 слота) — б
 Веса: ~72 GiB (UD-Q4_K_XL)
 ```
 
-### Скорость (production, 2026-04-28, UD-Q4_K_XL, parallel=2)
+### Скорость (production, 2026-04-28, UD-Q4_K_XL, parallel=2, smoke-verified)
 
-- Decode: **~41 tok/s** (stable, ctx=589824, parallel=2, warmed)
-- Prompt (короткий): ~75 tok/s
+- Decode: **41.3 tok/s** (smoke-verified)
+- Prompt (короткий): **124 tok/s** (smoke-verified)
 - Prompt (длинный, >100K): **~25 tok/s** (PCIe bottleneck между 3 GPU)
 - Cold-start: ~20-100s (зависит от warm cache)
 
@@ -121,10 +121,11 @@ BM1:  21,195 / 24,576 MiB (86.2%)
 BM2:  21,128 / 24,576 MiB (85.9%)
 ```
 
-### Скорость (production, 2026-04-24)
+### Скорость (production, 2026-04-28, smoke-verified)
 
-- Decode: **127.1 tok/s**
-- Prompt: **1,501 tok/s**
+- Decode: **140.7 tok/s** (smoke-verified)
+- Prompt: **471 tok/s** (smoke-verified)
+- LB backends: BM1 + BM2 оба **healthy**
 
 ### Архитектура
 
@@ -165,3 +166,25 @@ curl http://v100-host:4002/v1/models
 ## Клиентская конфигурация
 
 См. `client-setup.md`.
+
+---
+
+## Smoke check (2026-04-28)
+
+```
+V100 (qwen, :4001)
+  llamacpp-server-p8001  Up 6 min  (healthy)
+  llm-proxy-p4001        Up 6 min
+  open-webui-p3001       Up 6 min  (healthy)
+  Model: Qwen3.5-122B-A10B-UD-Q4_K_XL
+  Decode: 41.3 tok/s | PP: 124 tok/s
+  VRAM: 84.0/98.3 GiB (85.4%) | GPU temp: 73/67/64 C
+
+LB (qwen36, :4002)
+  BM1 (bm1:8001)  healthy
+  BM2 (bm2:8001)  healthy
+  Model: Qwen3.6-35B-A3B-Q3_K_M
+  Decode: 140.7 tok/s | PP: 471 tok/s
+
+Все сервисы работают без проблем.
+```

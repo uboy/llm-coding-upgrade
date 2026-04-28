@@ -14,12 +14,15 @@
 ## Files
 
 - `model-suite.models.json` – список кандидатов и runtime-параметры
-- `model-suite.evals.json` – direct benchmarks и eval suite
+- `model-suite.evals.json` – direct benchmarks и formal fixture suite
+- `evals/quality-task-catalog.json` – единый каталог задач, критериев и comparison targets
+- `docs/quality-evaluation-protocol.md` – канонический протокол сравнения raw и agentic моделей
 - `scripts/model_suite.py` – основной runner
 - `scripts/model-suite.sh` – Linux/macOS wrapper
 - `scripts/model-suite.ps1` – Windows wrapper
-- `eval-fixtures/` – чистые кейсы для прогона
+- `eval-fixtures/` – tracked formal fixtures с auto-tests для Python, C++, JS и TS
 - `runs/` – результаты конкретных запусков
+- `experiments/quality-eval-results-2026-04-28.md` – зафиксированная матрица текущих локальных результатов
 
 ## Linux/macOS
 
@@ -128,6 +131,7 @@ powershell -File C:\path\to\llm-coding-upgrade\scripts\model-suite.ps1 full
 - wall-clock и token usage из `OpenCode export`
 - visible test pass/fail
 - hidden-check pass/fail
+- `formal_solution` verdict: visible tests или compile-run pass, hidden-check pass если задан, тестовые файлы не менялись
 - сохранность хэшей test files
 
 ## Systems

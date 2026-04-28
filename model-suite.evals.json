@@ -5,18 +5,33 @@
   "direct_benchmarks": [
     {
       "id": "warmup",
+      "category": "meta",
+      "language": "meta",
+      "difficulty": "trivial",
+      "evaluation_mode": "healthcheck",
+      "checks": ["endpoint readiness", "minimal completion path"],
       "prompt": "Reply with exactly: ok",
       "max_tokens": 8,
       "record": false
     },
     {
       "id": "short_numbers",
+      "category": "formatting",
+      "language": "text",
+      "difficulty": "easy",
+      "evaluation_mode": "exact_match",
+      "checks": ["exact sequence 1..20", "single spaces only", "no extra prose"],
       "prompt": "Write the numbers from 1 to 20 separated by spaces, and nothing else.",
       "max_tokens": 64,
       "record": true
     },
     {
       "id": "edge_case_brainstorm",
+      "category": "code_review",
+      "language": "python",
+      "difficulty": "easy",
+      "evaluation_mode": "manual_or_rubric_review",
+      "checks": ["exactly 5 bullets", "TTL/LRU edge cases", "short and relevant bullets"],
       "prompt": "You are reviewing a Python cache implementation. List exactly 5 edge cases that would break a naive TTL plus LRU cache. Use one short bullet per line.",
       "max_tokens": 160,
       "record": true
@@ -25,6 +40,11 @@
   "cases": [
     {
       "id": "case01_ttl_cache",
+      "category": "data_structure",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "fixture_visible_hidden",
+      "checks": ["lazy expiry", "LRU eviction among live entries", "per-item TTL override", "stats/delete/clear API"],
       "fixture": "case01_ttl_cache",
       "solution_file": "ttl_cache.py",
       "timeout_seconds": 300,
@@ -33,6 +53,11 @@
     },
     {
       "id": "case02_env_template",
+      "category": "parsing",
+      "language": "python",
+      "difficulty": "medium",
+      "evaluation_mode": "fixture_visible_hidden",
+      "checks": ["recursive template resolution", "default on missing or empty", "cycle detection", "no env leakage and no input mutation"],
       "fixture": "case02_env_template",
       "solution_file": "env_template.py",
       "timeout_seconds": 300,
@@ -41,11 +66,68 @@
     },
     {
       "id": "case03_json_patch",
+      "category": "data_transform",
+      "language": "python",
+      "difficulty": "medium",
+      "evaluation_mode": "fixture_visible_hidden",
+      "checks": ["JSON Pointer escaping", "add/remove/replace/test semantics", "deep-copy behavior", "list insertion and append edge cases"],
       "fixture": "case03_json_patch",
       "solution_file": "json_patch.py",
       "timeout_seconds": 360,
       "prompt": "Implement the missing json_patch.py according to README.md. Do not modify tests. Run python3 -m unittest discover -s tests -v until all tests pass, then summarize what you changed in 3-5 bullets.",
       "hidden_check": "json_patch_semantics"
+    },
+    {
+      "id": "case04_rate_limiter",
+      "category": "system_design",
+      "language": "python",
+      "difficulty": "medium",
+      "evaluation_mode": "fixture_visible_hidden",
+      "checks": ["per-user sliding window", "boundary pruning", "invalid config validation", "window is sliding not fixed"],
+      "fixture": "case04_rate_limiter",
+      "solution_file": "rate_limiter.py",
+      "timeout_seconds": 300,
+      "prompt": "Implement the missing rate_limiter.py according to README.md. Do not modify tests. Run python3 -m unittest discover -s tests -v until all tests pass, then summarize what you changed in 3-5 bullets.",
+      "hidden_check": "rate_limiter_window_boundary"
+    },
+    {
+      "id": "case05_cpp_lru_cache",
+      "category": "data_structure",
+      "language": "cpp",
+      "difficulty": "medium",
+      "evaluation_mode": "fixture_compile_run",
+      "checks": ["header-only API", "LRU eviction", "refresh on get", "capacity zero behavior"],
+      "fixture": "case05_cpp_lru_cache",
+      "solution_file": "lru_cache.hpp",
+      "timeout_seconds": 300,
+      "prompt": "Implement the missing lru_cache.hpp according to README.md. Do not modify tests. Run bash tests/run.sh until all tests pass, then summarize what you changed in 3-5 bullets.",
+      "test_command": ["bash", "tests/run.sh"]
+    },
+    {
+      "id": "case06_js_retry_async",
+      "category": "async_control_flow",
+      "language": "js",
+      "difficulty": "medium",
+      "evaluation_mode": "fixture_runtime",
+      "checks": ["retry count semantics", "backoff progression", "shouldRetry short-circuit", "last error rethrow"],
+      "fixture": "case06_js_retry_async",
+      "solution_file": "retry_async.js",
+      "timeout_seconds": 300,
+      "prompt": "Implement the missing retry_async.js according to README.md. Do not modify tests. Run bash tests/run.sh until all tests pass, then summarize what you changed in 3-5 bullets.",
+      "test_command": ["bash", "tests/run.sh"]
+    },
+    {
+      "id": "case07_ts_event_bus",
+      "category": "typed_api_design",
+      "language": "ts",
+      "difficulty": "hard",
+      "evaluation_mode": "fixture_runtime",
+      "checks": ["generic payload typing", "listener order", "once semantics", "unsubscribe behavior"],
+      "fixture": "case07_ts_event_bus",
+      "solution_file": "event_bus.ts",
+      "timeout_seconds": 300,
+      "prompt": "Implement the missing event_bus.ts according to README.md. Do not modify tests. Run bash tests/run.sh until all tests pass, then summarize what you changed in 3-5 bullets.",
+      "test_command": ["bash", "tests/run.sh"]
     }
   ]
 }

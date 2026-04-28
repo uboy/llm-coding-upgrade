@@ -20,6 +20,7 @@ LB proxy (round-robin with health check): `:4002` -> BM1 + BM2
 | `decision-log.md` | Accepted decisions + canonical sampling parameters |
 | `docs/llm-glossary.md` | Glossary of LLM parameters and architecture |
 | `docs/optimization-research.md` | Optimization research findings |
+| `docs/quality-evaluation-protocol.md` | Canonical comparison protocol for local and external coding models |
 | `stack.env` | V100 stack configuration |
 | `lb-proxy.env` | LB proxy configuration |
 | `scripts/stack.sh` | V100 stack launcher |
@@ -28,6 +29,7 @@ LB proxy (round-robin with health check): `:4002` -> BM1 + BM2
 | `client-setup.md` | AI client configuration (Cline, Continue, OpenCode, Aider...) |
 | `automation.md` | Model-suite automation for comparing candidates |
 | `evals/benchmark-suite.json` | Benchmark suite with 10 coding tasks |
+| `evals/quality-task-catalog.json` | Unified catalog of quality-eval tasks, criteria, and comparison targets |
 
 ## Current Status
 
@@ -175,6 +177,7 @@ BM2:  21,128 / 24,576 MiB (85.9%)
 | File | Description |
 |------|-------------|
 | `experiments/model-comparison-full-2026-04-24.md` | Full benchmark V100 vs BM (10 tasks + speed) |
+| `experiments/quality-eval-results-2026-04-28.md` | Current local quality matrix + placeholders for Codex/Claude |
 | `experiments/v100-minimax-m2.7-2026-04-24.md` | MiniMax M2.7 test (not recommended) |
 | `experiments/v100-model-comparison-2026-04-23.md` | Comparison of 5 models (wave 1) |
 | `experiments/v100-ram-overflow-397b-exp.md` | RAM overflow experiment with Qwen3.5-397B |
@@ -374,9 +377,9 @@ See `automation.md` for model-suite automation:
 
 **Key Files:**
 - `model-suite.models.json` — candidate list and runtime parameters
-- `model-suite.evals.json` — direct benchmarks and eval suite
+- `model-suite.evals.json` — direct benchmarks and formal fixture suite
 - `scripts/model_suite.py` — main runner
 - `scripts/model-suite.sh` — Linux/macOS wrapper
 - `scripts/model-suite.ps1` — Windows wrapper
-- `eval-fixtures/` — clean test cases
+- `eval-fixtures/` — tracked formal fixtures with auto-tests for Python, C++, JS, and TS
 - `runs/` — run results

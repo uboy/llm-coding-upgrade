@@ -1,0 +1,350 @@
+{
+  "version": 1,
+  "description": "Unified quality-eval catalog for local production stacks and future external coding agents.",
+  "comparison_targets": [
+    {
+      "id": "qwen_raw",
+      "label": "V100 / qwen",
+      "mode": "raw_api",
+      "status": "measured",
+      "result_ref": "runs/live-eval-smoke-qwen-default/summary.json"
+    },
+    {
+      "id": "qwen_no_think",
+      "label": "V100 / qwen + /no_think",
+      "mode": "raw_api",
+      "status": "measured",
+      "result_ref": "runs/live-eval-smoke-qwen-nothink/summary.json"
+    },
+    {
+      "id": "qwen36_raw",
+      "label": "BM1/BM2 LB / qwen36",
+      "mode": "raw_api",
+      "status": "measured",
+      "result_ref": "runs/live-eval-smoke-qwen36/summary.json"
+    },
+    {
+      "id": "qwen36_no_think",
+      "label": "BM1/BM2 LB / qwen36 + /no_think",
+      "mode": "raw_api",
+      "status": "measured",
+      "result_ref": "runs/live-eval-smoke-qwen36-nothink/summary.json"
+    },
+    {
+      "id": "glm51_coding_api",
+      "label": "GLM-5.1 coding API",
+      "mode": "raw_api",
+      "status": "measured",
+      "result_ref": "runs/live-eval-smoke-glm51-coding-api/summary.json"
+    },
+    {
+      "id": "glm51_claude_wrapper",
+      "label": "GLM-5.1 via Claude Code wrapper",
+      "mode": "agentic_wrapper",
+      "status": "measured_partial",
+      "result_ref": "runs/live-eval-smoke-glm51-claude/glm-5.1/summary.json"
+    },
+    {
+      "id": "codex_cli",
+      "label": "Codex CLI",
+      "mode": "agentic",
+      "status": "planned_2026-04-29"
+    },
+    {
+      "id": "claude_code_vendor",
+      "label": "Claude Code (vendor model)",
+      "mode": "agentic",
+      "status": "planned_2026-04-29"
+    }
+  ],
+  "criteria": [
+    {
+      "id": "formal_solution",
+      "description": "Binary verdict for tracked fixtures: visible tests or compile-run pass, hidden checks pass when configured, and test assets remain unchanged."
+    },
+    {
+      "id": "strict_correctness",
+      "description": "Task-specific executable correctness: exact-match output, visible tests, hidden checks, compile/run pass, or ArkTS rubric."
+    },
+    {
+      "id": "output_hygiene",
+      "description": "No extra prose when the prompt requires code-only output; correct exported symbol names and file content boundaries."
+    },
+    {
+      "id": "agentic_autonomy",
+      "description": "Ability to inspect files, edit only the intended implementation, run tests, self-repair after failures, and stop once the task is solved."
+    },
+    {
+      "id": "speed",
+      "description": "Wall-clock latency plus client/server token-generation speed when the transport exposes it."
+    },
+    {
+      "id": "stability",
+      "description": "Whether the same model/mode can complete the same task family without collapsing into reasoning-only output or format drift."
+    }
+  ],
+  "suites": [
+    {
+      "id": "historical_python_prompt_suite",
+      "source_ref": "evals/benchmark-suite.json",
+      "result_ref": "experiments/model-comparison-full-2026-04-24.md",
+      "notes": "Historical prompt-quality baseline. Useful for continuity, but weaker than executable fixture checks."
+    },
+    {
+      "id": "model_suite_direct",
+      "source_ref": "model-suite.evals.json#direct_benchmarks",
+      "result_ref": "runs/run-*/summary.json",
+      "notes": "Fast direct prompts for format adherence and short analytical quality."
+    },
+    {
+      "id": "model_suite_formal_fixtures",
+      "source_ref": "model-suite.evals.json#cases",
+      "result_ref": "runs/live-eval-smoke-*/summary.json",
+      "notes": "Executable tracked fixtures with auto-tests, compile/run commands, optional hidden checks, and formal_solution verdict."
+    },
+    {
+      "id": "live_multilanguage_strict_suite",
+      "source_ref": ".scratchpad/live_eval.py",
+      "result_ref": "runs/live-eval-smoke-*/summary.json",
+      "notes": "Strict single-file code generation across C++, JS, TS, ArkTS and format-sensitive speed prompts."
+    },
+    {
+      "id": "agentic_fixture_suite",
+      "source_ref": "eval-fixtures/case01_ttl_cache, eval-fixtures/case02_env_template, eval-fixtures/case03_json_patch",
+      "result_ref": "experiments/quality-eval-results-2026-04-28.md",
+      "notes": "Tool-using edit/test workflow for OpenCode, Claude Code and future Codex/Claude vendor runs."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "Q01",
+      "suite": "historical_python_prompt_suite",
+      "language": "python",
+      "difficulty": "hard",
+      "measurement_modes": ["historical_prompt_quality"],
+      "source_ref": "evals/benchmark-suite.json#Q01",
+      "checks": ["TTL semantics", "LRU eviction", "thread safety", "unit tests included"]
+    },
+    {
+      "id": "Q02",
+      "suite": "historical_python_prompt_suite",
+      "language": "python",
+      "difficulty": "medium",
+      "measurement_modes": ["historical_prompt_quality"],
+      "source_ref": "evals/benchmark-suite.json#Q02",
+      "checks": ["find all race conditions", "locking strategy", "line-by-line explanation"]
+    },
+    {
+      "id": "Q03",
+      "suite": "historical_python_prompt_suite",
+      "language": "python",
+      "difficulty": "medium",
+      "measurement_modes": ["historical_prompt_quality"],
+      "source_ref": "evals/benchmark-suite.json#Q03",
+      "checks": ["per-user sliding window", "timestamp pruning", "correct asymptotic behavior"]
+    },
+    {
+      "id": "Q04",
+      "suite": "historical_python_prompt_suite",
+      "language": "python",
+      "difficulty": "hard",
+      "measurement_modes": ["historical_prompt_quality"],
+      "source_ref": "evals/benchmark-suite.json#Q04",
+      "checks": ["async blocking semantics", "bounded queue behavior", "graceful shutdown"]
+    },
+    {
+      "id": "Q05",
+      "suite": "historical_python_prompt_suite",
+      "language": "python",
+      "difficulty": "medium",
+      "measurement_modes": ["historical_prompt_quality"],
+      "source_ref": "evals/benchmark-suite.json#Q05",
+      "checks": ["heap-based shortest path", "path reconstruction", "error handling"]
+    },
+    {
+      "id": "Q06",
+      "suite": "historical_python_prompt_suite",
+      "language": "python",
+      "difficulty": "medium",
+      "measurement_modes": ["historical_prompt_quality"],
+      "source_ref": "evals/benchmark-suite.json#Q06",
+      "checks": ["exhaustive bug finding", "line-localized fixes", "review rigor"]
+    },
+    {
+      "id": "Q07",
+      "suite": "historical_python_prompt_suite",
+      "language": "python",
+      "difficulty": "hard",
+      "measurement_modes": ["historical_prompt_quality"],
+      "source_ref": "evals/benchmark-suite.json#Q07",
+      "checks": ["thread-safe subscriptions", "wildcard dispatch", "async publish isolation"]
+    },
+    {
+      "id": "Q08",
+      "suite": "historical_python_prompt_suite",
+      "language": "python",
+      "difficulty": "hard",
+      "measurement_modes": ["historical_prompt_quality"],
+      "source_ref": "evals/benchmark-suite.json#Q08",
+      "checks": ["decorator and context manager APIs", "backoff with jitter", "exception filtering"]
+    },
+    {
+      "id": "Q09",
+      "suite": "historical_python_prompt_suite",
+      "language": "python",
+      "difficulty": "hard",
+      "measurement_modes": ["historical_prompt_quality"],
+      "source_ref": "evals/benchmark-suite.json#Q09",
+      "checks": ["thread-safe pool lifecycle", "timeout and health checks", "context-managed acquire/release"]
+    },
+    {
+      "id": "Q10",
+      "suite": "historical_python_prompt_suite",
+      "language": "python",
+      "difficulty": "hard",
+      "measurement_modes": ["historical_prompt_quality"],
+      "source_ref": "evals/benchmark-suite.json#Q10",
+      "checks": ["BST CRUD and serialization", "rebalancing", "text visualization"]
+    },
+    {
+      "id": "short_numbers",
+      "suite": "model_suite_direct",
+      "language": "text",
+      "difficulty": "easy",
+      "measurement_modes": ["exact_match"],
+      "source_ref": "model-suite.evals.json#short_numbers",
+      "checks": ["exact sequence", "single spaces only", "no extra prose"],
+      "planned_external_targets": ["codex_cli", "claude_code_vendor"]
+    },
+    {
+      "id": "edge_case_brainstorm",
+      "suite": "model_suite_direct",
+      "language": "python",
+      "difficulty": "easy",
+      "measurement_modes": ["short_analysis"],
+      "source_ref": "model-suite.evals.json#edge_case_brainstorm",
+      "checks": ["exactly 5 bullets", "TTL/LRU relevance", "concise phrasing"],
+      "planned_external_targets": ["codex_cli", "claude_code_vendor"]
+    },
+    {
+      "id": "case01_ttl_cache",
+      "suite": "model_suite_formal_fixtures",
+      "language": "python",
+      "difficulty": "hard",
+      "measurement_modes": ["fixture_visible_hidden", "live_raw_single_shot", "agentic_edit_test", "formal_solution"],
+      "source_ref": "model-suite.evals.json#case01_ttl_cache",
+      "checks": ["lazy expiry", "LRU among live entries", "per-item TTL", "stats and deletion API"],
+      "planned_external_targets": ["codex_cli", "claude_code_vendor"]
+    },
+    {
+      "id": "case02_env_template",
+      "suite": "model_suite_formal_fixtures",
+      "language": "python",
+      "difficulty": "medium",
+      "measurement_modes": ["fixture_visible_hidden", "live_raw_single_shot", "agentic_edit_test", "formal_solution"],
+      "source_ref": "model-suite.evals.json#case02_env_template",
+      "checks": ["recursive resolution", "defaults on empty or missing", "cycle detection", "no env leakage"],
+      "planned_external_targets": ["codex_cli", "claude_code_vendor"]
+    },
+    {
+      "id": "case03_json_patch",
+      "suite": "model_suite_formal_fixtures",
+      "language": "python",
+      "difficulty": "medium",
+      "measurement_modes": ["fixture_visible_hidden", "live_raw_single_shot", "agentic_edit_test", "formal_solution"],
+      "source_ref": "model-suite.evals.json#case03_json_patch",
+      "checks": ["pointer escaping", "patch semantics", "deep-copy safety", "list index edge cases"],
+      "planned_external_targets": ["codex_cli", "claude_code_vendor"]
+    },
+    {
+      "id": "case04_rate_limiter",
+      "suite": "model_suite_formal_fixtures",
+      "language": "python",
+      "difficulty": "medium",
+      "measurement_modes": ["fixture_visible_hidden", "agentic_edit_test", "formal_solution"],
+      "source_ref": "model-suite.evals.json#case04_rate_limiter",
+      "checks": ["per-user sliding window", "boundary pruning", "invalid config validation", "sliding rather than fixed window"],
+      "planned_external_targets": ["codex_cli", "claude_code_vendor"]
+    },
+    {
+      "id": "case05_cpp_lru_cache",
+      "suite": "model_suite_formal_fixtures",
+      "language": "cpp",
+      "difficulty": "medium",
+      "measurement_modes": ["fixture_compile_run", "agentic_edit_test", "formal_solution"],
+      "source_ref": "model-suite.evals.json#case05_cpp_lru_cache",
+      "checks": ["header-only API", "LRU eviction", "refresh on get", "capacity zero behavior"],
+      "planned_external_targets": ["codex_cli", "claude_code_vendor"]
+    },
+    {
+      "id": "case06_js_retry_async",
+      "suite": "model_suite_formal_fixtures",
+      "language": "js",
+      "difficulty": "medium",
+      "measurement_modes": ["fixture_runtime", "agentic_edit_test", "formal_solution"],
+      "source_ref": "model-suite.evals.json#case06_js_retry_async",
+      "checks": ["retry count semantics", "backoff progression", "shouldRetry short-circuit", "last error rethrow"],
+      "planned_external_targets": ["codex_cli", "claude_code_vendor"]
+    },
+    {
+      "id": "case07_ts_event_bus",
+      "suite": "model_suite_formal_fixtures",
+      "language": "ts",
+      "difficulty": "hard",
+      "measurement_modes": ["fixture_runtime", "agentic_edit_test", "formal_solution"],
+      "source_ref": "model-suite.evals.json#case07_ts_event_bus",
+      "checks": ["generic payload typing", "listener order", "once semantics", "unsubscribe behavior"],
+      "planned_external_targets": ["codex_cli", "claude_code_vendor"]
+    },
+    {
+      "id": "speed_numbers",
+      "suite": "live_multilanguage_strict_suite",
+      "language": "text",
+      "difficulty": "easy",
+      "measurement_modes": ["exact_match_speed"],
+      "source_ref": ".scratchpad/live_eval.py#eval_speed_case",
+      "checks": ["exact sequence 1..80", "single spaces only", "no reasoning spill into content"],
+      "planned_external_targets": ["codex_cli", "claude_code_vendor"]
+    },
+    {
+      "id": "cpp_lru_cache",
+      "suite": "live_multilanguage_strict_suite",
+      "language": "cpp",
+      "difficulty": "medium",
+      "measurement_modes": ["raw_codegen_compile_run"],
+      "source_ref": ".scratchpad/live_eval.py#eval_cpp_case",
+      "checks": ["header-only API", "O(1) average get/put", "LRU eviction", "capacity zero semantics"],
+      "planned_external_targets": ["codex_cli", "claude_code_vendor"]
+    },
+    {
+      "id": "js_retry_async",
+      "suite": "live_multilanguage_strict_suite",
+      "language": "js",
+      "difficulty": "medium",
+      "measurement_modes": ["raw_codegen_runtime"],
+      "source_ref": ".scratchpad/live_eval.py#eval_js_case",
+      "checks": ["retry count semantics", "backoff progression", "shouldRetry short-circuit", "last error rethrow"],
+      "planned_external_targets": ["codex_cli", "claude_code_vendor"]
+    },
+    {
+      "id": "ts_event_bus",
+      "suite": "live_multilanguage_strict_suite",
+      "language": "ts",
+      "difficulty": "hard",
+      "measurement_modes": ["raw_codegen_runtime"],
+      "source_ref": ".scratchpad/live_eval.py#eval_ts_case",
+      "checks": ["generic payload typing", "listener order", "once semantics", "unsubscribe behavior"],
+      "planned_external_targets": ["codex_cli", "claude_code_vendor"]
+    },
+    {
+      "id": "arkts_stage_page",
+      "suite": "live_multilanguage_strict_suite",
+      "language": "arkts",
+      "difficulty": "medium",
+      "measurement_modes": ["rubric_review"],
+      "source_ref": ".scratchpad/live_eval.py#eval_arkts_case",
+      "checks": ["@State reactivity", "aboutToAppear data load", "stable ForEach key", "router params", "loading UI", "empty state"],
+      "planned_external_targets": ["codex_cli", "claude_code_vendor"]
+    }
+  ]
+}

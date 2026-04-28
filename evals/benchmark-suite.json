@@ -2,10 +2,20 @@
   "version": 1,
   "description": "10 задач для оценки качества V100 модели до/после оптимизаций",
   "max_tokens": 7000,
+  "evaluation_mode": "historical_prompt_quality",
+  "result_source": "experiments/model-comparison-full-2026-04-24.md",
+  "notes": [
+    "Этот suite исторически использовался как prompt-quality baseline.",
+    "Результаты по нему полезны для continuity, но сами по себе не заменяют executable tests и hidden checks."
+  ],
   "tasks": [
     {
       "id": "Q01",
       "name": "LRU Cache с TTL",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": ["TTL semantics", "LRU eviction", "thread safety", "unit tests included"],
       "prompt": "Реализуй класс LRU кэша с поддержкой TTL (time-to-live) на Python. Класс должен быть thread-safe. Интерфейс: get(key), put(key, value, ttl_seconds), delete(key). При превышении capacity удаляется LRU элемент. При истечении TTL элемент считается отсутствующим. Напиши также полный набор unit-тестов.",
       "category": "data_structure",
       "expected_keywords": ["threading", "Lock", "OrderedDict", "ttl", "time", "capacity"]
@@ -13,6 +23,10 @@
     {
       "id": "Q02",
       "name": "Bug fix: race condition",
+      "language": "python",
+      "difficulty": "medium",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": ["find all race conditions", "locking strategy", "line-by-line explanation"],
       "prompt": "Найди и исправь все race conditions в следующем коде:\n\nclass Counter:\n    def __init__(self):\n        self.value = 0\n        self.history = []\n\n    def increment(self):\n        current = self.value\n        self.value = current + 1\n        self.history.append(self.value)\n\n    def get_and_reset(self):\n        val = self.value\n        self.value = 0\n        self.history.clear()\n        return val\n\nimport threading\nc = Counter()\nthreads = [threading.Thread(target=lambda: [c.increment() for _ in range(1000)]) for _ in range(10)]\nfor t in threads: t.start()\nfor t in threads: t.join()\nprint(c.value, len(c.history))\n\nПокажи исправленную версию и объясни каждую найденную проблему.",
       "category": "debugging",
       "expected_keywords": ["race condition", "Lock", "threading", "atomic", "append", "increment"]
@@ -20,6 +34,10 @@
     {
       "id": "Q03",
       "name": "Sliding window rate limiter",
+      "language": "python",
+      "difficulty": "medium",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": ["per-user sliding window", "timestamp pruning", "correct asymptotic behavior"],
       "prompt": "Реализуй sliding window rate limiter на Python. Класс RateLimiter с методом allow_request(user_id) -> bool. Параметры: max_requests=100, window_seconds=60. Используй sliding window (не fixed window). Каждый user_id имеет отдельный лимит. Реализация должна быть O(1) по памяти на request (храним только timestamp'ы внутри окна). Покажи пример использования и тест.",
       "category": "system_design",
       "expected_keywords": ["sliding", "window", "timestamp", "deque", "time", "rate", "limit"]
@@ -27,6 +45,10 @@
     {
       "id": "Q04",
       "name": "Async producer-consumer",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": ["async blocking semantics", "bounded queue behavior", "graceful shutdown and context manager"],
       "prompt": "Реализуй async producer-consumer очередь на Python с asyncio. Класс AsyncQueue с методами: async put(item), async get() -> item, task_done(), join(). Поддержка maxsize (bounded queue). Метод put блокируется при полной очереди, get — при пустой. Также добавь graceful shutdown: метод close() и __aenter__/__aexit__. Напиши пример с 3 producers и 2 consumers.",
       "category": "concurrency",
       "expected_keywords": ["asyncio", "Queue", "Event", "producer", "consumer", "maxsize", "await", "close"]
@@ -34,6 +56,10 @@
     {
       "id": "Q05",
       "name": "Dijkstra shortest path",
+      "language": "python",
+      "difficulty": "medium",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": ["heap-based shortest path", "path reconstruction", "error handling for invalid graph inputs"],
       "prompt": "Реализуй алгоритм Дейкстры для поиска кратчайшего пути во взвешенном ориентированном графе. Функция: dijkstra(graph, start, end) -> (distance, path). Graph задан как dict: {node: [(neighbor, weight), ...]}. Используй приоритетную очередь (heapq). Добавь обработку случаев: узел не существует, путь не существует, отрицательные веса (ошибка). Покажи на примере графа с 10+ узлами.",
       "category": "algorithm",
       "expected_keywords": ["heapq", "dijkstra", "priority", "distance", "path", "negative", "weight"]
@@ -41,6 +67,10 @@
     {
       "id": "Q06",
       "name": "Code review: найти баги",
+      "language": "python",
+      "difficulty": "medium",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": ["exhaustive bug finding", "line-localized fixes", "reasoning about singleton/retry/division pitfalls"],
       "prompt": "Найди ВСЕ баги в этом коде:\n\ndef merge_dicts(*dicts):\n    result = {}\n    for d in dicts:\n        result.update(d)\n    return result\n\ndef flatten(lst):\n    return [item for sublist in lst for item in sublist]\n\ndef safe_divide(a, b=0):\n    return a / b if b != 0 else float('inf')\n\nclass Singleton:\n    _instance = None\n    def __new__(cls):\n        if cls._instance is None:\n            cls._instance = super().__new__(cls)\n        return cls._instance\n    def __init__(self):\n        self.data = []\n\ndef retry(func, max_retries=3):\n    for i in range(max_retries):\n        try:\n            return func()\n        except Exception:\n            continue\n    return None\n\nДля каждого бага: укажи строку, опиши проблему, покажи исправление.",
       "category": "code_review",
       "expected_keywords": ["nested", "shallow", "Singleton", "__init__", "reinit", "zero", "b!=0", "Exception", "silent", "None"]
@@ -48,6 +78,10 @@
     {
       "id": "Q07",
       "name": "Thread-safe event bus",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": ["thread-safe subscriptions", "wildcard dispatch", "async publish isolation"],
       "prompt": "Реализуй thread-safe Event Bus (pub/sub) на Python. Интерфейс:\n- subscribe(event_type: str, handler: Callable) -> subscription_id\n- unsubscribe(subscription_id: int)\n- publish(event_type: str, data: Any)\n- publish_async(event_type: str, data: Any) — неблокирующая публикация через ThreadPoolExecutor\n\nТребования: thread-safe, обработка исключений в handler'ах не должна ломать другие handler'ы, поддержка wildcard подписок (например 'order.*' ловит 'order.created' и 'order.cancelled'). Покажи полный пример.",
       "category": "system_design",
       "expected_keywords": ["threading", "Lock", "subscribe", "publish", "wildcard", "ThreadPoolExecutor", "event", "handler"]
@@ -55,6 +89,10 @@
     {
       "id": "Q08",
       "name": "Retry decorator + context manager",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": ["decorator and context manager APIs", "backoff with jitter", "exception filtering and callbacks"],
       "prompt": "Реализуй retry-механизм на Python, который можно использовать и как decorator, и как context manager:\n\n@retry(max_attempts=3, delay=1.0, backoff=2.0, exceptions=(ConnectionError, TimeoutError))\ndef fetch(url): ...\n\nwith Retry(max_attempts=3, delay=1.0) as r:\n    response = r.call(lambda: requests.get(url))\n\nПоддержка: exponential backoff, jitter (чтобы избежать thundering herd), список exception типов для retry, on_retry callback. Покажи примеры использования обоих способов.",
       "category": "patterns",
       "expected_keywords": ["decorator", "context", "manager", "backoff", "jitter", "retry", "attempt", "exception"]
@@ -62,6 +100,10 @@
     {
       "id": "Q09",
       "name": "Connection pool",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": ["thread-safe pool lifecycle", "timeout and health checks", "context-managed acquire/release"],
       "prompt": "Реализуй generic connection pool на Python. Класс ConnectionPool:\n- __init__(factory: Callable[[], Connection], max_size=10, min_idle=2, timeout=30)\n- acquire() -> Connection (контекстный менеджер, with pool.acquire() as conn)\n- release(conn: Connection)\n- close_all()\n\nТребования: thread-safe, автоматическое создание соединений при нехватке, timeout при ожидании свободного соединения, проверка health перед выдачей (is_alive()), автоматическое удаление мёртвых. Покажи пример с mock-соединениями.",
       "category": "system_design",
       "expected_keywords": ["Connection", "pool", "threading", "Semaphore", "acquire", "release", "timeout", "health"]
@@ -69,6 +111,10 @@
     {
       "id": "Q10",
       "name": "BST с сериализацией",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": ["BST CRUD and JSON serialization", "rebalancing", "text visualization"],
       "prompt": "Реализуй Binary Search Tree (BST) на Python с поддержкой сериализации:\n- insert(key, value)\n- search(key) -> value or None\n- delete(key)\n- inorder() -> list of (key, value)\n- serialize() -> JSON string\n- deserialize(json_string) -> BST (classmethod)\n\nТакже реализуй balanced BST: метод balance() который превращает дерево в сбалансированное. Добавь визуализацию в виде текстового дерева. Покажи пример: создать BST из 15 элементов, удалить 3, сбалансировать, сериализовать и десериализовать.",
       "category": "data_structure",
       "expected_keywords": ["BST", "Node", "insert", "search", "delete", "serialize", "deserialize", "balance", "inorder", "JSON"]

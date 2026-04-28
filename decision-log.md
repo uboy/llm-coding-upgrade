@@ -818,12 +818,35 @@ KV cache Q4_0 вместо Q8_0 экономит ~50% памяти KV cache. Д�
 
 ---
 
+### D-035. UD-Q4_K_XL → production квантование (2026-04-28)
+
+Статус: **принято — deployed**
+
+**Тестирование:**
+- Q4_K_M: 9/10 OK (Q04 OVERFLOW — thinking занял все 7000 токенов), avg ~32 tok/s (varied 24-41)
+- UD-Q4_K_XL: **10/10 OK** (Q04 теперь OK!), avg **~40 tok/s** (stable 39-40)
+- VRAM: ~72 GiB оба (одинаковый размер), GPU0 92.3% vs 90.0% (+1 GiB)
+- Decode speed: ~41 tok/s (сопоставимо с Q4_K_M)
+
+**Вывод:** UD-Q4_K_XL лучше по качеству (10/10 vs 9/10), стабильнее по скорости и не требует доп. VRAM.
+
+### D-036. ik_llama.cpp — нецелесообразно для production (2026-04-28)
+
+Статус: **отклонено**
+
+**Тестирование:**
+- Собран в Docker (CUDA 12.4, sm_70) — требует Docker для запуска ( libcudart.so.12 отсутствует на хосте с CUDA 13.2)
+- Decode: 40.8 tok/s vs 41 tok/s (llama.cpp) — **без преимущества**
+- PP: 75.7 tok/s (144 prompt tokens) — короткий промпт, трудно сравнить
+- Сложность поддержки: отдельная сборка, Docker wrapper, libcudart.so.12 зависимость
+
+**Вывод:** Не оправдывает сложность поддержки. Стандартный llama.cpp сопоставим по скорости.
+
+---
+
 ## Открытые вопросы
 
 - DeepSeek V4-Flash GGUF availability — перепроверить через ~1 неделю (unsloth/bartowski)
 - BM thinking overflow mitigation — протестировать с max_tokens=12000 и/или `/no_think`
 - Cold-start после рестарта V100 (~20-100s) — принят как рабочее ограничение
 - V100 prompt processing bottleneck (~25 tok/s на длинных промптах) — аппаратное ограничение (PCIe, no NVLink)
-- UD-Q4_K_XL для Qwen3.5-122B-A10B — **доступен** на HuggingFace (unsloth), ~77 GiB, 3 шарда. Стоит скачать и сравнить качество с Q4_K_M.
-- KV cache Q4_0 — протестировать экономию ~3.5 GiB vs падение качества
-- ik_llama.cpp для CC 7.0 — оценить целесообразность сборки

@@ -4,7 +4,7 @@ const LISTEN_PORT = 4001;
 const TARGET_HOST = "host.docker.internal";
 const TARGET_PORT = 8001;
 const MODEL_ALIAS = "qwen";
-const REAL_MODEL = "Qwen3.5-122B-A10B-Q4_K_M-00001-of-00003.gguf";
+const REAL_MODEL = "Qwen3.5-122B-A10B-UD-Q4_K_XL-00001-of-00003.gguf";
 
 function handleModels(res) {
   const body = JSON.stringify({

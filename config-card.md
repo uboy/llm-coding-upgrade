@@ -6,8 +6,8 @@
 
 | Параметр | Значение |
 |---|---|
-| Model | Qwen3.5-122B-A10B Q4_K_M |
-| GGUF path | `/models/Qwen3.5-122B-A10B-GGUF/Q4_K_M/Qwen3.5-122B-A10B-Q4_K_M-00001-of-00003.gguf` |
+| Model | Qwen3.5-122B-A10B UD-Q4_K_XL |
+| GGUF path | `/models/Qwen3.5-122B-A10B-GGUF/UD-Q4_K_XL/Qwen3.5-122B-A10B-UD-Q4_K_XL-00001-of-00003.gguf` |
 | Runtime | `ghcr.io/ggml-org/llama.cpp:server-cuda` |
 | Proxy alias | `qwen` (порт 4001) |
 | Proxy URL | `http://v100-host:4001/v1` |
@@ -37,26 +37,27 @@
 --override-kv qwen35moe.context_length=int:589824  # снять hard cap на n_ctx_train
 ```
 
-### VRAM (факт, 2026-04-28, parallel=2, ctx=589824, KV Q4_0)
+### VRAM (факт, 2026-04-28, parallel=2, ctx=589824, KV Q4_0, UD-Q4_K_XL)
 
 ```
-GPU0: 29,515/32,768 MiB (90.0%)  — 2,1 GiB свободно
-GPU1: 26,580/32,768 MiB (81.1%)  — 5,5 GiB свободно
-GPU2: 26,057/32,768 MiB (79.5%)  — 6,0 GiB свободно
-Total: 82,152/98,304 MiB (83.6%)
+GPU0: 30,260/32,768 MiB (92.3%)  — 1,9 GiB свободно
+GPU1: 26,890/32,768 MiB (82.0%)  — 4,6 GiB свободно
+GPU2: 26,838/32,768 MiB (81.9%)  — 4,6 GiB свободно
+Total: 83,988/98,304 MiB (85.4%)
 KV total: ~4,185 MiB (Q4_0, ctx=589824, 12 attn слоёв, 2 слота) — было 7,344 MiB при Q8_0
-Веса: ~72 GiB (Q4_K_M)
+Веса: ~72 GiB (UD-Q4_K_XL)
 ```
 
-### Скорость (production, 2026-04-24, parallel=2)
+### Скорость (production, 2026-04-28, UD-Q4_K_XL, parallel=2)
 
-- Decode: **42-47 tok/s** (ctx=589824, parallel=2, warmed)
-- Prompt (короткий): ~129 tok/s
+- Decode: **~41 tok/s** (stable, ctx=589824, parallel=2, warmed)
+- Prompt (короткий): ~75 tok/s
 - Prompt (длинный, >100K): **~25 tok/s** (PCIe bottleneck между 3 GPU)
 - Cold-start: ~20-100s (зависит от warm cache)
 
 > 23.9 tok/s — было при parallel=4, ctx=262144 (4×65536 слота).
-> 42-47 tok/s — текущая скорость при parallel=2 (в 1.8× быстрее decode).
+> 42-47 tok/s — было при Q4_K_M, parallel=2.
+> ~41 tok/s — текущая скорость при UD-Q4_K_XL, parallel=2 (10/10 OK качество).
 
 ### Архитектура
 

@@ -1,0 +1,196 @@
+{
+  "version": 2,
+  "description": "Усложнённый benchmark: multi-file, архитектурные решения, security, performance",
+  "max_tokens": 12000,
+  "evaluation_mode": "prompt_quality_review",
+  "tasks": [
+    {
+      "id": "H01",
+      "name": "Thread-safe B-tree с итератором",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": [
+        "B-tree invariants (order, depth, split/merge)",
+        "thread-safe read-write (RWLock)",
+        "serializable iterator over snapshot",
+        "bulk insert perf consideration"
+      ],
+      "prompt": "Реализуй thread-safe B-Tree на Python. Требования:\n\n1. Класс BTree(order: int) с методами:\n   - insert(key: int, value: Any)\n   - search(key: int) -> Optional[Any]\n   - delete(key: int) -> bool\n   - range_query(min_key: int, max_key: int) -> List[Tuple[int, Any]]\n   - items() -> Iterator[Tuple[int, Any]] — снапшот-итератор, консистентная копия на момент вызова\n\n2. Thread-safety:\n   - read-write lock (RWLock) — множественные читатели или один писатель\n   - range_query(items) читают без блокировки записи (через копирование)\n   - deadlock-free\n\n3. B-tree invariants:\n   - каждый узел: от order-1 до 2*order-1 ключей\n   - корень: от 1 до 2*order-1 ключей\n   - split при переполнении, merge при undeflow\n\n4. Итератор:\n   - фиксирует снапшот (копия ключей) при создании\n   - не зависит от последующих insert/delete\n\n5. Тест: создай BTree(order=3), вставь 100 ключей, удали 20, сделай range_query(10, 50) и items(). Проверь что все ключи в порядке.\n\nНапиши также юнит-тесты на:\n- вставку и дубликаты\n- удаление существующих и несуществующих\n- range_query на пустом дереве\n- многопоточное чтение (10 читателей, 1 писатель)",
+      "category": "data_structure",
+      "expected_keywords": [
+        "BTree", "Node", "split", "merge", "RWLock", "threading", "snapshot", "iterator"
+      ]
+    },
+    {
+      "id": "H02",
+      "name": "Secure credential manager",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": [
+        "Fernet encryption at rest",
+        "master key derivation (PBKDF2/Argon2)",
+        "secure memory wiping",
+        "file permission validation",
+        "auto-lock on inactivity"
+      ],
+      "prompt": "Реализуй безопасный менеджер credentials на Python.\n\nТребования:\n\n1. Класс CredentialManager(master_password: str, db_path: str, lock_timeout: int = 300)\n   - add(service: str, username: str, password: str)\n   - get(service: str) -> Optional[Tuple[str, str]]\n   - delete(service: str) -> bool\n   - list_services() -> List[str]\n   - lock() — немедленная блокировка (очистка ключа из памяти)\n\n2. Хранение:\n   - файл SQLite с шифрованием каждого значения через Fernet (cryptography)\n   - master key: PBKDF2HMAC(sha256, salt, 600000 итераций) или Argon2id\n   - каждая запись: service_name (plaintext index), encrypted_blob (Fernet)\n   - НЕ хранить master password, НЕ хранить незашифрованные credentials\n\n3. Безопасность:\n   - auto-lock: после lock_timeout секунд бездействия ключ стирается из памяти\n   - secure wipe: overwrite ключа нулями перед удалением из памяти\n   - file permissions: db_path должен иметь permission 0600\n   - защита от timing attack при сравнении service name\n\n4. Тест: создай менеджер, добавь 3 сервиса, получи 2, удали 1, list, lock, попробуй get (должен упасть).\n\nНапиши юнит-тесты на:\n- корректное шифрование/расшифровка\n- auto-lock\n- неправильный master_password -> отказ\n- попытка доступа после lock -> исключение",
+      "category": "security",
+      "expected_keywords": [
+        "Fernet", "PBKDF2", "Argon2", "SQLite", "encryption", "secure", "wipe", "auto-lock"
+      ]
+    },
+    {
+      "id": "H03",
+      "name": "Async RPC фреймворк (mini)",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": [
+        "async handler registration and dispatch",
+        "serialization/deserialization (JSON or msgpack)",
+        "client stub generation",
+        "timeout and error handling",
+        "concurrent request processing"
+      ],
+      "prompt": "Реализуй мини RPC фреймворк на Python с asyncio.\n\nТребования:\n\n1. Декоратор @rpc для регистрации методов:\n```python\nrpc_server = RPCServer(host='127.0.0.1', port=9000)\n\n@rpc_server.register\ndef add(a: int, b: int) -> int:\n    return a + b\n\n@rpc_server.register\ndef dict_to_list(d: dict) -> list:\n    return list(d.items())\n```\n\n2. Клиент:\n```python\nasync with RPCClient(host='127.0.0.1', port=9000) as client:\n    result = await client.call('add', a=1, b=2)  # -> 3\n    result = await client.call('dict_to_list', d={'x': 1})  # -> [('x', 1)]\n```\n\n3. Transport: TCP с frame-length prefixed protocol: 4 байта длину (uint32 big-endian) + payload (JSON или msgpack)\n\n4. Обработка ошибок:\n   - метод не найден -> RPCError с code=-1\n   - неверные аргументы -> RPCError с code=-2\n   - таймаут (по умолчанию 30с) -> RPCError с code=-3\n\n5. Тест: запусти сервер, зарегистрируй 3 метода (add, join, reverse), вызови все 3 с разных клиентов конкурентно.\n\nНапиши юнит-тесты:\n- корректный вызов с разными типами аргументов\n- метод не найден\n- аргументы не совпадают с сигнатурой\n- конкурентные вызовы (10 одновременных запросов)\n- обработка таймаута (метод, который спит 60с, вызвать с timeout=1)",
+      "category": "system_design",
+      "expected_keywords": [
+        "asyncio", "RPC", "TCP", "frame", "protocol", "serialization", "timeout", "concurrent"
+      ]
+    },
+    {
+      "id": "H04",
+      "name": "Multi-threaded Web server (mini)",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": [
+        "worker thread pool with queue",
+        "HTTP/1.0 parsing",
+        "static file serving with MIME types",
+        "graceful shutdown with signal handling",
+        "error pages (404, 500)"
+      ],
+      "prompt": "Реализуй минимальный multi-threaded HTTP/1.0 сервер на Python (только стандартная библиотека).\n\nТребования:\n\n1. ThreadPoolHTTPServer(host: str, port: int, root_dir: str, workers: int = 4)\n   - слушает TCP socket, принимает соединения\n   - распределяет запросы по thread pool (фиксированный размер)\n   - разбирает HTTP/1.0 запросы: GET /path HTTP/1.0\n\n2. Обработка:\n   - статические файлы из root_dir\n   - правильный MIME type по расширению (.html, .css, .js, .png, .jpg, .json, .txt)\n   - directory index: ищет index.html, если нет — 404\n   - path traversal protection: /../../../etc/passwd -> 403\n   - HEAD запросы: только заголовки без тела\n   - Content-Length, Content-Type, Last-Modified headers\n   - Connection: close (HTTP/1.0)\n\n3. Graceful shutdown:\n   - SIGINT/SIGTERM:\n   - перестать принимать новые соединения\n   - дождаться завершения активных запросов (join workers с timeout=10с)\n   - закрыть server socket\n\n4. Ошибки:\n   - 404: файл не найден\n   - 403: path traversal / permission\n   - 500: внутренняя ошибка\n   - все ошибки: body с HTML-страницей\n\n5. Тест: создай сервер с 4 workers, root_dir=/tmp/www, положи test.html. Выполни curl-запросы:\n   - GET /test.html -> 200 + содержимое\n   - GET /nonexistent -> 404\n   - GET /../../../etc/passwd -> 403\n   - HEAD /test.html -> 200, без body\n\nНапиши юнит-тесты с использованием threading + socket (без external зависимостей).",
+      "category": "networking",
+      "expected_keywords": [
+        "socket", "threading", "HTTP", "worker", "pool", "MIME", "graceful", "shutdown"
+      ]
+    },
+    {
+      "id": "H05",
+      "name": "SQL query builder с type safety",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": [
+        "fluent query builder API",
+        "type-aware column references",
+        "SQL injection prevention (parameterized)",
+        "subquery support",
+        "dialect abstraction"
+      ],
+      "prompt": "Реализуй type-safe SQL query builder на Python.\n\nТребования:\n\n1. Fluent API:\n```python\nquery = (\n    Query()\n    .select('u.id', 'u.name', 'COUNT(o.id) as order_count')\n    .from_table('users', 'u')\n    .left_join('orders', 'o', 'o.user_id = u.id')\n    .where('u.created_at >= $1', datetime(2024, 1, 1))\n    .where('u.status = $2', 'active')\n    .group_by('u.id')\n    .having('COUNT(o.id) > $3', 5)\n    .order_by('order_count', desc=True)\n    .limit(10)\n    .offset(20)\n)\n```\n\n2. Генерация:\n   - build() -> (sql_string: str, params: tuple)\n   - Для примера выше:\n   ```sql\n   SELECT u.id, u.name, COUNT(o.id) as order_count\n   FROM users u\n   LEFT JOIN orders o ON o.user_id = u.id\n   WHERE u.created_at >= $1 AND u.status = $2\n   GROUP BY u.id\n   HAVING COUNT(o.id) > $3\n   ORDER BY order_count DESC\n   LIMIT $4 OFFSET $5\n   ```\n   - params: (datetime(2024,1,1), 'active', 5, 10, 20)\n\n3. Type-aware параметры:\n   - $N — позиционные параметры (автонумерация или явная)\n   - Python тип -> SQL тип: int, float, str, bool, datetime, None, list (для IN)\n\n4. Поддержка:\n   - SELECT, INSERT, UPDATE, DELETE\n   - JOIN: INNER, LEFT, RIGHT, FULL\n   - Subquery: .where('id IN', subquery)\n   - UNION / UNION ALL\n   - EXISTS / NOT EXISTS\n   - Raw expression: .where(expression, *params)\n\n5. SQL injection prevention:\n   - ВСЕ пользовательские значения через параметры ($N)\n   - Имена таблиц и колонок проверяются на корректность (только a-z, A-Z, 0-9, _)\n   - raw expression требует явного вызова .raw()\n\n6. Dialect abstraction:\n   - BaseDialect, PostgresDialect, SQLiteDialect, MySQLDialect\n   - PostgreSQL: $1, $2\n   - SQLite: ?, ?\n   - MySQL: %s, %s\n\n7. Тест: построй 5 разных запросов, проверь SQL и params.\n\nНапиши юнит-тесты на:\n- SELECT с WHERE, GROUP BY, HAVING, ORDER BY, LIMIT\n- INSERT INTO ... VALUES\n- UPDATE ... SET ... WHERE\n- DELETE FROM ... WHERE\n- JOIN + subquery\n- SQL injection attempt через имена таблиц -> должно отклонить\n- все 3 диалекта",
+      "category": "patterns",
+      "expected_keywords": [
+        "builder", "SQL", "fluent", "parameterized", "dialect", "injection", "prevention"
+      ]
+    },
+    {
+      "id": "H06",
+      "name": "Сложный рефакторинг: найти и исправить 8 багов",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": [
+        "all 8 bugs found",
+        "no new bugs introduced",
+        "fixes are minimal and correct",
+        "explanations for each fix"
+      ],
+      "prompt": "Найди ВСЕ баги и проблемы в коде ниже. Исправь их. Для каждого бага: строка, проблема, исправление.\n\n```python\nimport threading\nimport time\nimport json\nimport os\nfrom collections import defaultdict\n\nclass UserSessionStore:\n    \"\"\"Хранилище сессий пользователей с TTL.\"\"\"\n    \n    def __init__(self, ttl_seconds=3600):\n        self._ttl = ttl_seconds\n        self._sessions = {}\n        self._locks = defaultdict(threading.Lock)\n        self._cleanup_thread = threading.Thread(target=self._cleanup_loop, daemon=True)\n        self._cleanup_thread.start()\n    \n    def create_session(self, user_id, data=None):\n        session_id = self._generate_id()\n        self._sessions[session_id] = {\n            'user_id': user_id,\n            'data': data or {},\n            'created_at': time.time(),\n            'expires_at': time.time() + self._ttl\n        }\n        return session_id\n    \n    def get_session(self, session_id):\n        with self._locks[session_id]:\n            session = self._sessions.get(session_id)\n            if session is None:\n                return None\n            if time.time() > session['expires_at']:\n                del self._sessions[session_id]\n                return None\n            session['expires_at'] = time.time() + self._ttl\n            return dict(session)\n    \n    def update_session(self, session_id, data):\n        with self._locks[session_id]:\n            session = self._sessions.get(session_id)\n            if session is None:\n                return False\n            session['data'].update(data)\n            session['expires_at'] = time.time() + self._ttl\n            return True\n    \n    def delete_session(self, session_id):\n        with self._locks[session_id]:\n            if session_id in self._sessions:\n                del self._sessions[session_id]\n                return True\n            return False\n    \n    def get_active_sessions(self):\n        now = time.time()\n        result = []\n        for sid, session in list(self._sessions.items()):\n            if now <= session['expires_at']:\n                result.append((sid, session['user_id']))\n        return result\n    \n    def save_to_disk(self, filepath):\n        with open(filepath, 'w') as f:\n            json.dump(self._sessions, f)\n    \n    def load_from_disk(self, filepath):\n        if not os.path.exists(filepath):\n            return\n        with open(filepath) as f:\n            self._sessions = json.load(f)\n    \n    def _generate_id(self):\n        import uuid\n        return str(uuid.uuid4())\n    \n    def _cleanup_loop(self):\n        while True:\n            time.sleep(60)\n            now = time.time()\n            for sid, session in list(self._sessions.items()):\n                if now > session['expires_at']:\n                    del self._sessions[sid]\n\n\nclass RateLimiter:\n    \"\"\"Token bucket rate limiter.\"\"\"\n    \n    def __init__(self, rate=10, burst=20):\n        self.rate = rate\n        self.burst = burst\n        self.tokens = defaultdict(lambda: burst)\n        self.last_refill = defaultdict(time.time)\n    \n    def allow(self, key):\n        now = time.time()\n        elapsed = now - self.last_refill[key]\n        refill = elapsed * self.rate\n        self.tokens[key] = min(self.burst, self.tokens[key] + refill)\n        self.last_refill[key] = now\n        if self.tokens[key] >= 1:\n            self.tokens[key] -= 1\n            return True\n        return False\n    \n    def reset(self, key):\n        self.tokens[key] = self.burst\n        self.last_refill[key] = time.time()\n```",
+      "category": "code_review",
+      "expected_keywords": [
+        "race", "condition", "thread-safe", "defaultdict", "Lock", "TTL", "token", "bucket"
+      ]
+    },
+    {
+      "id": "H07",
+      "name": "Реализовать Pub/Sub с exactly-once доставкой",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": [
+        "at-least-once + deduplication = exactly-once",
+        "persistent storage (SQLite)",
+        "consumer group with offset tracking",
+        "redelivery with backoff",
+        "dead letter queue"
+      ],
+      "prompt": "Реализуй Pub/Sub message broker с exactly-once доставкой на Python.\n\nТребования:\n\n1. Класс MessageBroker(db_path: str):\n   - create_topic(topic: str) -> bool\n   - publish(topic: str, message: dict) -> message_id: str\n   - subscribe(topic: str, consumer_group: str) -> subscription_id: str\n   - poll(subscription_id: str, batch_size: int = 10, timeout: float = 5.0) -> List[Message]\n   - commit(subscription_id: str, message_ids: List[str])\n   - get_dead_letters(topic: str) -> List[Message]\n\n2. Exactly-once гарантии:\n   - at-least-once: сообщение может быть получено повторно после crash/restart\n   - deduplication: broker НЕ отдаёт уже закоммиченные сообщения\n   - commit() фиксирует offset для consumer group\n   - если consumer не commit'ит за timeout.reprocess (60с) — сообщение становится доступно другим consumer'ам той же группы\n\n3. Persistent storage:\n   - SQLite с тремя таблицами: topics, messages, consumer_offsets\n   - WAL mode для конкурентного чтения\n   - все publish синхронно пишут в БД (fsync)\n\n4. Dead letter queue (DLQ):\n   - после max_deliveries=3 неудачных попыток сообщение перемещается в DLQ\n   - get_dead_letters() возвращает сообщения из DLQ\n\n5. Consumer groups:\n   - каждый consumer в группе получает уникальное подмножество сообщений (partition)\n   - offset хранится per-group, а не per-consumer\n\n6. Тест: создай топик, опубликуй 10 сообщений, запусти 2 consumer'а в одной группе, получи и закоммить 5 каждый. Проверь что повторный poll не возвращает закоммиченные. Опубликуй ещё 5, проверь что DLQ пуст.\n\nНапиши юнит-тесты:\n- publish + poll + commit cycle\n- exactly-once (два poll без commit: второе возвращает то же)\n- consumer group recovery (один consumer падает, другой подхватывает)\n- DLQ: max_deliveries превышен -> в DLQ\n- create_topic (дубликат -> False)",
+      "category": "system_design",
+      "expected_keywords": [
+        "Pub/Sub", "exactly-once", "SQLite", "consumer", "group", "offset", "DLQ", "deduplication"
+      ]
+    },
+    {
+      "id": "H08",
+      "name": "DataFrame-like library (mini pandas)",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": [
+        "columnar storage per dtype",
+        "lazy evaluation with query plan",
+        "groupby aggregations",
+        "join/merge",
+        "I/O: CSV, JSON, Parquet-like binary"
+      ],
+      "prompt": "Реализуй мини DataFrame библиотеку (аналог pandas) на Python (только стандартная библиотека).\n\nТребования:\n\n1. Класс DataFrame:\n```python\ndf = DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'salary': [50000.0, 60000.0, 70000.0]\n})\n```\n\n2. Columnar storage:\n   - каждая колонка хранится как отдельный массив (list) одного типа\n   - поддерживаемые: int, float, str, bool, datetime\n   - смешанные типы -> str\n\n3. Operations (возвращают новый DataFrame, оригинал не меняют):\n   - select(*columns) -> DataFrame\n   - filter(condition: Callable[[DataFrame], Series]) -> DataFrame\n   - groupby(columns) -> GroupBy с agg(sum, mean, count, min, max)\n   - sort(column, asc=True)\n   - join(other, on, how='inner') — inner, left, right, outer\n   - head(n=5), tail(n=5)\n   - map(column, func) -> новая колонка\n   - apply(row_func) -> Series\n\n4. Lazy evaluation (опционально, но плюс):\n   - цепочка операций не выполняется до первого materialize\n   - plan = df.select(...).filter(...).sort(...)  # ничего не выполняется\n   - result = plan.execute()  # здесь выполняется\n   - plan.explain() -> строковое представление плана\n\n5. I/O:\n   - DataFrame.read_csv(path) -> classmethod\n   - to_csv(path)\n   - read_json(path)\n   - to_json(path)\n   - read_parquet-like (бинарный columnar формат: header с schema, body — колонки)\n   - to_parquet-like(path)\n\n6. Тест: создай DataFrame с 1000 записей, сделай groupby + agg по категориям, отсортируй, сохрани в CSV и JSON.\n\nНапиши юнит-тесты:\n- создание из dict и list\n- select, filter (цепочка)\n- groupby + agg (sum, mean, count)\n- join (inner, left)\n- to_csv / read_csv roundtrip\n- sort с разными типами",
+      "category": "data_processing",
+      "expected_keywords": [
+        "DataFrame", "columnar", "groupby", "join", "lazy", "CSV", "JSON", "aggregation"
+      ]
+    },
+    {
+      "id": "H09",
+      "name": "Микро ORM с миграциями",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": [
+        "declarative model definition",
+        "CRUD operations (save, find, delete)",
+        "lazy loading with session",
+        "migration system (auto-detect schema diff)",
+        "relation mapping (FK, has_many, belongs_to)"
+      ],
+      "prompt": "Реализуй микро ORM на Python для SQLite.\n\nТребования:\n\n1. Declarative models:\n```python\nclass User(Model):\n    __table__ = 'users'\n    id = Column(int, primary_key=True)\n    name = Column(str)\n    email = Column(str, unique=True)\n    created_at = Column(datetime, default=datetime.now)\n\nclass Post(Model):\n    __table__ = 'posts'\n    id = Column(int, primary_key=True)\n    title = Column(str)\n    body = Column(str)\n    user_id = Column(int, foreign_key='users.id')\n    author = belongs_to(User, foreign_key='user_id')\n\nclass Comment(Model):\n    __table__ = 'comments'\n    id = Column(int, primary_key=True)\n    text = Column(str)\n    post_id = Column(int, foreign_key='posts.id')\n    post = belongs_to(Post, foreign_key='post_id')\n```\n\n2. Session with CRUD:\n```python\nsession = Session('test.db')\nsession.create_all()  # create tables from models\n\nuser = User(name='Alice', email='alice@example.com')\nsession.save(user)  # INSERT, sets user.id from lastrowid\n\nfound = session.find(User, id=1)  # SELECT WHERE id=1\nall_users = session.where(User, name='Alice')  # SELECT WHERE name=?\nsession.delete(found)\n```\n\n3. Lazy loading:\n```python\npost = session.find(Post, id=1)\npost.author  # lazy load: SELECT * FROM users WHERE id = post.user_id\n```\n\n4. Migration system:\n```python\nmigrator = Migrator('test.db')\nmigrator.register(User, Post, Comment)\nmigrator.migrate()  # auto: CREATE TABLE IF NOT EXISTS + ALTER TABLE ADD COLUMN\n```\n   - auto-detect: для новых моделей CREATE TABLE\n   - для новых колонок: ALTER TABLE ADD COLUMN\n   - изменённые типы: игнорировать (SQLite не поддерживает ALTER COLUMN TYPE)\n   - удалённые модели/колонки: игнорировать\n\n5. Query chaining:\n```python\nresults = (\n    session.query(Post)\n    .where('user_id = $1', 1)\n    .where('title LIKE $1', '%hello%')\n    .order_by('created_at', desc=True)\n    .limit(10)\n    .all()\n)\n```\n\n6. Тест: создай 3 модели, сделай миграцию, создай пользователя + 2 поста, найди посты пользователя через query, проверь lazy loading.\n\nНапиши юнит-тесты:\n- create_all + save + find (проверка всех колонок)\n- where с параметрами\n- delete\n- отношение belongs_to (lazy loading)\n- миграция: новая модель -> CREATE TABLE\n- миграция: новая колонка -> ALTER TABLE",
+      "category": "patterns",
+      "expected_keywords": [
+        "ORM", "Model", "Session", "migration", "lazy", "CRUD", "foreign", "key"
+      ]
+    },
+    {
+      "id": "H10",
+      "name": "Event-driven state machine",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "prompt_quality_review",
+      "checks": [
+        "declarative state/transition DSL",
+        "guards (conditions on transitions)",
+        "actions/effects on enter/exit/transition",
+        "nested/hierarchical states",
+        "event history with time travel"
+      ],
+      "prompt": "Реализуй event-driven state machine framework на Python.\n\nТребования:\n\n1. Declarative DSL:\n```python\nclass OrderFSM(StateMachine):\n    initial = 'pending'\n    \n    state('pending', enter='log_created', exit='log_cancel')\n    state('confirmed')\n    state('shipped')\n    state('delivered')\n    state('cancelled', final=True)\n    state('refunded', final=True)\n    \n    transition('confirm', 'pending', 'confirmed', guard='payment_received')\n    transition('ship', 'confirmed', 'shipped')\n    transition('deliver', 'shipped', 'delivered')\n    transition('cancel', ['pending', 'confirmed'], 'cancelled')\n    transition('refund', 'delivered', 'refunded', guard='return_accepted')\n    \n    def payment_received(self, event, context):\n        return context.get('payment_status') == 'paid'\n    \n    def return_accepted(self, event, context):\n        return context.get('return_approved', False)\n    \n    def log_created(self, event, context):\n        print(f\"Order {context.get('order_id')} created\")\n    \n    def log_cancel(self, event, context):\n        print(f\"Order {context.get('order_id')} cancelled at enter\")\n```\n\n2. Runtime:\n```python\nfsm = OrderFSM(context={'order_id': 123, 'payment_status': 'paid'})\nfsm.fire('confirm')  # pending -> confirmed (guard passes)\nfsm.fire('cancel')   # confirmed -> cancelled\nfsm.state  # 'cancelled'\nfsm.can('ship')  # False (cancelled is final)\n```\n\n3. Guards: callable, принимает (event, context) -> bool. Если False -> переход отклонён, GuardError.\n\n4. Effects:\n   - enter(state_name): вызывается при входе в состояние\n   - exit(state_name): вызывается при выходе из состояния\n   - transition(from_state, to_state): вызывается при выполнении перехода\n\n5. Hierarchical states:\n```python\nclass ComplexFSM(StateMachine):\n    initial = 'idle'\n    state('idle')\n    state('processing')\n    \n    # nested states\n    state('active')\n    state('active.validating')\n    state('active.processing')\n    state('active.completed')\n    \n    transition('start', 'idle', 'active')\n    transition('validate', 'active', 'active.validating')\n    transition('process', 'active.validating', 'active.processing')\n    transition('complete', 'active.processing', 'active.completed')\n    transition('done', 'active.completed', 'idle')\n```\n\n6. Event history:\n```python\nfsm.fire('start')\nfsm.fire('validate')\nfsm.history  # [Event('init', None, 'idle', time1),\n              #  Event('start', 'idle', 'active', time2),\n              #  Event('validate', 'active', 'active.validating', time3)]\n```\n\n7. Serialization:\n   - to_dict() -> dict (state + context)\n   - from_dict(data) -> classmethod (восстанавливает FSM)\n\n8. Тест: создай OrderFSM, пройди полный lifecycle (pending -> confirmed -> shipped -> delivered -> refunded), проверь guards.\n\nНапиши юнит-тесты:\n- нормальный lifecycle\n- guard rejection -> GuardError\n- invalid transition -> TransitionError\n- hierarchical states\n- to_dict / from_dict roundtrip\n- history content",
+      "category": "patterns",
+      "expected_keywords": [
+        "StateMachine", "transition", "guard", "effect", "hierarchical", "history", "DSL"
+      ]
+    }
+  ]
+}

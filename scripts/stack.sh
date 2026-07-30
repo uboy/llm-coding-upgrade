@@ -225,6 +225,7 @@ start_llama() {
     --log-opt max-file=3 \
     --gpus all \
     -e "CUDA_VISIBLE_DEVICES=${LLAMA_GPU_DEVICES}" \
+    ${LLAMA_ARG_FLASH_ATTN:+-e "LLAMA_ARG_FLASH_ATTN=${LLAMA_ARG_FLASH_ATTN}"} \
     -p "${LLAMA_HOST_PORT}:${LLAMA_CONTAINER_PORT}" \
     -v "${LLAMA_MODELS_HOST_DIR}:/models" \
     "${draft_volume_args[@]}" \
@@ -235,11 +236,13 @@ start_llama() {
     --n-gpu-layers "${LLAMA_GPU_LAYERS}" \
     --ctx-size "${LLAMA_CTX_SIZE}" \
     --split-mode "${LLAMA_SPLIT_MODE}" \
+    ${LLAMA_MAIN_GPU:+--main-gpu "${LLAMA_MAIN_GPU}"} \
     --tensor-split "${LLAMA_TENSOR_SPLIT}" \
     --parallel "${LLAMA_PARALLEL}" \
     --batch-size "${LLAMA_BATCH_SIZE:-2048}" \
     --ubatch-size "${LLAMA_UBATCH_SIZE:-512}" \
     --fit "${LLAMA_FIT}" \
+    ${LLAMA_FIT_TARGET:+--fit-target "${LLAMA_FIT_TARGET}"} \
     --cache-type-k "${LLAMA_CACHE_TYPE_K:-q8_0}" \
     --cache-type-v "${LLAMA_CACHE_TYPE_V:-q8_0}" \
     --reasoning "${LLAMA_REASONING:-off}" \
@@ -250,6 +253,7 @@ start_llama() {
     --min-p "${LLAMA_MIN_P:-0.0}" \
     --repeat-penalty "${LLAMA_REPEAT_PENALTY:-1.1}" \
     ${LLAMA_OVERRIDE_KV:+--override-kv "$LLAMA_OVERRIDE_KV"} \
+    ${LLAMA_NO_KV_OFFLOAD:+--no-kv-offload} \
     "${draft_args[@]}"
 }
 
@@ -352,6 +356,25 @@ logs_stack() {
   esac
 }
 
+wait_ready() {
+  local timeout="${1:-300}"
+  local elapsed=0
+  echo "Waiting for llama.cpp to become ready (timeout=${timeout}s)..."
+  while (( elapsed < timeout )); do
+    if curl -fsS --max-time 5 "http://127.0.0.1:${LLAMA_HOST_PORT}/health" >/dev/null 2>&1; then
+      echo "llama.cpp ready after ${elapsed}s"
+      return 0
+    fi
+    sleep 5
+    (( elapsed += 5 ))
+    if (( elapsed % 30 == 0 )); then
+      echo "  ... still waiting (${elapsed}s/${timeout}s)"
+    fi
+  done
+  echo "llama.cpp did not become ready within ${timeout}s" >&2
+  return 1
+}
+
 smoke_stack() {
   curl -fsS --max-time 10 "http://127.0.0.1:${PROXY_HOST_PORT}/v1/models"
   echo
@@ -363,7 +386,7 @@ smoke_stack() {
 
 usage() {
   cat <<EOF
-Usage: $(basename "$0") <up|down|restart|status|logs|smoke|render-proxy> [target]
+Usage: $(basename "$0") <up|down|restart|status|logs|smoke|wait-ready|render-proxy> [target]
 
 Commands:
   up            Recreate and start the whole stack.
@@ -372,6 +395,8 @@ Commands:
   status        Show stack container status.
   logs [target] Show logs for all, llama, proxy, or webui.
   smoke         Run a basic API smoke test via the proxy.
+  wait-ready [timeout]
+                Wait for llama.cpp /health endpoint (default 300s).
   render-proxy  Regenerate ${PROXY_FILE} from ${CONFIG_FILE}.
 EOF
 }
@@ -393,6 +418,9 @@ case "$cmd" in
     ;;
   smoke)
     smoke_stack
+    ;;
+  wait-ready)
+    wait_ready "${2:-300}"
     ;;
   render-proxy)
     render_proxy

@@ -47,7 +47,7 @@ bash /data/home/<user>/proj/llm-coding-upgrade/scripts/model-suite.sh install
 Default candidates now include:
 
 - `qwen35-122b-a10b-q4km` (current V100 prod)
-- `qwen36-35b-a3b-q3km` (current BM prod)
+- `google_gemma-4-26B-A4B-it-Q4_K_M` (current BM prod)
 
 Current storage roots:
 

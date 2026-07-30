@@ -5,7 +5,7 @@
 | Модель | URL | API key | Назначение |
 |--------|-----|---------|------------|
 | `qwen` | `http://v100-host:4001/v1` | `dummy` | Qwen3.5-122B-A10B (V100) — coding |
-| `qwen36` | `http://v100-host:4002/v1` | `dummy` | Qwen3.6-35B-A3B (bm1+2) — general + vision |
+| `gemma4` | `http://v100-host:4002/v1` | `dummy` | Gemma 4 26B-A4B (bm1+2) — general + vision |
 
 > Оба эндпоинта — OpenAI-compatible API. Никакие данные не покидают локальную сеть.
 
@@ -64,12 +64,12 @@ models:
     apiKey: dummy
     contextLength: 294912
 
-  - title: Qwen 36B (local)
+  - title: Gemma 4 26B (local)
     provider: openai
-    model: qwen36
+    model: gemma4
     apiBase: http://v100-host:4002/v1
     apiKey: dummy
-    contextLength: 327680
+    contextLength: 262144
 
 tabAutocompleteModel:
   title: Qwen Coder Autocomplete
@@ -113,12 +113,11 @@ analytics:
           "maxTokens": 8192,
           "reasoning": true
         },
-        "qwen36": {
-          "id": "qwen36",
-          "name": "Qwen 36B (local)",
-          "contextLength": 327680,
-          "maxTokens": 8192,
-          "reasoning": true
+        "gemma4": {
+          "id": "gemma4",
+          "name": "Gemma 4 26B (local)",
+          "contextLength": 262144,
+          "maxTokens": 8192
         }
       },
       "baseURL": "http://v100-host:4001/v1"
@@ -130,7 +129,7 @@ analytics:
 }
 ```
 
-> Для `qwen36` создать отдельный `opencode.json` в нужном проекте с `"baseURL": "http://v100-host:4002/v1"` и `"model": "llamacpp/qwen36"`.
+> Для `gemma4` создать отдельный `opencode.json` в нужном проекте с `"baseURL": "http://v100-host:4002/v1"` и `"model": "llamacpp/gemma4"`.
 
 ---
 
@@ -221,7 +220,7 @@ Claude Code использует Anthropic API. Для работы с лока�
 1. Открыть Jan → `Settings` → `Integrations` → `OpenAI`
 2. **API Key:** `dummy`
 3. **API URL:** `http://v100-host:4002/v1`
-4. В чате выбрать **Remote** → указать модель `qwen36`
+4. В чате выбрать **Remote** → указать модель `gemma4`
 
 ### Телеметрия
 
@@ -235,7 +234,7 @@ Claude Code использует Anthropic API. Для работы с лока�
 
 Модели доступны автоматически:
 - `qwen` — Qwen3.5-122B-A10B через прокси :4001
-- `qwen36` — Qwen3.6-35B-A3B через LB-прокси :4002 (round-robin bm1/2)
+- `gemma4` — Gemma 4 26B-A4B через LB-прокси :4002 (round-robin bm1/2)
 
 ---
 

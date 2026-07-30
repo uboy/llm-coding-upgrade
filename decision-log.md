@@ -890,9 +890,118 @@ Decode speed: ~130 tok/s. Case01/02 — код выдаётся, но с баг�
 
 ---
 
+### D-038. V100: parallel 2→1, ctx 589824→262144, убрать override-kv (2026-05-05)
+
+Статус: **принято — deployed**
+
+**Мотивация:**
+- `ctx-size=589824` превышает `n_ctx_train=262144`, требуя `override-kv` и создавая ненужную сложность
+- `parallel=2` давал 2 слота по 294912 токенов, но одновременно стек почти не используется — один пользователь занимает оба слота длинным контекстом
+- Упрощение конфигурации: ctx = native model limit, без override
+
+**Изменения:**
+- `LLAMA_PARALLEL`: 2 → 1
+- `LLAMA_CTX_SIZE`: 589824 → 262144
+- `LLAMA_OVERRIDE_KV`: удалён (не нужен при native ctx)
+
+**Результаты замеров (warm cache):**
+
+| Метрика | Было (par=2, ctx=589824) | Стало (par=1, ctx=262144) |
+|---------|--------------------------|---------------------------|
+| Decode (0-2K) | 41.3 tok/s | **42.7-47.8 tok/s** |
+| Prompt (короткий) | 124 tok/s | 103-142 tok/s |
+| VRAM total | 83,988 MiB (85.4%) | **81,542 MiB (82.9%)** |
+| Cold-start | 20-100s | ~76s |
+
+**Деградация decode по длине контекста (cold cache, 2026-05-05):**
+
+| Prompt tokens | PP tok/s | Decode tok/s | Wall time |
+|---------------|----------|-------------|-----------|
+| 15 | 103-142 | 47.8 | ~0.2s |
+| 1,619 | 340.2 | 42.2 | 6.7s |
+| 10,534 | 335.8 | 22.1 | 35s |
+| 63,605 | 255.8 | 16.1 | 251s |
+| 127,705 | 180.5 | 25.4 | 362s |
+| 256,505 | 112.6* | 14.0 | 61s* |
+
+> *256K — горячий KV cache. Cold оценочно ~33 мин.
+
+**Вывод:** Decode на коротком контексте стал быстрее (~+5-15%), VRAM снизился на ~2.4 GiB. На длинном контексте (10K+) decode деградирует до 14-22 tok/s — это аппаратное ограничение PCIe без NVLink. Конфигурация проще — нет override-kv.
+
+### D-039. Management scripts: deploy.sh, apply-model.sh (2026-05-05)
+
+Статус: **принято — implemented**
+
+**Мотивация:**
+- `stack.sh` и `lb-stack.sh` были независимы, BM1/BM2 управлялись вручную через SSH
+- Не было механизма переключения моделей из `model-suite.models.json` без запуска полного benchmark cycle
+- Не было health-aware restart — `restart` = `down+up` без ожидания загрузки модели
+- Не было rollback при неудачном переключении модели
+
+**Создано:**
+- `scripts/deploy.sh` — единый lifecycle-менеджер: restart/status/smoke/down/logs для V100 + LB + BM1/BM2 (SSH)
+- `scripts/apply-model.sh` — переключение модели из реестра: list/current/apply с rollback
+- `scripts/stack.sh` — добавлен `wait-ready [timeout]` (поллинг /health)
+
+**Добавлено в stack.env:**
+- `BM1_HOST`, `BM1_CONTAINER`, `BM2_HOST`, `BM2_CONTAINER` — SSH-доступ к bm нодам
+
+**Возможности deploy.sh:**
+- `restart` — перезапуск всех сервисов с health-waits в правильном порядке
+- `restart-local` — только локальные сервисы (V100 + LB)
+- `restart-bm` — только BM1/BM2 через SSH
+- `status` — расширенный статус с параметрами конфигурации для каждого сервиса
+- `smoke` — E2E проверка всех эндпоинтов
+
+**Возможности apply-model.sh:**
+- `list` — список моделей из `model-suite.models.json` с указанием установленных
+- `current` — текущий активный конфиг
+- `apply <id>` — полный цикл: JSON → GGUF → validate → backup → generate env → restart → wait → smoke → откат при ошибке
+
+---
+
 ## Открытые вопросы
 
 - DeepSeek V4-Flash GGUF availability — перепроверить через ~1 неделю (unsloth/bartowski)
 - ~~BM thinking overflow mitigation — протестировать с max_tokens=12000 и/или `/no_think`~~ → **resolved D-037**: max_tokens=16384 решает проблему для обеих моделей; qwen36 всё равно ограничен 3B active params
 - Cold-start после рестарта V100 (~20-100s) — принят как рабочее ограничение
-- V100 prompt processing bottleneck (~25 tok/s на длинных промптах) — аппаратное ограничение (PCIe, no NVLink)
+- V100 prompt processing bottleneck (~25 tok/s на длинных промптах) — аппаратное ограничение (PCIe, no NVLink) → **partially resolved D-038**: ubatch=2048 gives 37-42% PP improvement
+
+### D-038. V100: увеличить ubatch 512 → 2048
+
+Статус: принято
+Дата: 2026-05-07
+
+Изменение:
+`LLAMA_UBATCH_SIZE=2048` (было 512)
+
+Причина:
+Увеличивает V100 prompt processing throughput на 32-42% на промптах 10K-128K, сокращает wall time на 21-27%, не снижает decode speed, не ухудшает качество в quality suite.
+
+Evidence:
+- 10K PP: 325.6 → 445.0 tok/s (+37%)
+- 64K PP: 262.6 → 369.7 tok/s (+41%)
+- 128K PP: 189.4 → 246.9 tok/s (+30%)
+- 10K wall: 39.8s → 30.2s (-24%)
+- 64K wall: 249s → 183s (-26%)
+- 128K wall: 407s → 320s (-21%)
+- Decode: без изменений (~41 tok/s short, ~22 tok/s long)
+- Quality: 10/10 OK
+- VRAM: GPU0 89% → 92% (+1.2 GiB compute buffer). Стабильно, без OOM на 128K.
+- Эксперимент: runs/v100-opt-20260507-181221/
+- Production validation: runs/v100-ubatch2048-prod-20260507-215444/
+
+Отклонённые альтернативы:
+- flash-attn off: не стартует (обязателен на CC 7.0)
+- KV q8_0: PP медленнее, gains нет
+- tensor-split rebalance: ±0-2% PP, не стоит усложнения
+- ubatch < 512: PP хуже
+- fit=off: decode хуже (35.6 vs 41.6)
+- mixed KV q4/q8: не стартует
+
+Rollback:
+```
+sed -i 's|^LLAMA_UBATCH_SIZE=.*|LLAMA_UBATCH_SIZE=512|' stack.env
+bash scripts/deploy.sh restart-local
+bash scripts/deploy.sh smoke
+```

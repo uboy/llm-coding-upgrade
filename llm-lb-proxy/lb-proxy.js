@@ -1,8 +1,8 @@
 const http = require("http");
 
 const LISTEN_PORT = 4002;
-const MODEL_ALIAS = "qwen36";
-const REAL_MODEL = "Qwen_Qwen3.6-35B-A3B-Q3_K_M.gguf";
+const MODEL_ALIAS = "gemma4";
+const REAL_MODEL = "google_gemma-4-26B-A4B-it-Q4_K_M.gguf";
 const BACKENDS_CONFIG = [
   { host: "bm1", port: 8001 },
   { host: "bm2", port: 8001 },

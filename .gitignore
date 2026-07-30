@@ -15,3 +15,6 @@ runs/
 *.swp
 *.swo
 __pycache__/
+
+# Manual backup copies (not versioned history)
+*.bak.*

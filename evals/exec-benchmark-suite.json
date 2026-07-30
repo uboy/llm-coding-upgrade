@@ -1,0 +1,123 @@
+{
+  "version": 3,
+  "description": "Executable benchmark suite: 10 tasks with actual test pass/fail verification",
+  "max_tokens": 32000,
+  "evaluation_mode": "executable_test",
+  "notes": [
+    "Each task requires the model to generate code that passes unit tests.",
+    "Tests are run with pytest or language-specific test runners.",
+    "Tasks E01-E07 are pre-existing eval-fixtures; E08-E10 are new additions."
+  ],
+  "tasks": [
+    {
+      "id": "E01",
+      "name": "TTL Cache",
+      "language": "python",
+      "difficulty": "medium",
+      "evaluation_mode": "executable_test",
+      "fixture_dir": "eval-fixtures/case01_ttl_cache",
+      "target_file": "ttl_cache.py",
+      "code_lang": "python",
+      "test_command": "PYTHONPATH=eval-fixtures/case01_ttl_cache:$PYTHONPATH python3 -m pytest eval-fixtures/case01_ttl_cache/tests/ -v"
+    },
+    {
+      "id": "E02",
+      "name": "Template Resolver",
+      "language": "python",
+      "difficulty": "medium",
+      "evaluation_mode": "executable_test",
+      "fixture_dir": "eval-fixtures/case02_env_template",
+      "target_file": "env_template.py",
+      "code_lang": "python",
+      "test_command": "PYTHONPATH=eval-fixtures/case02_env_template:$PYTHONPATH python3 -m pytest eval-fixtures/case02_env_template/tests/ -v"
+    },
+    {
+      "id": "E03",
+      "name": "JSON Patch",
+      "language": "python",
+      "difficulty": "medium",
+      "evaluation_mode": "executable_test",
+      "fixture_dir": "eval-fixtures/case03_json_patch",
+      "target_file": "json_patch.py",
+      "code_lang": "python",
+      "test_command": "PYTHONPATH=eval-fixtures/case03_json_patch:$PYTHONPATH python3 -m pytest eval-fixtures/case03_json_patch/tests/ -v"
+    },
+    {
+      "id": "E04",
+      "name": "Sliding Window Rate Limiter",
+      "language": "python",
+      "difficulty": "medium",
+      "evaluation_mode": "executable_test",
+      "fixture_dir": "eval-fixtures/case04_rate_limiter",
+      "target_file": "rate_limiter.py",
+      "code_lang": "python",
+      "test_command": "PYTHONPATH=eval-fixtures/case04_rate_limiter:$PYTHONPATH python3 -m pytest eval-fixtures/case04_rate_limiter/tests/ -v"
+    },
+    {
+      "id": "E05",
+      "name": "C++ LRU Cache",
+      "language": "cpp",
+      "difficulty": "hard",
+      "evaluation_mode": "executable_test",
+      "fixture_dir": "eval-fixtures/case05_cpp_lru_cache",
+      "target_file": "lru_cache.hpp",
+      "code_lang": "cpp",
+      "test_command": "bash eval-fixtures/case05_cpp_lru_cache/tests/run.sh"
+    },
+    {
+      "id": "E06",
+      "name": "JS Async Retry",
+      "language": "javascript",
+      "difficulty": "hard",
+      "evaluation_mode": "executable_test",
+      "fixture_dir": "eval-fixtures/case06_js_retry_async",
+      "target_file": "retry_async.js",
+      "code_lang": "javascript",
+      "test_command": "bash eval-fixtures/case06_js_retry_async/tests/run.sh"
+    },
+    {
+      "id": "E07",
+      "name": "TypeScript Event Bus",
+      "language": "typescript",
+      "difficulty": "hard",
+      "evaluation_mode": "executable_test",
+      "fixture_dir": "eval-fixtures/case07_ts_event_bus",
+      "target_file": "event_bus.ts",
+      "code_lang": "typescript",
+      "test_command": "bash eval-fixtures/case07_ts_event_bus/tests/run.sh"
+    },
+    {
+      "id": "E08",
+      "name": "Log Parser & Anomaly Detector",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "executable_test",
+      "fixture_dir": "eval-fixtures/case08_log_analyzer",
+      "target_file": "log_analyzer.py",
+      "code_lang": "python",
+      "test_command": "PYTHONPATH=eval-fixtures/case08_log_analyzer:$PYTHONPATH python3 -m pytest eval-fixtures/case08_log_analyzer/tests/ -v"
+    },
+    {
+      "id": "E09",
+      "name": "Bug Fix — Bank Account Ledger",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "executable_test",
+      "fixture_dir": "eval-fixtures/case09_bank_ledger",
+      "target_file": "bank_ledger.py",
+      "code_lang": "python",
+      "test_command": "PYTHONPATH=eval-fixtures/case09_bank_ledger:$PYTHONPATH python3 -m pytest eval-fixtures/case09_bank_ledger/tests/ -v"
+    },
+    {
+      "id": "E10",
+      "name": "Maximum Happiness DP",
+      "language": "python",
+      "difficulty": "hard",
+      "evaluation_mode": "executable_test",
+      "fixture_dir": "eval-fixtures/case10_max_happiness",
+      "target_file": "max_happiness.py",
+      "code_lang": "python",
+      "test_command": "PYTHONPATH=eval-fixtures/case10_max_happiness:$PYTHONPATH python3 -m pytest eval-fixtures/case10_max_happiness/tests/ -v"
+    }
+  ]
+}

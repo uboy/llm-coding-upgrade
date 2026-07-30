@@ -6,9 +6,9 @@ Self-hosted LLM stack across three servers for coding and general AI workloads.
 
 | Server | IP | Model | Alias | Port | Decode Speed | Context Slot |
 |--------|-----|-------|-------|------|-------------|--------------|
-| V100 (v100-host) | v100-host | Qwen3.5-122B-A10B Q4_K_M | `qwen` | 4001/8001 | 42-47 tok/s | 294,912 (×2) |
-| bm1 | bm1 | Qwen3.6-35B-A3B Q3_K_M + mmproj | `qwen36` | 4002 | 127.1 tok/s | 327,680 |
-| bm2 | bm2 | Qwen3.6-35B-A3B Q3_K_M + mmproj | `qwen36` | 4002 | 127.1 tok/s | 327,680 |
+| V100 (v100-host) | v100-host | Qwen3.5-122B-A10B UD-Q4_K_XL | `qwen` | 4001/8001 | 42-48 tok/s | 262,144 |
+| bm1 | bm1 | Gemma 4 26B-A4B Q4_K_M | `gemma4` | 4002 | ~80 tok/s | 262,144 |
+| bm2 | bm2 | Gemma 4 26B-A4B Q4_K_M | `gemma4` | 4002 | ~80 tok/s | 262,144 |
 
 LB proxy (round-robin with health check): `:4002` -> BM1 + BM2
 
@@ -16,26 +16,32 @@ LB proxy (round-robin with health check): `:4002` -> BM1 + BM2
 
 | File | Purpose |
 |------|---------|
-| `config-card.md` | Production configuration parameters in table format |
+| `config-card.md` | Production configuration parameters + script reference |
 | `decision-log.md` | Accepted decisions + canonical sampling parameters |
 | `docs/llm-glossary.md` | Glossary of LLM parameters and architecture |
 | `docs/optimization-research.md` | Optimization research findings |
 | `docs/quality-evaluation-protocol.md` | Canonical comparison protocol for local and external coding models |
 | `stack.env` | V100 stack configuration |
 | `lb-proxy.env` | LB proxy configuration |
+| `scripts/deploy.sh` | Unified lifecycle manager (V100 + BM + LB) |
+| `scripts/apply-model.sh` | Model switching from registry with rollback |
 | `scripts/stack.sh` | V100 stack launcher |
 | `scripts/lb-stack.sh` | LB proxy launcher |
 | `scripts/v100-benchmark.sh` | Benchmark script for speed and quality testing |
+| `scripts/run-benchmark.sh` | Universal benchmark runner (prompt quality review) |
+| `scripts/run-exec-benchmark.sh` | Executable benchmark runner (generates code, runs real tests, PASS/FAIL) |
 | `client-setup.md` | AI client configuration (Cline, Continue, OpenCode, Aider...) |
 | `automation.md` | Model-suite automation for comparing candidates |
 | `evals/benchmark-suite.json` | Benchmark suite with 10 coding tasks |
+| `evals/benchmark-suite-hard.json` | Hard benchmark suite (10 advanced tasks) |
+| `evals/exec-benchmark-suite.json` | Executable benchmark suite: 10 real test suites (Python/C++/JS/TS) |
 | `evals/quality-task-catalog.json` | Unified catalog of quality-eval tasks, criteria, and comparison targets |
 
 ## Current Status
 
 ### V100 Server (v100-host)
 
-**Model:** Qwen3.5-122B-A10B Q4_K_M
+**Model:** Qwen3.5-122B-A10B UD-Q4_K_XL
 
 | Parameter | Value |
 |-----------|-------|
@@ -48,12 +54,14 @@ LB proxy (round-robin with health check): `:4002` -> BM1 + BM2
 **llama.cpp Parameters:**
 ```
 --n-gpu-layers 100
---ctx-size 589824           # 2 slots × 294912 tokens
+--ctx-size 262144           # native n_ctx_train
 --split-mode layer
 --tensor-split 1,1,1
---parallel 2
---cache-type-k q8_0
---cache-type-v q8_0
+--parallel 1
+--batch-size 2048
+--ubatch-size 2048
+--cache-type-k q4_0
+--cache-type-v q4_0
 --jinja                     # native chat template for tool-calling
 --reasoning on              # thinking-model
 --temp 0.6
@@ -61,24 +69,38 @@ LB proxy (round-robin with health check): `:4002` -> BM1 + BM2
 --top-k 20
 --min-p 0.0
 --repeat-penalty 1.0        # 1.0 = disabled (thinking models)
---override-kv qwen35moe.context_length=int:589824  # remove hard cap on n_ctx_train
 ```
 
-**VRAM Usage (2026-04-24, parallel=2, ctx=589824):**
+> `--override-kv` не используется — ctx совпадает с `n_ctx_train=262144`.
+
+**VRAM Usage (2026-05-07, ubatch=2048, parallel=1, ctx=262144, KV Q4_0, UD-Q4_K_XL):**
 ```
-GPU0: 31,412/32,768 MiB (95.8%)  — bottleneck
-GPU1: 28,042/32,768 MiB (85.6%)
-GPU2: 27,520/32,768 MiB (84.0%)
-Total: 86,974/98,304 MiB (88.5%)
-KV total: ~7,344 MiB (Q8, ctx=589824, 12 attn layers, 2 slots)
-Weights: ~72 GiB (Q4_K_M)
+GPU0: 30,180/32,768 MiB (92.1%)
+GPU1: 26,350/32,768 MiB (80.4%)
+GPU2: 26,424/32,768 MiB (80.6%)
+Total: 82,954/98,304 MiB (84.4%)
+Weights: ~72 GiB (UD-Q4_K_XL)
 ```
 
-**Performance (production, 2026-04-24, parallel=2):**
-- Decode: **42-47 tok/s** (ctx=589824, parallel=2, warmed)
-- Prompt (short): ~129 tok/s
-- Prompt (long, >100K): **~25 tok/s** (PCIe bottleneck between 3 GPUs)
-- Cold-start: ~20-100s (depends on warm cache)
+**Performance (production, 2026-05-07, ubatch=2048, parallel=1, ctx=262144, KV Q4_0):**
+
+| Prompt tokens | PP tok/s | Decode tok/s | Wall time |
+|---------------|----------|-------------|-----------|
+| 865 | 498.3 | 44.6 | 4.8s |
+| 11,785 | 445.0 | 41.6 | 30.2s |
+| 75,362 | 369.7 | 23.0 | 183s |
+| 150,702 | 246.9 | 22.3 | 320s |
+
+> V100 PP improved by increasing ubatch from 512 to 2048 (D-038).
+> Gains: 10K +37%, 64K +42%, 128K +32% over previous config. Decode unchanged.
+> Quality suite: 10/10 OK. Artifacts: runs/v100-opt-20260507-181221/
+
+Decode degradation by context:
+- 0-2K: **42-48 tok/s**
+- 10-65K: **22-28 tok/s**
+- 100-256K: **14-25 tok/s**
+
+Cold-start: ~76s
 
 **Architecture Details:**
 | Parameter | Value |
@@ -92,7 +114,7 @@ Weights: ~72 GiB (Q4_K_M)
 | KV heads (GQA) | 4 |
 | Head dim | 128 |
 | Embed dim | 2048 |
-| n_ctx_train | 262,144 (256K) — overridden to 589,824 via override-kv |
+| n_ctx_train | 262,144 (256K) |
 | Thinking | Hybrid |
 
 **Sampling Parameters (canonical, from decision-log.md):**
@@ -101,22 +123,21 @@ Weights: ~72 GiB (Q4_K_M)
 --jinja
 ```
 
-### bm1 / bm2
+### bm1
 
-**Model:** Qwen3.6-35B-A3B Q3_K_M + mmproj
+**Model:** Gemma 4 26B-A4B Q4_K_M
 
 | Parameter | Value |
 |-----------|-------|
-| LB alias | `qwen36` |
+| LB alias | `gemma4` |
 | LB URL | `http://v100-host:4002/v1` |
-| GPU | 1× RTX 3090 24GB (on each server) |
+| GPU | 1× RTX 3090 24GB |
 
 **llama.cpp Parameters:**
 ```
---n-gpu-layers 100
---ctx-size 327680
+-ngl 100
+--ctx-size 262144
 --parallel 1
---mmproj mmproj-Qwen_Qwen3.6-35B-A3B-f16.gguf
 --batch-size 1024 --ubatch-size 256
 --cache-type-k q8_0
 --cache-type-v q8_0
@@ -126,7 +147,7 @@ Weights: ~72 GiB (Q4_K_M)
 --top-p 0.95
 --top-k 20
 --min-p 0.0
---override-kv qwen35moe.context_length=int:327680  # remove hard cap on n_ctx_train
+--override-kv qwen35moe.context_length=int:327680
 ```
 
 **VRAM Usage (2026-04-24, ctx=327680):**
@@ -136,47 +157,140 @@ KV Q8 (328K):       3,400 MiB  ← 10/40 attn layers, rest are SSM
 RS buffer:            63 MiB  ← recurrent state (fixed)
 Compute buf:         ~350 MiB
 ─────────────────────────────
-BM1:  21,195 / 24,576 MiB (86.2%)
-BM2:  21,128 / 24,576 MiB (85.9%)
+Total:  21,195 / 24,576 MiB (86.2%)
 ```
 
-**Performance (production, 2026-04-24):**
-- Decode: **127.1 tok/s**
-- Prompt: **1,501 tok/s**
+**Performance (2026-05-18):**
+- Decode: **110.9 tok/s**
+- Prompt: **300.0 tok/s**
+- Quality (10 coding tasks): **8/10 OK** (2 overflow — thinking chain)
+- Exec Benchmark (10 real test suites): **6/10 PASS**
+
+### bm2
+
+**Model:** Gemma 4 26B-A4B Q4_K_M
+
+| Parameter | Value |
+|-----------|-------|
+| LB alias | `gemma4` |
+| LB URL | `http://v100-host:4002/v1` |
+| GPU | 1× RTX 3090 24GB |
+
+**llama.cpp Parameters:**
+```
+-ngl 999
+--ctx-size 262144
+--parallel 1
+--batch-size 1024 --ubatch-size 256
+--cache-type-k q8_0
+--cache-type-v q8_0
+--reasoning off
+--jinja
+--temp 0.6
+--top-p 0.95
+--top-k 20
+--min-p 0.0
+--repeat-penalty 1.0
+```
+
+**VRAM Usage (2026-05-18, ctx=262144):**
+```
+Weights (CUDA0):  20,328 / 24,576 MiB (82.7%)
+```
+
+**Performance (2026-05-18):**
+- Decode: **121.6 tok/s**
+- Prompt: **409.3 tok/s**
+- Quality (10 standard + 10 hard coding tasks): **20/20 OK**
+- Exec Benchmark (10 real test suites): **7/10 PASS**
+  - ✅ Python: Template Resolver, JSON Patch, Rate Limiter
+  - ✅ C++: LRU Cache, ✅ JavaScript: Async Retry, ✅ TypeScript: Event Bus
+  - ✅ Bug-fix: Bank Ledger (3 planted bugs found & fixed)
+  - ❌ TTL Cache, ❌ Log Analyzer, ❌ Max Happiness DP
 
 **Architecture Details:**
 | Parameter | Value |
 |-----------|-------|
-| Total params | 35B |
-| Active params | 3B |
-| Type | MoE (4/32 experts) + SSM |
-| Blocks | 40 |
-| Attention layers | 10 (interval=4) |
-| SSM layers | 30 |
-| KV heads (GQA) | 2 |
-| Head dim | 256 |
-| Embed dim | 3072 |
-| n_ctx_train | 262,144 (256K) — overridden to 327,680 via override-kv |
-| Thinking | Hybrid |
-| Vision | mmproj |
+| Total params | 26B |
+| Active params | 4B |
+| Type | MoE |
+| Thinking | — (disabled, Fast mode) |
+| Vision | ✅ mmproj available |
 
-### Comparison Table (V100 vs BM)
+### Comparison Table (V100 vs BM1 vs BM2)
 
-| Metric | V100 (122B Q4) | BM (35B Q3) |
-|--------|----------------|-------------|
-| Decode tok/s | **23.9** | **127.1** |
-| Prompt tok/s | ~128 (est.) | **1,501** |
-| Quality | 9/10 | 6/10 |
-| Thinking overflow | 1/10 tasks | 4/10 tasks |
-| Context per slot | 294,912 | 327,680 |
-| Parallel slots | 2 | 1 |
-| Vision | No | Yes (mmproj) |
+| Metric | V100 (122B UD-Q4_K_XL) | BM1 (Qwen3.6 35B) | BM2 (Gemma4 26B) |
+|--------|------------------------|-------------------|-------------------|
+| Decode tok/s | **42-48** | 110.9 | **121.6** |
+| Prompt tok/s | 247-445 | 300.0 | **409.3** |
+| Quality (10 tasks) | 9/10 | 8/10 (2 overflow) | **10/10** |
+| Exec Benchmark (10 real tests) | — | 6/10 | **7/10** |
+| Context per slot | 262,144 | 327,680 | 262,144 |
+| VRAM usage | 84% | 86% | **83%** |
+| Thinking | on | on | off |
+| Vision | No | Yes (mmproj) | Yes (mmproj) |
+
+## Management Scripts
+
+### deploy.sh — Unified Lifecycle Manager
+
+Manages all services: V100 stack + LB proxy + BM1/BM2 (via SSH).
+
+```bash
+bash scripts/deploy.sh restart            # Restart everything with health-waits
+bash scripts/deploy.sh restart-local      # Local services only (V100 + LB)
+bash scripts/deploy.sh restart-bm         # BM1/BM2 via SSH only
+bash scripts/deploy.sh status             # Status with config params for all services
+bash scripts/deploy.sh smoke              # End-to-end smoke on all endpoints
+bash scripts/deploy.sh down               # Stop all local services
+bash scripts/deploy.sh logs [target]      # Logs: v100, lb, bm1, bm2, all
+```
+
+Options: `--env FILE` (alternate stack.env), `--lb-env FILE` (alternate lb-proxy.env)
+
+Restart order with health waits:
+1. V100 llama.cpp -> wait `/health` (up to 5 min)
+2. BM1/BM2 llama.cpp -> wait `/health` via SSH (up to 5 min)
+3. LB proxy -> wait port ready (up to 30s)
+
+### apply-model.sh — Model Switching
+
+Reads `model-suite.models.json`, generates config, restarts, validates, rolls back on failure.
+
+```bash
+bash scripts/apply-model.sh list              # List available models
+bash scripts/apply-model.sh current           # Show current active config
+bash scripts/apply-model.sh apply <model-id>  # Switch model (with rollback)
+bash scripts/apply-model.sh apply <id> --no-rollback  # No rollback on failure
+```
+
+Full `apply` cycle: parse JSON -> resolve GGUF -> validate -> backup -> generate stack.env -> restart -> wait-ready -> smoke -> rollback on failure.
+
+### stack.sh — V100 Stack
+
+```bash
+bash scripts/stack.sh up                      # Start stack
+bash scripts/stack.sh down                    # Stop stack
+bash scripts/stack.sh restart                 # Restart stack
+bash scripts/stack.sh status                  # Container status
+bash scripts/stack.sh smoke                   # Smoke test via proxy
+bash scripts/stack.sh wait-ready [timeout]    # Wait for llama.cpp /health
+bash scripts/stack.sh logs [target]           # Logs: all, llama, proxy, webui
+bash scripts/stack.sh render-proxy            # Regenerate proxy.js from config
+```
+
+### lb-stack.sh — LB Proxy
+
+```bash
+bash scripts/lb-stack.sh up / down / restart / status / smoke / logs
+```
 
 ## Experiments
 
 | File | Description |
 |------|-------------|
 | `experiments/model-comparison-full-2026-04-24.md` | Full benchmark V100 vs BM (10 tasks + speed) |
+| `experiments/gemma4-vs-qwen36-bm2-2026-05-18.md` | Gemma 4 vs Qwen 3.6 exec test benchmark (10 real test suites, 7/10 vs 6/10) |
 | `experiments/quality-eval-results-2026-04-28.md` | Current local quality matrix + placeholders for Codex/Claude |
 | `experiments/v100-minimax-m2.7-2026-04-24.md` | MiniMax M2.7 test (not recommended) |
 | `experiments/v100-model-comparison-2026-04-23.md` | Comparison of 5 models (wave 1) |
@@ -185,8 +299,7 @@ BM2:  21,128 / 24,576 MiB (85.9%)
 
 ## Known Limitations
 
-- **V100 prompt processing:** Long prompts (>100K) are processed at ~25 tok/s. A 265K prompt takes ~3 hours.
-  Mitigation: Redirect long prompts to BM (1501 tok/s).
+- **V100 long context degradation:** Decode speed drops with context length — 42-48 tok/s at 0-2K, 16-22 tok/s at 10-65K, 14-25 tok/s at 100-256K. Caused by PCIe bottleneck between 3 GPUs (no NVLink). For long prompt processing, redirect to BM (471 tok/s PP).
 - **V100 NVLink:** Tesla V100 PCIe supports NVLink 2.0 hardware-wise, but physical bridges are absent.
 - **BM thinking overflow:** On complex tasks, the thinking chain consumes the entire token budget, leaving content = 0.
   Mitigation: Use `/no_think` or set max_tokens >= 12000.
@@ -199,21 +312,18 @@ BM2:  21,128 / 24,576 MiB (85.9%)
 ## Quick Start Commands
 
 ```bash
-# Stack status
-bash scripts/stack.sh status
-bash scripts/lb-stack.sh status
-curl http://localhost:4002/lb-status
+# Full status of all services
+bash scripts/deploy.sh status
 
-# Restart V100 stack
-bash scripts/stack.sh restart
-bash scripts/stack.sh smoke
+# Restart everything
+bash scripts/deploy.sh restart
 
-# Restart LB proxy
-bash scripts/lb-stack.sh restart
+# Switch V100 model
+bash scripts/apply-model.sh list
+bash scripts/apply-model.sh apply <model-id>
 
-# Check endpoints
-curl http://v100-host:4001/v1/models
-curl http://v100-host:4002/v1/models
+# Smoke test all endpoints
+bash scripts/deploy.sh smoke
 ```
 
 ## Monitoring New Models
@@ -269,24 +379,7 @@ bash scripts/v100-benchmark.sh --speed-only
 bash scripts/v100-benchmark.sh --quality-only --task Q01
 
 # Custom endpoint
-bash scripts/v100-benchmark.sh --endpoint http://v100-host:4002/v1 --model qwen36
-```
-
-## Operational Commands
-
-```bash
-# V100 stack
-bash /data/home/<user>/proj/llm-coding-upgrade/scripts/stack.sh restart
-bash /data/home/<user>/proj/llm-coding-upgrade/scripts/stack.sh status
-bash /data/home/<user>/proj/llm-coding-upgrade/scripts/stack.sh smoke
-
-# LB proxy
-bash /data/home/<user>/proj/llm-coding-upgrade/scripts/lb-stack.sh restart
-curl http://localhost:4002/lb-status
-
-# Check endpoints
-curl http://v100-host:4001/v1/models
-curl http://v100-host:4002/v1/models
+bash scripts/v100-benchmark.sh --endpoint http://v100-host:4002/v1 --model gemma4
 ```
 
 ## Client Configuration
@@ -303,7 +396,7 @@ See `client-setup.md` for detailed setup of AI clients:
 
 **Endpoints:**
 - `qwen`: `http://v100-host:4001/v1` — Qwen3.5-122B (3× V100) — coding
-- `qwen36`: `http://v100-host:4002/v1` — Qwen3.6-35B (bm1+2) — general + vision
+- `gemma4`: `http://v100-host:4002/v1` — Gemma 4 26B-A4B (bm1+2) — general + vision
 
 Both endpoints are OpenAI-compatible. No data leaves the local network.
 
@@ -320,12 +413,12 @@ Both endpoints are OpenAI-compatible. No data leaves the local network.
 ### V100 Stack (stack.env)
 
 Key parameters:
-- `LLAMA_MODEL_PATH`: `/models/Qwen3.5-122B-A10B-GGUF/Q4_K_M/Qwen3.5-122B-A10B-Q4_K_M-00001-of-00003.gguf`
-- `LLAMA_CTX_SIZE`: 589824
-- `LLAMA_PARALLEL`: 2
+- `LLAMA_MODEL_PATH`: `/models/Qwen3.5-122B-A10B-GGUF/UD-Q4_K_XL/Qwen3.5-122B-A10B-UD-Q4_K_XL-00001-of-00003.gguf`
+- `LLAMA_CTX_SIZE`: 262144
+- `LLAMA_PARALLEL`: 1
 - `LLAMA_BATCH_SIZE`: 2048
 - `LLAMA_UBATCH_SIZE`: 2048
-- `LLAMA_OVERRIDE_KV`: `qwen35moe.context_length=int:589824`
+- `LLAMA_CACHE_TYPE_K/V`: q4_0
 - Sampling: `temp=0.6`, `top-p=0.95`, `top-k=20`, `min-p=0.0`, `repeat-penalty=1.0`
 
 ### LB Proxy (lb-proxy.env)
@@ -357,13 +450,13 @@ Source of truth for sampling parameters. Any disputes should refer to this secti
 ```
 Reasoning: Official Qwen3 thinking model parameters. Generates `<think/>` blocks. DO NOT add `--repeat-penalty`. DO NOT set `--reasoning off`.
 
-### Qwen3.6-35B-A3B (bm1/2, alias `qwen36`, port 4002)
+### Gemma 4 26B-A4B (bm1/2, alias `gemma4`, port 4002)
 ```
 --temp 0.6  --top-p 0.95  --top-k 20  --min-p 0.0
---reasoning on
+--repeat-penalty 1.0
 --jinja
 ```
-Reasoning: Official Qwen3 thinking model parameters. Generates `reasoning_content`. DO NOT add `--repeat-penalty`.
+Reasoning: No specific reasoning configuration. Generates `reasoning_content` by default.
 
 ## Automation
 

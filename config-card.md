@@ -1,6 +1,6 @@
 # Config Card — Производственная конфигурация
 
-> Актуально на 2026-04-28. За sampling-параметрами — в `decision-log.md`.
+> Актуально на 2026-05-07. За sampling-параметрами — в `decision-log.md`.
 
 ## V100 — Qwen3.5-122B-A10B (кодинг + reasoning)
 
@@ -19,13 +19,13 @@
 
 ```
 --n-gpu-layers 100
---ctx-size 589824           # 2 слота × 294912 токенов
+--ctx-size 262144           # native n_ctx_train модели
 --batch-size 2048           # PP throughput
---ubatch-size 512           # micro-batch (безопасный для VRAM)
+--ubatch-size 2048          # PP throughput (+37-42% vs 512, D-038)
 --split-mode layer
 --tensor-split 1,1,1
---parallel 2
---cache-type-k q4_0         # -3.5 GiB vs Q8_0, без потери качества
+--parallel 1
+--cache-type-k q4_0         # экономия VRAM vs Q8_0, без потери качества
 --cache-type-v q4_0
 --jinja                     # нативный chat template для tool-calling
 --reasoning on              # thinking-модель
@@ -34,30 +34,64 @@
 --top-k 20
 --min-p 0.0
 --repeat-penalty 1.0        # 1.0 = отключен (thinking models)
---override-kv qwen35moe.context_length=int:589824  # снять hard cap на n_ctx_train
 ```
 
-### VRAM (факт, 2026-04-28, parallel=2, ctx=589824, KV Q4_0, UD-Q4_K_XL)
+> Примечание: `--override-kv` не используется — `ctx-size` совпадает с `n_ctx_train=262144`.
+
+### VRAM (факт, 2026-05-07, ubatch=2048, parallel=1, ctx=262144, KV Q4_0, UD-Q4_K_XL)
 
 ```
-GPU0: 30,260/32,768 MiB (92.3%)  — 1,9 GiB свободно
-GPU1: 26,890/32,768 MiB (82.0%)  — 4,6 GiB свободно
-GPU2: 26,838/32,768 MiB (81.9%)  — 4,6 GiB свободно
-Total: 83,988/98,304 MiB (85.4%)
-KV total: ~4,185 MiB (Q4_0, ctx=589824, 12 attn слоёв, 2 слота) — было 7,344 MiB при Q8_0
+GPU0: 30,180/32,768 MiB (92.1%)  — 2,3 GiB свободно
+GPU1: 26,350/32,768 MiB (80.4%)  — 6,1 GiB свободно
+GPU2: 26,424/32,768 MiB (80.6%)  — 6,1 GiB свободно
+Total: 82,954/98,304 MiB (84.4%)
 Веса: ~72 GiB (UD-Q4_K_XL)
+Compute buffer: ~9.8 GiB (GPU0, ubatch=2048)
 ```
 
-### Скорость (production, 2026-04-28, UD-Q4_K_XL, parallel=2, smoke-verified)
+> GPU0 increased from 89% to 92% vs ubatch=512. Additional compute buffer ~+1.2 GiB.
+> Stable, no OOM observed on 128K prompts. Production decision D-038.
 
-- Decode: **41.3 tok/s** (smoke-verified)
-- Prompt (короткий): **124 tok/s** (smoke-verified)
-- Prompt (длинный, >100K): **~25 tok/s** (PCIe bottleneck между 3 GPU)
-- Cold-start: ~20-100s (зависит от warm cache)
+### Скорость (2026-05-07, ubatch=2048, UD-Q4_K_XL, parallel=1, ctx=262144, KV Q4_0)
 
-> 23.9 tok/s — было при parallel=4, ctx=262144 (4×65536 слота).
-> 42-47 tok/s — было при Q4_K_M, parallel=2.
-> ~41 tok/s — текущая скорость при UD-Q4_K_XL, parallel=2 (10/10 OK качество).
+**Короткий контекст (cold cache):**
+
+| Prompt tokens | PP tok/s | Decode tok/s | Wall time |
+|---------------|----------|-------------|-----------|
+| 865 | 498.3 | 44.6 | 4.8s |
+| 11,785 | 445.0 | 41.6 | 30.2s |
+
+**Длинный контекст (cold cache, один запрос):**
+
+| Prompt tokens | PP tok/s | Decode tok/s | Wall time |
+|---------------|----------|-------------|-----------|
+| 75,362 | 369.7 | 23.0 | 183s |
+| 150,702 | 246.9 | 22.3 | 320s |
+
+**PP improvement vs ubatch=512 (D-038):**
+
+| Context | PP before | PP after | Delta |
+|---------|-----------|----------|-------|
+| 10K | 325.6 tok/s | 445.0 tok/s | +37% |
+| 64K | 262.6 tok/s | 369.7 tok/s | +41% |
+| 128K | 189.4 tok/s | 246.9 tok/s | +30% |
+
+**Wall time improvement:**
+- 10K: 39.8s → 30.2s (-24%)
+- 64K: 249s → 183s (-26%)
+- 128K: 407s → 320s (-21%)
+
+> *256K тест с горячим KV cache (предыдущие запросы прогрели кэш). Cold 256K оценочно ~33 мин при ~130 tok/s PP.
+
+**Деградация decode по контексту:**
+- 0-2K: **42-48 tok/s** (полная скорость)
+- 10-65K: **16-22 tok/s** (PCIe bottleneck между 3 GPU)
+- 100-256K: **14-25 tok/s**
+
+- Cold-start: ~76s (cold cache, загрузка модели)
+
+> Ранее 41.3 tok/s при parallel=2, ctx=589824 — decode стал быстрее на коротком контексте.
+> Ранее 23.9 tok/s при parallel=4, ctx=262144 (4×65536 слота).
 
 ### Архитектура
 
@@ -72,7 +106,7 @@ KV total: ~4,185 MiB (Q4_0, ctx=589824, 12 attn слоёв, 2 слота) — б
 | KV heads (GQA) | 4 |
 | Head dim | 128 |
 | Embed dim | 2048 |
-| n_ctx_train | 262,144 (256K) — переопределён на 589,824 через override-kv |
+| n_ctx_train | 262,144 (256K) |
 | Thinking | ✅ hybrid |
 
 ---
@@ -80,23 +114,22 @@ KV total: ~4,185 MiB (Q4_0, ctx=589824, 12 attn слоёв, 2 слота) — б
 ## bm1 / bm2 — Qwen3.6-35B-A3B (general + vision)
 
 | Параметр | Значение |
-|---|---|
-| Model | Qwen3.6-35B-A3B Q3_K_M + mmproj |
-| GGUF path | `/models/Qwen3.6-35B-A3B-GGUF/Qwen_Qwen3.6-35B-A3B-Q3_K_M.gguf` |
-| mmproj | `/models/Qwen3.6-35B-A3B-GGUF/mmproj-Qwen_Qwen3.6-35B-A3B-f16.gguf` |
-| HF repo | `bartowski/Qwen_Qwen3.6-35B-A3B-GGUF` |
+|---|---|---|
+| Model | Gemma 4 26B-A4B Q4_K_M |
+| GGUF path | `/models/gemma4/google_gemma-4-26B-A4B-it-Q4_K_M.gguf` |
+| mmproj | не используется (текстовая модель) |
+| HF repo | `google/gemma-4-26B-A4B-it-GGUF` |
 | Runtime | `ghcr.io/ggml-org/llama.cpp:server-cuda` |
-| LB alias | `qwen36` |
+| LB alias | `gemma4` |
 | LB URL | `http://v100-host:4002/v1` |
 | GPU | 1× RTX 3090 24GB (на каждом сервере) |
 
 ### llama.cpp параметры
 
 ```
---n-gpu-layers 100
---ctx-size 327680
+-ngl 100 (BM1) / -ngl 999 (BM2)
+--ctx-size 262144
 --parallel 1
---mmproj mmproj-Qwen_Qwen3.6-35B-A3B-f16.gguf
 --batch-size 1024 --ubatch-size 256
 --cache-type-k q8_0
 --cache-type-v q8_0
@@ -146,45 +179,95 @@ BM2:  21,128 / 24,576 MiB (85.9%)
 
 ---
 
-## Операционные команды
+## Управляющие скрипты
+
+### deploy.sh — Единый lifecycle-менеджер
+
+Управляет всеми сервисами: V100 стек + LB proxy + BM1/BM2 (через SSH).
 
 ```bash
-# V100 стек
-bash /data/home/<user>/proj/llm-coding-upgrade/scripts/stack.sh restart
-bash /data/home/<user>/proj/llm-coding-upgrade/scripts/stack.sh status
-bash /data/home/<user>/proj/llm-coding-upgrade/scripts/stack.sh smoke
-
-# LB proxy
-bash /data/home/<user>/proj/llm-coding-upgrade/scripts/lb-stack.sh restart
-curl http://localhost:4002/lb-status
-
-# Проверка эндпоинтов
-curl http://v100-host:4001/v1/models
-curl http://v100-host:4002/v1/models
+bash scripts/deploy.sh restart            # Перезапуск всего (V100 + BM + LB) с health-waits
+bash scripts/deploy.sh restart-local      # Только локальные сервисы (V100 + LB)
+bash scripts/deploy.sh restart-bm         # Только BM1/BM2 через SSH
+bash scripts/deploy.sh status             # Статус всех сервисов с параметрами
+bash scripts/deploy.sh smoke              # E2E smoke на всех эндпоинтах
+bash scripts/deploy.sh down               # Остановить все локальные сервисы
+bash scripts/deploy.sh logs [target]      # Логи: v100, lb, bm1, bm2, all
 ```
 
-## Клиентская конфигурация
+Порядок restart с health-waits:
+1. V100 llama.cpp → wait `/health` (до 5 мин)
+2. BM1/BM2 llama.cpp → wait `/health` через SSH (до 5 мин)
+3. LB proxy → wait port ready (до 30с)
 
-См. `client-setup.md`.
+### apply-model.sh — Переключение модели
+
+Читает `model-suite.models.json`, генерирует конфиг, перезапускает стек, валидирует, откатывает при ошибке.
+
+```bash
+bash scripts/apply-model.sh list              # Список доступных моделей
+bash scripts/apply-model.sh current           # Текущий активный конфиг
+bash scripts/apply-model.sh apply <model-id>  # Переключить модель (с rollback)
+```
+
+Полный цикл `apply`: parse JSON → resolve GGUF → validate → backup config → generate stack.env → restart → wait-ready → smoke → откат при ошибке.
+
+### stack.sh — Управление V100 стеком
+
+Управляет локальными контейнерами: llama.cpp, proxy, Open WebUI.
+
+```bash
+bash scripts/stack.sh up             # Запустить стек
+bash scripts/stack.sh down           # Остановить стек
+bash scripts/stack.sh restart        # Перезапустить стек
+bash scripts/stack.sh status         # Статус контейнеров
+bash scripts/stack.sh smoke          # Smoke test через proxy
+bash scripts/stack.sh wait-ready [timeout]  # Ждать готовности llama.cpp
+bash scripts/stack.sh logs [target]  # Логи: all, llama, proxy, webui
+bash scripts/stack.sh render-proxy   # Перегенерировать proxy.js из конфига
+```
+
+### lb-stack.sh — Управление LB proxy
+
+Управляет контейнером load balancer proxy.
+
+```bash
+bash scripts/lb-stack.sh up             # Запустить LB proxy
+bash scripts/lb-stack.sh down           # Остановить
+bash scripts/lb-stack.sh restart        # Перезапустить
+bash scripts/lb-stack.sh status         # Статус
+bash scripts/lb-stack.sh smoke          # Smoke test
+bash scripts/lb-stack.sh logs           # Логи
+```
+
+### Конфигурационные файлы
+
+| Файл | Назначение |
+|------|-----------|
+| `stack.env` | V100 стек: llama.cpp, proxy, Open WebUI, BM SSH |
+| `lb-proxy.env` | LB proxy: backends, model alias |
+| `model-suite.models.json` | Реестр моделей с runtime-параметрами |
+| `model-suite.evals.json` | Конфигурация benchmark suite |
 
 ---
 
-## Smoke check (2026-04-28)
+## Smoke check (2026-05-05)
 
 ```
 V100 (qwen, :4001)
-  llamacpp-server-p8001  Up 6 min  (healthy)
-  llm-proxy-p4001        Up 6 min
-  open-webui-p3001       Up 6 min  (healthy)
+  llamacpp-server-p8001  Up  (healthy)
+  llm-proxy-p4001        Up
+  open-webui-p3001       Up  (healthy)
   Model: Qwen3.5-122B-A10B-UD-Q4_K_XL
-  Decode: 41.3 tok/s | PP: 124 tok/s
-  VRAM: 84.0/98.3 GiB (85.4%) | GPU temp: 73/67/64 C
+  Decode: 42.7-47.8 tok/s | PP: 103-170 tok/s
+  VRAM: 81.5/98.3 GiB (82.9%)
+  Config: parallel=1, ctx=262144, KV Q4_0
 
-LB (qwen36, :4002)
+LB (gemma4, :4002)
   BM1 (bm1:8001)  healthy
   BM2 (bm2:8001)  healthy
-  Model: Qwen3.6-35B-A3B-Q3_K_M
-  Decode: 140.7 tok/s | PP: 471 tok/s
+  Model: google_gemma-4-26B-A4B-it-Q4_K_M.gguf
+  Decode: ~80 tok/s
 
 Все сервисы работают без проблем.
 ```

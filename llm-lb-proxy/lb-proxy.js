@@ -4,8 +4,9 @@ const LISTEN_PORT = 4002;
 const MODEL_ALIAS = "gemma4";
 const REAL_MODEL = "google_gemma-4-26B-A4B-it-Q4_K_M.gguf";
 const BACKENDS_CONFIG = [
-  { host: "bm1", port: 8001 },
-  { host: "bm2", port: 8001 },
+  { host: "v100-host", port: 8001 },   // V100 GPU0
+  { host: "v100-host", port: 8011 },   // V100 GPU1
+  { host: "bm2", port: 8001 },   // BM2
 ];
 
 const HEALTH_INTERVAL_MS = 15000;

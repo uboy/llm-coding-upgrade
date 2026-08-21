@@ -271,3 +271,32 @@ LB (gemma4, :4002)
 
 Все сервисы работают без проблем.
 ```
+
+---
+
+## BM1/BM2 (RTX 3090 24 GB) — Qwen3.8-27B + DFlash 2 (протестировано 2026-08-20, НЕ продакшн)
+
+> Рецепты проверены E2E на bm1/bm2 (эпик <internal> local-llm-inference, фазы 1–5).
+> Полные данные: `experiments/dflash2-qwen38-27b-2026-08-20.md`. Продакшн-стек не тронут.
+
+| Параметр | Значение |
+|---|---|
+| Runtime | `llamacpp-dflash2:pr27342` (llama.cpp PR #27342, `--spec-type draft-dflash`) |
+| Target | `unsloth/Qwen3.8-27B-GGUF` UD-Q4_K_M (15.32 GiB) или UD-Q6_K (20.47 GiB) |
+| Drafter | `incoai/Qwen3.8-27B-DFlash2-GGUF` Q4_K_M (1.07 GiB) |
+| KV-кэш | q4_0 у target И драфтера (`-ctk/-ctv/-ctkd/-ctvd q4_0`) |
+| Веса/скрипты | bm1 `~/proj/dflash2-bench/`; bm2 — Q4+drafter + longctx-скрипты |
+
+### Проверенные конфигурации
+
+| Рецепт | Конфиг | Скорость | Примечание |
+|---|---|---|---|
+| R1 скорость | Q4, ctx ≤16k, n-max 5 (код) / 2 (проза) | 95 tk/s (код) / 61 (проза) | 2.23× к baseline |
+| R2 качество | Q6_K, ctx ≤8k, n-max 2 | 50.3 tk/s | +49%, VRAM 23 630 MiB |
+| R3 длинный ctx | Q4, ctx ≤144k, n-max 5, KV q4_0 | 51.5–52.6 tk/s | 2.54×; потолок DFlash |
+
+### Границы (24 GB, одна 3090)
+- ctx ≥160k + DFlash: крэш на первом decode (ленивая аллокация спек-буферов).
+- ctx 200k: только baseline без DFlash (17.3 tk/s, VRAM 20 259 MiB).
+- Lossless НЕ побайтовый (расхождения на близких токенах при temp 0).
+- n-max обязательно под тип нагрузки: дефолт 7 — хуже всех (до −4.4%).

@@ -1,0 +1,1 @@
+Write a Python function implementing binary search on a sorted list, with type hints, docstring, and three unit tests using assert.

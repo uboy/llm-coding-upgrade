@@ -1,0 +1,12 @@
+FROM nvidia/cuda:12.4.0-devel-ubuntu22.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends git cmake build-essential ca-certificates && rm -rf /var/lib/apt/lists/*
+WORKDIR /src
+COPY llama-cpp-turboquant /src
+RUN cmake -B build -DCMAKE_BUILD_TYPE=Release -DGGML_CUDA=ON \
+    -DGGML_CUDA_ARCHITECTURES=70 \
+    -DCMAKE_SHARED_LINKER_FLAGS="-L/usr/local/cuda/targets/x86_64-linux/lib/stubs -lcuda" \
+    -DCMAKE_EXE_LINKER_FLAGS="-L/usr/local/cuda/targets/x86_64-linux/lib/stubs -lcuda" \
+ && cmake --build build -j "$(nproc)"
+EXPOSE 8080
+ENTRYPOINT ["/src/build/bin/llama-server"]

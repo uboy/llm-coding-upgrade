@@ -1,8 +1,8 @@
-# Config Card — Производственная конфигурация
+# Config Card - Производственная конфигурация
 
-> Актуально на 2026-05-07. За sampling-параметрами — в `decision-log.md`.
+> Актуально на 2026-05-07. За sampling-параметрами - в `decision-log.md`.
 
-## V100 — Qwen3.5-122B-A10B (кодинг + reasoning)
+## V100 - Qwen3.5-122B-A10B (кодинг + reasoning)
 
 | Параметр | Значение |
 |---|---|
@@ -36,14 +36,14 @@
 --repeat-penalty 1.0        # 1.0 = отключен (thinking models)
 ```
 
-> Примечание: `--override-kv` не используется — `ctx-size` совпадает с `n_ctx_train=262144`.
+> Примечание: `--override-kv` не используется - `ctx-size` совпадает с `n_ctx_train=262144`.
 
 ### VRAM (факт, 2026-05-07, ubatch=2048, parallel=1, ctx=262144, KV Q4_0, UD-Q4_K_XL)
 
 ```
-GPU0: 30,180/32,768 MiB (92.1%)  — 2,3 GiB свободно
-GPU1: 26,350/32,768 MiB (80.4%)  — 6,1 GiB свободно
-GPU2: 26,424/32,768 MiB (80.6%)  — 6,1 GiB свободно
+GPU0: 30,180/32,768 MiB (92.1%)  - 2,3 GiB свободно
+GPU1: 26,350/32,768 MiB (80.4%)  - 6,1 GiB свободно
+GPU2: 26,424/32,768 MiB (80.6%)  - 6,1 GiB свободно
 Total: 82,954/98,304 MiB (84.4%)
 Веса: ~72 GiB (UD-Q4_K_XL)
 Compute buffer: ~9.8 GiB (GPU0, ubatch=2048)
@@ -90,7 +90,7 @@ Compute buffer: ~9.8 GiB (GPU0, ubatch=2048)
 
 - Cold-start: ~76s (cold cache, загрузка модели)
 
-> Ранее 41.3 tok/s при parallel=2, ctx=589824 — decode стал быстрее на коротком контексте.
+> Ранее 41.3 tok/s при parallel=2, ctx=589824 - decode стал быстрее на коротком контексте.
 > Ранее 23.9 tok/s при parallel=4, ctx=262144 (4×65536 слота).
 
 ### Архитектура
@@ -111,7 +111,7 @@ Compute buffer: ~9.8 GiB (GPU0, ubatch=2048)
 
 ---
 
-## bm1 / bm2 — Qwen3.6-35B-A3B (general + vision)
+## bm1 / bm2 - Qwen3.6-35B-A3B (general + vision)
 
 | Параметр | Значение |
 |---|---|---|
@@ -173,7 +173,7 @@ BM2:  21,128 / 24,576 MiB (85.9%)
 | KV heads (GQA) | 2 |
 | Head dim | 256 |
 | Embed dim | 3072 |
-| n_ctx_train | 262,144 (256K) — переопределён на 327,680 через override-kv |
+| n_ctx_train | 262,144 (256K) - переопределён на 327,680 через override-kv |
 | Thinking | ✅ hybrid |
 | Vision | ✅ mmproj |
 
@@ -181,7 +181,7 @@ BM2:  21,128 / 24,576 MiB (85.9%)
 
 ## Управляющие скрипты
 
-### deploy.sh — Единый lifecycle-менеджер
+### deploy.sh - Единый lifecycle-менеджер
 
 Управляет всеми сервисами: V100 стек + LB proxy + BM1/BM2 (через SSH).
 
@@ -200,7 +200,7 @@ bash scripts/deploy.sh logs [target]      # Логи: v100, lb, bm1, bm2, all
 2. BM1/BM2 llama.cpp → wait `/health` через SSH (до 5 мин)
 3. LB proxy → wait port ready (до 30с)
 
-### apply-model.sh — Переключение модели
+### apply-model.sh - Переключение модели
 
 Читает `model-suite.models.json`, генерирует конфиг, перезапускает стек, валидирует, откатывает при ошибке.
 
@@ -212,7 +212,7 @@ bash scripts/apply-model.sh apply <model-id>  # Переключить моде�
 
 Полный цикл `apply`: parse JSON → resolve GGUF → validate → backup config → generate stack.env → restart → wait-ready → smoke → откат при ошибке.
 
-### stack.sh — Управление V100 стеком
+### stack.sh - Управление V100 стеком
 
 Управляет локальными контейнерами: llama.cpp, proxy, Open WebUI.
 
@@ -227,7 +227,7 @@ bash scripts/stack.sh logs [target]  # Логи: all, llama, proxy, webui
 bash scripts/stack.sh render-proxy   # Перегенерировать proxy.js из конфига
 ```
 
-### lb-stack.sh — Управление LB proxy
+### lb-stack.sh - Управление LB proxy
 
 Управляет контейнером load balancer proxy.
 
@@ -274,7 +274,7 @@ LB (gemma4, :4002)
 
 ---
 
-## BM1/BM2 (RTX 3090 24 GB) — Qwen3.8-27B + DFlash 2 (протестировано 2026-08-20, НЕ продакшн)
+## BM1/BM2 (RTX 3090 24 GB) - Qwen3.8-27B + DFlash 2 (протестировано 2026-08-20, НЕ продакшн)
 
 > Рецепты проверены E2E на bm1/bm2 (эпик <internal> local-llm-inference, фазы 1–5).
 > Полные данные: `experiments/dflash2-qwen38-27b-2026-08-20.md`. Продакшн-стек не тронут.
@@ -285,7 +285,7 @@ LB (gemma4, :4002)
 | Target | `unsloth/Qwen3.8-27B-GGUF` UD-Q4_K_M (15.32 GiB) или UD-Q6_K (20.47 GiB) |
 | Drafter | `incoai/Qwen3.8-27B-DFlash2-GGUF` Q4_K_M (1.07 GiB) |
 | KV-кэш | q4_0 у target И драфтера (`-ctk/-ctv/-ctkd/-ctvd q4_0`) |
-| Веса/скрипты | bm1 `~/proj/dflash2-bench/`; bm2 — Q4+drafter + longctx-скрипты |
+| Веса/скрипты | bm1 `~/proj/dflash2-bench/`; bm2 - Q4+drafter + longctx-скрипты |
 
 ### Проверенные конфигурации
 
@@ -299,4 +299,16 @@ LB (gemma4, :4002)
 - ctx ≥160k + DFlash: крэш на первом decode (ленивая аллокация спек-буферов).
 - ctx 200k: только baseline без DFlash (17.3 tk/s, VRAM 20 259 MiB).
 - Lossless НЕ побайтовый (расхождения на близких токенах при temp 0).
-- n-max обязательно под тип нагрузки: дефолт 7 — хуже всех (до −4.4%).
+- n-max обязательно под тип нагрузки: дефолт 7 - хуже всех (до −4.4%).
+
+## BM/big-model 2026-08 (фазы 6-10 <internal>, эксперименты; продакшн не включено)
+
+| Рецепт | Конфиг | Скорость | Примечание |
+|---|---|---|---|
+| R4 драйвер 3090 | Qwen3.8-27B UD-Q4_K_M, turbo3 KV + draft-mtp n-max 2, ctx 131072 | 62.3 tk/s @8k / 43.7 @104k | рекомендован владельцем как постоянный; образ llamacpp-turboquant:fork |
+| R5 V100 качество | UD-Q6_K + draft-mtp 2 (32 GB) | 16.5 @8k, 26.5 @124k | Q6 влезает только на 32GB; turbo3 на V100 по скорости невыгоден |
+| R6 консультант | DeepSeek-V4-Flash Q4 155GB + dspark, --n-cpu-moe, V100-хост | 6.0/8.7 tk/s, prefill 71-74 т/с | 284B, mmap; эксперименты, не стенд |
+
+Веса-инвентарь после чистки 2026-08-23: bm1 = UD-Q4_K_M (16.5G) + образы/скрипты;
+v100-host = UD-Q6_K (21G) + gpt-oss-120b-GGUF (60G) + DeepSeek Q4/dspark (155G).
+Скрипты воспроизведения: experiments/scripts-bigmodel-2026-08/.

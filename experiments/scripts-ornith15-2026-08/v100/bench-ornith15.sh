@@ -5,10 +5,14 @@
 #  - тайминги берутся также из docker-лога llama-server (prompt eval time / eval time).
 # Сервер должен быть поднят serve-ornith15.sh; имя контейнера ornith15-run.
 # Результат: строки BENCH в stdout + полный лог сервера сохранён.
+# G-D3: reasoning-модель сжигает max_tokens на think -> бюджет >= 3500
+# (иначе content пустой/обрезанный). Переопределяется вторым аргументом... нет,
+# третьим: bench-ornith15.sh <port> <label> [max_tokens].
 set -euo pipefail
 
 PORT="${1:?port required}"
 LABEL="${2:-run}"
+MAXTOK="${3:-4096}"
 NAME=ornith15-run
 B=/data/home/<user>/proj/bigmodel-bench-v100
 
@@ -19,7 +23,7 @@ bench_once() {
   t0=$(date +%s.%N)
   curl -s "http://localhost:$PORT/v1/chat/completions" \
     -H 'Content-Type: application/json' \
-    -d "{\"model\":\"ornith\",\"messages\":[{\"role\":\"user\",\"content\":$(python3 -c "import json,sys;print(json.dumps(sys.argv[1]))" "$PROMPT")}],\"temperature\":0.6,\"top_p\":0.95,\"top_k\":20,\"max_tokens\":1024,\"stream\":true}" \
+    -d "{\"model\":\"ornith\",\"messages\":[{\"role\":\"user\",\"content\":$(python3 -c "import json,sys;print(json.dumps(sys.argv[1]))" "$PROMPT")}],\"temperature\":0.6,\"top_p\":0.95,\"top_k\":20,\"max_tokens\":$MAXTOK,\"stream\":true}" \
     > "$out_file"
   t1=$(date +%s.%N)
   local chunks answer_tokens

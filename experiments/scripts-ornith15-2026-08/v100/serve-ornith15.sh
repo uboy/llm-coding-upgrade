@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # serve-ornith15.sh <quant> <ctx> [gpu] [extra llama-server flags...]
-#   quant: q4km | q6k | q8  (файл в /models/ornith15/)
+#   quant: q4km | q6k | q8 | q9 (файл в /models/ornith15/; q9 = 9B бонус)
 # Поднимает Ornith-1.5-35B-A3B-GGUF на одной V100 (по умолчанию GPU2),
 # порт 8081, health-wait, печатает VRAM. Эксперимент фазы 11 <internal>
 # (local-llm-inference), прод-стек не трогает.
@@ -16,7 +16,8 @@ case "${1:-}" in
   q4km) F=Ornith-1.5-35B-Q4_K_M.gguf ;;
   q6k)  F=Ornith-1.5-35B-Q6_K.gguf ;;
   q8)   F=Ornith-1.5-35B-Q8_0.gguf ;;
-  *) echo "usage: $0 q4km|q6k|q8 <ctx> [gpu] [extra...]"; exit 2 ;;
+  q9)   F=Ornith-1.5-9B-Q6_K.gguf ;;
+  *) echo "usage: $0 q4km|q6k|q8|q9 <ctx> [gpu] [extra...]"; exit 2 ;;
 esac
 QUANT="$1"; CTX="${2:?ctx required}"; GPU="${3:-2}"; shift 3 || { shift 2; GPU=2; }
 EXTRA="$*"

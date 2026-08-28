@@ -1,0 +1,46 @@
+{
+  "suite": "exam-suite-v2",
+  "version": "0.1.0-seed",
+  "created": "2026-08-28",
+  "notes": "Seed-набор для обкатки харнеса. Полный сьют (4 языка x классы задач + longtail) авторится в фазах 2-3 по карточке task-llm-coding-upgrade-exam-suite-v2. Анти-контаминация: задачи сочинены 2026-08-28, KVLite - вымышленный формат; перед приёмкой каждой задачи - веб-проверка на совпадение с публичными датасетами.",
+  "tasks": [
+    {
+      "id": "py-apicontract-kvlite",
+      "kind": "executable",
+      "language": "python",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-apicontract-kvlite/README.md",
+      "target_file": "tasks/py-apicontract-kvlite/kvlite.py",
+      "test_cmd": ["python", "-m", "pytest", "tasks/py-apicontract-kvlite/tests/", "-q", "--no-header"],
+      "reference": "tasks/py-apicontract-kvlite/reference/kvlite.py",
+      "contamination_check": "формат выдуман (KVLite), 2026-08-28 веб-поиск: совпадений с публичными датасетами нет"
+    },
+    {
+      "id": "longtail-dot-undirected-edge",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "easy",
+      "created": "2026-08-28",
+      "question": "В языке разметки Graphviz DOT: каким токеном (последовательностью символов) соединяются узлы НЕнаправленного ребра? Ответ дай в виде ровно этого токена.",
+      "accepted_answers": ["--"],
+      "answer_note": "направленное -> , ненаправленное -- ; источник: Graphviz DOT grammar",
+      "contamination_check": "2026-08-28: факт устойчивый, проверяемый по офиц. документации Graphviz"
+    },
+    {
+      "id": "longtail-mqtt-packetid-not-found",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "В MQTT v5 какой код причины (Reason Code) означает 'Packet Identifier not found' и в каких пакетах он возвращается? Ответ: шестнадцатеричный код и имена пакетов.",
+      "accepted_answers": ["0x92", "146"],
+      "answer_extra_required": ["PUBREL", "PUBCOMP"],
+      "answer_note": "0x92 (146), PUBREL/PUBCOMP; источник: OASIS MQTT 5.0, таблица Reason Code",
+      "contamination_check": "2026-08-28: подтверждено по OASIS MQTT v5.0 spec (docs.oasis-open.org)"
+    }
+  ]
+}

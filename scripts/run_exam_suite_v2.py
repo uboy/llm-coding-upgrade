@@ -94,14 +94,29 @@ def ask_http(base_url: str, model: str, prompt: str, timeout: int,
 
 # --- задачи -------------------------------------------------------------------
 
+def build_code_prompt(task: dict, spec: str) -> str:
+    """README + прикреплённые файлы: контракт C++ (solution.h), битый код bugfix/refactor."""
+    parts = [spec]
+    suite_root = ROOT / "evals" / "exam-suite-v2"
+    for rel in task.get("attach", []):
+        f = suite_root / rel
+        if f.exists():
+            content = f.read_text(encoding="utf-8")
+            parts.append("--- начало файла " + rel + " (содержимое как есть) ---\n" + content + "\n--- конец файла " + rel + " ---")
+    if task.get("class") == "bugfix":
+        parts.append("Выше в разделе broken - текущий код с багом. Найди и исправь дефект, сохранив публичный контракт.")
+    elif task.get("class") == "refactor":
+        parts.append("Выше в разделе broken - работающий, но плохо структурированный код. Отрефактори его, сохранив поведение, и выполни структурные требования спецификации. Сдача кода, идентичного broken, не засчитывается.")
+    target_name = Path(task["target_file"]).name
+    parts.append(CODE_SUFFIX + " Имя файла: " + target_name)
+    return "\n\n".join(parts)
+
+
 def run_executable_task(task: dict, ask) -> dict:
     prompt_file = ROOT / "evals" / "exam-suite-v2" / task["prompt_file"]
     spec = prompt_file.read_text(encoding="utf-8")
     target = ROOT / "evals" / "exam-suite-v2" / task["target_file"]
-    prompt = (
-        f"Реализуй модуль по спецификации ниже.\n\n{spec}\n\n{CODE_SUFFIX} "
-        f"Имя файла: {target.name}"
-    )
+    prompt = build_code_prompt(task, spec)
     t0 = time.time()
     try:
         raw = ask(prompt)
@@ -220,15 +235,25 @@ def main() -> int:
         print(f"[{task['id']}] {status} ({r.get('wall_s')}s) {r.get('summary', r.get('answer_excerpt', '') or r.get('error', ''))[:80]}")
 
     passed = sum(1 for r in results if r["passed"])
+    selected = [t for t in suite["tasks"] if not only or only.search(t["id"])]
+    by_lang = {}
+    for t, r in zip(selected, results):
+        agg = by_lang.setdefault(t["language"], [0, 0])
+        agg[1] += 1
+        if r["passed"]:
+            agg[0] += 1
     report = {
         "suite": suite["suite"], "suite_version": suite["version"],
         "backend": args.backend, "model": args.model,
         "timestamp": stamp, "results": results,
         "score": f"{passed}/{len(results)}",
+        "per_language": {k: str(v[0]) + "/" + str(v[1]) for k, v in sorted(by_lang.items())},
     }
     (out_dir / "results.json").write_text(
         json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"\nSCORE: {passed}/{len(results)}  -> {out_dir / 'results.json'}")
+    print("")
+    print(f"SCORE: {passed}/{len(results)}  per-language: {report['per_language']}")
+    print(f"-> {out_dir / 'results.json'}")
     return 0
 
 

@@ -1639,13 +1639,13 @@
       "class": "longtail-knowledge",
       "difficulty": "easy",
       "created": "2026-08-28",
-      "question": "ISO 8601: какая одиночная буква-разделитель обязательна между датой и временем?",
+      "question": "ISO 8601: назовите кодовую точку Unicode (формат U+XXXX) латинской буквы, служащей обязательным разделителем между датой и временем.",
       "accepted_answers": [
-        "t",
-        "буква t"
+        "u+0054",
+        "0054"
       ],
-      "answer_note": "T; ISO 8601",
-      "contamination_check": "T; ISO 8601"
+      "answer_note": "U+0054 (латинская T); ISO 8601",
+      "contamination_check": "U+0054 (латинская T); ISO 8601"
     },
     {
       "id": "kn-18-isbn13-weights",
@@ -1749,15 +1749,15 @@
       "class": "longtail-knowledge",
       "difficulty": "medium",
       "created": "2026-08-28",
-      "question": "WebSocket (RFC 6455): какой бит заголовка фрейма обязательно установлен у фреймов от клиента к серверу и что этот бит означает? Ответ: имя бита + краткое действие.",
+      "question": "WebSocket (RFC 6455): какой бит заголовка установлен в фреймах, отправляемых КЛИЕНТОМ, и чему равно его значение? Ответ: имя бита и число.",
       "accepted_answers": [
         "mask"
       ],
       "answer_extra_required": [
-        "маскир"
+        "1"
       ],
-      "answer_note": "MASK=1, полезная нагрузка маскируется; RFC 6455 §5.1-5.3",
-      "contamination_check": "MASK=1, полезная нагрузка маскируется; RFC 6455 §5.1-5.3"
+      "answer_note": "MASK = 1 в клиентских фреймах; RFC 6455 5.1",
+      "contamination_check": "MASK = 1 в клиентских фреймах; RFC 6455 5.1"
     },
     {
       "id": "kn-25-http2-settings",

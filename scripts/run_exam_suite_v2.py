@@ -159,6 +159,7 @@ def main() -> int:
     ap.add_argument("--timeout", type=int, default=600)
     ap.add_argument("--out-dir", default=str(DEFAULT_OUT))
     ap.add_argument("--proxy", default="", help="http://host:port, для гео-запертых моделей opencode")
+    ap.add_argument("--only", default="", help="regex: выполнять только совпавшие id задач")
     args = ap.parse_args()
 
     if args.backend == "http" and not args.base_url:
@@ -176,8 +177,13 @@ def main() -> int:
     out_dir = Path(args.out_dir) / f"{stamp}-{args.model.replace('/', '_')}"
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    import re as _re
+    only = _re.compile(args.only) if args.only else None
+
     results = []
     for task in suite["tasks"]:
+        if only and not only.search(task["id"]):
+            continue
         if task["kind"] == "executable":
             r = run_executable_task(task, ask)
         else:

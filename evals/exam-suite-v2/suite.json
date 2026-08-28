@@ -1,9 +1,1042 @@
 {
   "suite": "exam-suite-v2",
-  "version": "0.1.0-seed",
+  "version": "1.0.0",
   "created": "2026-08-28",
-  "notes": "Seed-набор для обкатки харнеса. Полный сьют (4 языка x классы задач + longtail) авторится в фазах 2-3 по карточке task-llm-coding-upgrade-exam-suite-v2. Анти-контаминация: задачи сочинены 2026-08-28, KVLite - вымышленный формат; перед приёмкой каждой задачи - веб-проверка на совпадение с публичными датасетами.",
+  "notes": "Полный сьют: исполняемые задачи на 4 языках (алгоритмы, контракты API, состояние, bugfix, рефакторинг, специфика языка) + вопросы на редкие знания. Анти-контаминация: спецификации авторские от 2026-08-28, вымышленные домены; знания - стабильные факты из RFC/стандартов с источником в answer_note. Скоринг knowledge: вхождение обязательных элементов, лишние не штрафуются.",
   "tasks": [
+    {
+      "id": "cpp-algo-01",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-algo-01/README.md",
+      "target_file": "tasks/cpp-algo-01/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-algo-01"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-algo-02",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-algo-02/README.md",
+      "target_file": "tasks/cpp-algo-02/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-algo-02"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-algo-03",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-algo-03/README.md",
+      "target_file": "tasks/cpp-algo-03/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-algo-03"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-algo-04",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-algo-04/README.md",
+      "target_file": "tasks/cpp-algo-04/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-algo-04"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-api-01",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-api-01/README.md",
+      "target_file": "tasks/cpp-api-01/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-api-01"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-api-02",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-api-02/README.md",
+      "target_file": "tasks/cpp-api-02/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-api-02"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-api-03",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-api-03/README.md",
+      "target_file": "tasks/cpp-api-03/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-api-03"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-api-04",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-api-04/README.md",
+      "target_file": "tasks/cpp-api-04/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-api-04"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-bug-01",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "bugfix",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-bug-01/README.md",
+      "target_file": "tasks/cpp-bug-01/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-bug-01"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-bug-02",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "bugfix",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-bug-02/README.md",
+      "target_file": "tasks/cpp-bug-02/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-bug-02"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-bug-03",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "bugfix",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-bug-03/README.md",
+      "target_file": "tasks/cpp-bug-03/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-bug-03"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-lang-01",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "lang-specific",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-lang-01/README.md",
+      "target_file": "tasks/cpp-lang-01/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-lang-01"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-lang-02",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "lang-specific",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-lang-02/README.md",
+      "target_file": "tasks/cpp-lang-02/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-lang-02"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-ref-01",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "refactor",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-ref-01/README.md",
+      "target_file": "tasks/cpp-ref-01/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-ref-01"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-ref-02",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "refactor",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-ref-02/README.md",
+      "target_file": "tasks/cpp-ref-02/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-ref-02"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-state-01",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "stateful",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-state-01/README.md",
+      "target_file": "tasks/cpp-state-01/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-state-01"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-state-02",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "stateful",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-state-02/README.md",
+      "target_file": "tasks/cpp-state-02/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-state-02"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "cpp-state-03",
+      "kind": "executable",
+      "language": "cpp",
+      "class": "stateful",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/cpp-state-03/README.md",
+      "target_file": "tasks/cpp-state-03/solution.cpp",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "cpp",
+        "cpp-state-03"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-algo-01",
+      "kind": "executable",
+      "language": "java",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-algo-01/README.md",
+      "target_file": "tasks/java-algo-01/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-algo-01"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-algo-02",
+      "kind": "executable",
+      "language": "java",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-algo-02/README.md",
+      "target_file": "tasks/java-algo-02/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-algo-02"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-algo-03",
+      "kind": "executable",
+      "language": "java",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-algo-03/README.md",
+      "target_file": "tasks/java-algo-03/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-algo-03"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-algo-04",
+      "kind": "executable",
+      "language": "java",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-algo-04/README.md",
+      "target_file": "tasks/java-algo-04/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-algo-04"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-api-01",
+      "kind": "executable",
+      "language": "java",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-api-01/README.md",
+      "target_file": "tasks/java-api-01/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-api-01"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-api-02",
+      "kind": "executable",
+      "language": "java",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-api-02/README.md",
+      "target_file": "tasks/java-api-02/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-api-02"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-api-03",
+      "kind": "executable",
+      "language": "java",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-api-03/README.md",
+      "target_file": "tasks/java-api-03/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-api-03"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-api-04",
+      "kind": "executable",
+      "language": "java",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-api-04/README.md",
+      "target_file": "tasks/java-api-04/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-api-04"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-bug-01",
+      "kind": "executable",
+      "language": "java",
+      "class": "bugfix",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-bug-01/README.md",
+      "target_file": "tasks/java-bug-01/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-bug-01"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-bug-02",
+      "kind": "executable",
+      "language": "java",
+      "class": "bugfix",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-bug-02/README.md",
+      "target_file": "tasks/java-bug-02/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-bug-02"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-bug-03",
+      "kind": "executable",
+      "language": "java",
+      "class": "bugfix",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-bug-03/README.md",
+      "target_file": "tasks/java-bug-03/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-bug-03"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-lang-01",
+      "kind": "executable",
+      "language": "java",
+      "class": "lang-specific",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-lang-01/README.md",
+      "target_file": "tasks/java-lang-01/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-lang-01"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-lang-02",
+      "kind": "executable",
+      "language": "java",
+      "class": "lang-specific",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-lang-02/README.md",
+      "target_file": "tasks/java-lang-02/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-lang-02"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-ref-01",
+      "kind": "executable",
+      "language": "java",
+      "class": "refactor",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-ref-01/README.md",
+      "target_file": "tasks/java-ref-01/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-ref-01"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-ref-02",
+      "kind": "executable",
+      "language": "java",
+      "class": "refactor",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-ref-02/README.md",
+      "target_file": "tasks/java-ref-02/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-ref-02"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-state-01",
+      "kind": "executable",
+      "language": "java",
+      "class": "stateful",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-state-01/README.md",
+      "target_file": "tasks/java-state-01/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-state-01"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-state-02",
+      "kind": "executable",
+      "language": "java",
+      "class": "stateful",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-state-02/README.md",
+      "target_file": "tasks/java-state-02/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-state-02"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "java-state-03",
+      "kind": "executable",
+      "language": "java",
+      "class": "stateful",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/java-state-03/README.md",
+      "target_file": "tasks/java-state-03/Task.java",
+      "test_cmd": [
+        "python",
+        "runners.py",
+        "java",
+        "java-state-03"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-algo-01",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-algo-01/README.md",
+      "target_file": "tasks/js-algo-01/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-algo-01/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-algo-02",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-algo-02/README.md",
+      "target_file": "tasks/js-algo-02/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-algo-02/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-algo-03",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-algo-03/README.md",
+      "target_file": "tasks/js-algo-03/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-algo-03/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-algo-04",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-algo-04/README.md",
+      "target_file": "tasks/js-algo-04/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-algo-04/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-api-01",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-api-01/README.md",
+      "target_file": "tasks/js-api-01/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-api-01/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-api-02",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-api-02/README.md",
+      "target_file": "tasks/js-api-02/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-api-02/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-api-03",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-api-03/README.md",
+      "target_file": "tasks/js-api-03/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-api-03/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-api-04",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-api-04/README.md",
+      "target_file": "tasks/js-api-04/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-api-04/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-bug-01",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "bugfix",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-bug-01/README.md",
+      "target_file": "tasks/js-bug-01/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-bug-01/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-bug-02",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "bugfix",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-bug-02/README.md",
+      "target_file": "tasks/js-bug-02/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-bug-02/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-bug-03",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "bugfix",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-bug-03/README.md",
+      "target_file": "tasks/js-bug-03/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-bug-03/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-lang-01",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "lang-specific",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-lang-01/README.md",
+      "target_file": "tasks/js-lang-01/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-lang-01/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-lang-02",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "lang-specific",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-lang-02/README.md",
+      "target_file": "tasks/js-lang-02/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-lang-02/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-ref-01",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "refactor",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-ref-01/README.md",
+      "target_file": "tasks/js-ref-01/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-ref-01/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-ref-02",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "refactor",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-ref-02/README.md",
+      "target_file": "tasks/js-ref-02/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-ref-02/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-state-01",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "stateful",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-state-01/README.md",
+      "target_file": "tasks/js-state-01/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-state-01/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-state-02",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "stateful",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-state-02/README.md",
+      "target_file": "tasks/js-state-02/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-state-02/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "js-state-03",
+      "kind": "executable",
+      "language": "javascript",
+      "class": "stateful",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/js-state-03/README.md",
+      "target_file": "tasks/js-state-03/solution.mjs",
+      "test_cmd": [
+        "node",
+        "--test",
+        "tasks/js-state-03/tests/test_a.mjs"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-algo-01",
+      "kind": "executable",
+      "language": "python",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-algo-01/README.md",
+      "target_file": "tasks/py-algo-01/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-algo-01/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-algo-02",
+      "kind": "executable",
+      "language": "python",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-algo-02/README.md",
+      "target_file": "tasks/py-algo-02/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-algo-02/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-algo-03",
+      "kind": "executable",
+      "language": "python",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-algo-03/README.md",
+      "target_file": "tasks/py-algo-03/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-algo-03/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-algo-04",
+      "kind": "executable",
+      "language": "python",
+      "class": "algo-ds",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-algo-04/README.md",
+      "target_file": "tasks/py-algo-04/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-algo-04/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-api-02",
+      "kind": "executable",
+      "language": "python",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-api-02/README.md",
+      "target_file": "tasks/py-api-02/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-api-02/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-api-03",
+      "kind": "executable",
+      "language": "python",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-api-03/README.md",
+      "target_file": "tasks/py-api-03/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-api-03/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-api-04",
+      "kind": "executable",
+      "language": "python",
+      "class": "api-contract",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-api-04/README.md",
+      "target_file": "tasks/py-api-04/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-api-04/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
     {
       "id": "py-apicontract-kvlite",
       "kind": "executable",
@@ -13,34 +1046,629 @@
       "created": "2026-08-28",
       "prompt_file": "tasks/py-apicontract-kvlite/README.md",
       "target_file": "tasks/py-apicontract-kvlite/kvlite.py",
-      "test_cmd": ["python", "-m", "pytest", "tasks/py-apicontract-kvlite/tests/", "-q", "--no-header"],
-      "reference": "tasks/py-apicontract-kvlite/reference/kvlite.py",
-      "contamination_check": "формат выдуман (KVLite), 2026-08-28 веб-поиск: совпадений с публичными датасетами нет"
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-apicontract-kvlite/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
     },
     {
-      "id": "longtail-dot-undirected-edge",
+      "id": "py-bug-01",
+      "kind": "executable",
+      "language": "python",
+      "class": "bugfix",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-bug-01/README.md",
+      "target_file": "tasks/py-bug-01/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-bug-01/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-bug-02",
+      "kind": "executable",
+      "language": "python",
+      "class": "bugfix",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-bug-02/README.md",
+      "target_file": "tasks/py-bug-02/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-bug-02/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-bug-03",
+      "kind": "executable",
+      "language": "python",
+      "class": "bugfix",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-bug-03/README.md",
+      "target_file": "tasks/py-bug-03/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-bug-03/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-lang-01",
+      "kind": "executable",
+      "language": "python",
+      "class": "lang-specific",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-lang-01/README.md",
+      "target_file": "tasks/py-lang-01/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-lang-01/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-lang-02",
+      "kind": "executable",
+      "language": "python",
+      "class": "lang-specific",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-lang-02/README.md",
+      "target_file": "tasks/py-lang-02/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-lang-02/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-ref-01",
+      "kind": "executable",
+      "language": "python",
+      "class": "refactor",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-ref-01/README.md",
+      "target_file": "tasks/py-ref-01/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-ref-01/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-ref-02",
+      "kind": "executable",
+      "language": "python",
+      "class": "refactor",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-ref-02/README.md",
+      "target_file": "tasks/py-ref-02/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-ref-02/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-state-01",
+      "kind": "executable",
+      "language": "python",
+      "class": "stateful",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-state-01/README.md",
+      "target_file": "tasks/py-state-01/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-state-01/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-state-02",
+      "kind": "executable",
+      "language": "python",
+      "class": "stateful",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-state-02/README.md",
+      "target_file": "tasks/py-state-02/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-state-02/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "py-state-03",
+      "kind": "executable",
+      "language": "python",
+      "class": "stateful",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "prompt_file": "tasks/py-state-03/README.md",
+      "target_file": "tasks/py-state-03/solution.py",
+      "test_cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "tasks/py-state-03/tests/",
+        "-q",
+        "--no-header"
+      ],
+      "contamination_check": "спецификация авторская (вымышленный домен), дата создания 2026-08-28; штатная веб-проверка на совпадение с публичными датасетами - фаза 3"
+    },
+    {
+      "id": "kn-01-dot-undirected",
       "kind": "knowledge",
       "language": "text",
       "class": "longtail-knowledge",
       "difficulty": "easy",
       "created": "2026-08-28",
-      "question": "В языке разметки Graphviz DOT: каким токеном (последовательностью символов) соединяются узлы НЕнаправленного ребра? Ответ дай в виде ровно этого токена.",
-      "accepted_answers": ["--"],
-      "answer_note": "направленное -> , ненаправленное -- ; источник: Graphviz DOT grammar",
-      "contamination_check": "2026-08-28: факт устойчивый, проверяемый по офиц. документации Graphviz"
+      "question": "В языке разметки Graphviz DOT: каким токеном соединяются узлы НЕнаправленного ребра? Ответ ровно этим токеном.",
+      "accepted_answers": [
+        "--"
+      ],
+      "answer_note": "-- (двойное тире); направленное -> ; источник: Graphviz DOT grammar",
+      "contamination_check": "-- (двойное тире); направленное -> ; источник: Graphviz DOT grammar"
     },
     {
-      "id": "longtail-mqtt-packetid-not-found",
+      "id": "kn-02-mqtt-packetid",
       "kind": "knowledge",
       "language": "text",
       "class": "longtail-knowledge",
       "difficulty": "medium",
       "created": "2026-08-28",
-      "question": "В MQTT v5 какой код причины (Reason Code) означает 'Packet Identifier not found' и в каких пакетах он возвращается? Ответ: шестнадцатеричный код и имена пакетов.",
-      "accepted_answers": ["0x92", "146"],
-      "answer_extra_required": ["PUBREL", "PUBCOMP"],
-      "answer_note": "0x92 (146), PUBREL/PUBCOMP; источник: OASIS MQTT 5.0, таблица Reason Code",
-      "contamination_check": "2026-08-28: подтверждено по OASIS MQTT v5.0 spec (docs.oasis-open.org)"
+      "question": "MQTT v5: какой Reason Code означает 'Packet Identifier not found' (шестнадцатеричный код) и в каких двух типах пакетов он возвращается?",
+      "accepted_answers": [
+        "0x92",
+        "146"
+      ],
+      "answer_extra_required": [
+        "PUBREL",
+        "PUBCOMP"
+      ],
+      "answer_note": "0x92 (146), PUBREL/PUBCOMP; источник: OASIS MQTT v5.0, Reason Code table",
+      "contamination_check": "0x92 (146), PUBREL/PUBCOMP; источник: OASIS MQTT v5.0, Reason Code table"
+    },
+    {
+      "id": "kn-03-http-425",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "HTTP: какая фраза-название у статус-кода 425 и в каком RFC он определён?",
+      "accepted_answers": [
+        "too early"
+      ],
+      "answer_extra_required": [
+        "8470"
+      ],
+      "answer_note": "Too Early, RFC 8470 (Using Early Data in HTTP)",
+      "contamination_check": "Too Early, RFC 8470 (Using Early Data in HTTP)"
+    },
+    {
+      "id": "kn-04-smtp-421",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "SMTP: код 421 означает, что служба недоступна и соединение закрывается. Продиктуйте стандартную фразу-расшифровку этого кода (английский оригинал).",
+      "accepted_answers": [
+        "service not available"
+      ],
+      "answer_extra_required": [
+        "closing transmission channel"
+      ],
+      "answer_note": "Service not available, closing transmission channel; RFC 5321",
+      "contamination_check": "Service not available, closing transmission channel; RFC 5321"
+    },
+    {
+      "id": "kn-05-dns-type33",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "DNS: какой тип записи имеет числовой код TYPE=33?",
+      "accepted_answers": [
+        "srv"
+      ],
+      "answer_note": "SRV (RFC 2782)",
+      "contamination_check": "SRV (RFC 2782)"
+    },
+    {
+      "id": "kn-06-unicode-nbsp",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "easy",
+      "created": "2026-08-28",
+      "question": "Unicode: назовите кодовую точку неразрывного пробела (NO-BREAK SPACE) в формате U+XXXX.",
+      "accepted_answers": [
+        "u+00a0",
+        "00a0"
+      ],
+      "answer_note": "U+00A0",
+      "contamination_check": "U+00A0"
+    },
+    {
+      "id": "kn-07-elf-etexec",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "ELF: поле e_type со значением 2 соответствует какому типу файла (имя константы)?",
+      "accepted_answers": [
+        "et_exec"
+      ],
+      "answer_note": "ET_EXEC; System V ABI / elf.h",
+      "contamination_check": "ET_EXEC; System V ABI / elf.h"
+    },
+    {
+      "id": "kn-08-git-blob-header",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "Git: sha1 хеша blob-объекта считается от байтовой строки, начинающейся с какого префикса (до нулевого байта)? Приведите префикс для файла размером 12 байт.",
+      "accepted_answers": [
+        "blob 12"
+      ],
+      "answer_note": "'blob 12\\0<content>'; Git Internals",
+      "contamination_check": "'blob 12\\0<content>'; Git Internals"
+    },
+    {
+      "id": "kn-09-tar-pax",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "hard",
+      "created": "2026-08-28",
+      "question": "tar: формат pax (pax_interchange) определён каким стандартом POSIX (номер стандарта)?",
+      "accepted_answers": [
+        "posix.1-2001",
+        "1003.1-2001"
+      ],
+      "answer_note": "POSIX.1-2001 (позже переиздан в POSIX.1-2012)",
+      "contamination_check": "POSIX.1-2001 (позже переиздан в POSIX.1-2012)"
+    },
+    {
+      "id": "kn-10-ffmpeg-vn",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "easy",
+      "created": "2026-08-28",
+      "question": "ffmpeg: какой флаг полностью отключает обработку видео (видеопоток не декодируется)?",
+      "accepted_answers": [
+        "-vn"
+      ],
+      "answer_note": "-vn (disable video)",
+      "contamination_check": "-vn (disable video)"
+    },
+    {
+      "id": "kn-11-sqlite-fk",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "SQLite: enforcement внешних ключей по умолчанию выключен; какая PRAGMA и какое значение включает его на соединение?",
+      "accepted_answers": [
+        "foreign_keys"
+      ],
+      "answer_extra_required": [
+        "on"
+      ],
+      "answer_note": "PRAGMA foreign_keys = ON; sqlite.orgpragma.html",
+      "contamination_check": "PRAGMA foreign_keys = ON; sqlite.orgpragma.html"
+    },
+    {
+      "id": "kn-12-pcre-atomic",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "PCRE: как записывается атомарная группа (не допускающая бэктрекинг внутрь)? Приведите синтаксис на примере группы без содержимого.",
+      "accepted_answers": [
+        "(?>",
+        "(?>)"
+      ],
+      "answer_note": "(?> ... ); pcre.org",
+      "contamination_check": "(?> ... ); pcre.org"
+    },
+    {
+      "id": "kn-13-bt-spp",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "Bluetooth: короткий UUID (16-бит) базового сервиса Serial Port Profile?",
+      "accepted_answers": [
+        "0x1101",
+        "1101"
+      ],
+      "answer_note": "0x1101; Bluetooth SIG assigned numbers",
+      "contamination_check": "0x1101; Bluetooth SIG assigned numbers"
+    },
+    {
+      "id": "kn-14-usb-hid-class",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "USB: какой класс устройства (bInterfaceClass, 16-рично) у HID (клавиатуры/мыши)?",
+      "accepted_answers": [
+        "0x03",
+        "03"
+      ],
+      "answer_note": "0x03 HID; USB assigned class codes",
+      "contamination_check": "0x03 HID; USB assigned class codes"
+    },
+    {
+      "id": "kn-15-modbus-fc06",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "Modbus: функция 0x06 - что она делает (английское имя из спецификации)?",
+      "accepted_answers": [
+        "write single register"
+      ],
+      "answer_note": "Write Single Register; MODBUS Application Protocol spec",
+      "contamination_check": "Write Single Register; MODBUS Application Protocol spec"
+    },
+    {
+      "id": "kn-16-can-extid",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "CAN bus: сколько бит в идентификаторе расширенного кадра (extended frame)?",
+      "accepted_answers": [
+        "29"
+      ],
+      "answer_note": "29 бит (базовый - 11); ISO 11898",
+      "contamination_check": "29 бит (базовый - 11); ISO 11898"
+    },
+    {
+      "id": "kn-17-iso8601-t",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "easy",
+      "created": "2026-08-28",
+      "question": "ISO 8601: какая одиночная буква-разделитель обязательна между датой и временем?",
+      "accepted_answers": [
+        "t"
+      ],
+      "answer_note": "T; ISO 8601",
+      "contamination_check": "T; ISO 8601"
+    },
+    {
+      "id": "kn-18-isbn13-weights",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "ISBN-13: контрольная цифра считается с какими двумя чередующимися весами?",
+      "accepted_answers": [
+        "1, 3",
+        "1 и 3",
+        "1 3"
+      ],
+      "answer_note": "1 и 3 (чередование, слева, x10 mod 10); ISO 2108",
+      "contamination_check": "1 и 3 (чередование, слева, x10 mod 10); ISO 2108"
+    },
+    {
+      "id": "kn-19-e164-max",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "easy",
+      "created": "2026-08-28",
+      "question": "E.164: максимальное число цифр в номере (включая код страны)?",
+      "accepted_answers": [
+        "15"
+      ],
+      "answer_note": "15 цифр; ITU-T E.164",
+      "contamination_check": "15 цифр; ITU-T E.164"
+    },
+    {
+      "id": "kn-20-ada-gnat",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "Ada: название основного свободного компилятора (проект GNU)?",
+      "accepted_answers": [
+        "gnat"
+      ],
+      "answer_note": "GNAT (GNU Ada)",
+      "contamination_check": "GNAT (GNU Ada)"
+    },
+    {
+      "id": "kn-21-apl-comment",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "hard",
+      "created": "2026-08-28",
+      "question": "APL: какой символ начинает комментарий в строке кода (назовите его имя по-английски)?",
+      "accepted_answers": [
+        "lamp",
+        "⍝"
+      ],
+      "answer_note": "⍝ lamp; APL standard",
+      "contamination_check": "⍝ lamp; APL standard"
+    },
+    {
+      "id": "kn-22-cobol-divisions",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "hard",
+      "created": "2026-08-28",
+      "question": "COBOL: сколько DIVISION (разделов) в структуре программы и назовите их.",
+      "accepted_answers": [
+        "4"
+      ],
+      "answer_extra_required": [
+        "identification",
+        "environment",
+        "data",
+        "procedure"
+      ],
+      "answer_note": "IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE - 4",
+      "contamination_check": "IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE - 4"
+    },
+    {
+      "id": "kn-23-erlang-cookie",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "Erlang: файл какого имени (домашний каталог) хранит секрет распределённого узла для аутентификации между нодами?",
+      "accepted_answers": [
+        ".erlang.cookie"
+      ],
+      "answer_note": "~/.erlang.cookie; Erlang distribution doc",
+      "contamination_check": "~/.erlang.cookie; Erlang distribution doc"
+    },
+    {
+      "id": "kn-24-websocket-mask",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "WebSocket (RFC 6455): какие фреймы ОБЯЗАТЕЛЬНО маскируются - от клиента к серверу или от сервера к клиенту?",
+      "accepted_answers": [
+        "клиент",
+        "client"
+      ],
+      "answer_note": "клиентские (client-to-server) фреймы маскируются обязательно; RFC 6455 §5.1",
+      "contamination_check": "клиентские (client-to-server) фреймы маскируются обязательно; RFC 6455 §5.1"
+    },
+    {
+      "id": "kn-25-http2-settings",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "hard",
+      "created": "2026-08-28",
+      "question": "HTTP/2: какой тип фрейма (hex) несёт SETTINGS и какова длина заголовка фрейма в байтах?",
+      "accepted_answers": [
+        "0x4"
+      ],
+      "answer_extra_required": [
+        "9"
+      ],
+      "answer_note": "SETTINGS type=0x4, header 9 байт; RFC 7540 §4.1/§6.5",
+      "contamination_check": "SETTINGS type=0x4, header 9 байт; RFC 7540 §4.1/§6.5"
+    },
+    {
+      "id": "kn-26-quic-transport",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "easy",
+      "created": "2026-08-28",
+      "question": "QUIC работает поверх какого транспортного протокола?",
+      "accepted_answers": [
+        "udp"
+      ],
+      "answer_note": "UDP; RFC 9000",
+      "contamination_check": "UDP; RFC 9000"
+    },
+    {
+      "id": "kn-27-posix-alpha",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "POSIX-регулярки: как называется класс букв и как он записывается (синтаксис с двойными скобками)?",
+      "accepted_answers": [
+        "[:alpha:]"
+      ],
+      "answer_note": "[[:alpha:]]; POSIX.1-2008",
+      "contamination_check": "[[:alpha:]]; POSIX.1-2008"
+    },
+    {
+      "id": "kn-28-pg-serial",
+      "kind": "knowledge",
+      "language": "text",
+      "class": "longtail-knowledge",
+      "difficulty": "medium",
+      "created": "2026-08-28",
+      "question": "PostgreSQL: устоявшееся имя SQL-типа-псевдонима для автоинкрементного 4-байтного целого (до IDENTITY)?",
+      "accepted_answers": [
+        "serial"
+      ],
+      "answer_note": "serial; PostgreSQL docs",
+      "contamination_check": "serial; PostgreSQL docs"
     }
   ]
 }

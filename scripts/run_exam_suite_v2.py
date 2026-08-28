@@ -100,6 +100,8 @@ def build_code_prompt(task: dict, spec: str) -> str:
     suite_root = ROOT / "evals" / "exam-suite-v2"
     for rel in task.get("attach", []):
         f = suite_root / rel
+        if not f.exists():
+            print(f"[WARN] attach-файл не найден: {rel}", file=sys.stderr)
         if f.exists():
             content = f.read_text(encoding="utf-8")
             parts.append("--- начало файла " + rel + " (содержимое как есть) ---\n" + content + "\n--- конец файла " + rel + " ---")

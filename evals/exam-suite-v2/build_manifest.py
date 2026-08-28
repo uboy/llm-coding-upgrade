@@ -27,6 +27,13 @@ LANG_MAP = {"py": "python", "js": "javascript", "cpp": "cpp", "java": "java"}
 
 # Без bash: cygwin-шный bash первым в PATH сессии не видит node/javac (грабля 2026-08-28).
 # C++/Java гоняются через python-оркестратор runners.py с маркером OK (cygwin abort даёт exit 0).
+BROKEN_NAME = {
+    "python": "solution.py",
+    "javascript": "solution.mjs",
+    "cpp": "solution.cpp",
+    "java": "Task.java",
+}
+
 TEST_CMD = {
     "python": ["python", "-m", "pytest", "tasks/{id}/tests/", "-q", "--no-header"],
     "javascript": ["node", "--test", "tasks/{id}/tests/test_a.mjs"],
@@ -66,6 +73,11 @@ def main() -> int:
             lang = LANG_MAP[m.group(1)]
             klass = CLASS_MAP[m.group(2)][0]
             diff = "medium"
+        attach = []
+        if lang == "cpp":
+            attach.append(f"tasks/{tid}/solution.h")
+        if klass in ("bugfix", "refactor"):
+            attach.append(f"tasks/{tid}/broken/{BROKEN_NAME[lang]}")
         entry = {
             "id": tid,
             "kind": "executable",
@@ -74,6 +86,7 @@ def main() -> int:
             "difficulty": override.get("difficulty", diff),
             "created": override.get("created", "2026-08-28"),
             "prompt_file": override.get("prompt_file", PROMPT[lang].format(id=tid)),
+            "attach": override.get("attach", attach),
             "target_file": override.get("target_file", TARGET[lang].format(id=tid)),
             "test_cmd": [c.format(id=tid) for c in TEST_CMD[lang]],
             "contamination_check": override.get(
@@ -96,6 +109,8 @@ def main() -> int:
             "accepted_answers": item["accepted_answers"],
             **({"answer_extra_required": item["answer_extra_required"]}
                if item.get("answer_extra_required") else {}),
+            **({"reject_if": item["reject_if"]}
+               if item.get("reject_if") else {}),
             "answer_note": item["answer_note"],
             "contamination_check": item.get("answer_note", "")[:80],
         })

@@ -13,7 +13,7 @@ class Elevator:
             raise RuntimeError("doors open")
         if not self.targets:
             return
-        target = min(self.targets, key=lambda f: (abs(f - self.current), -f))
+        target = min(self.targets, key=lambda f: (abs(f - self.current), f))
         if target > self.current:
             self.current += 1
         elif target < self.current:

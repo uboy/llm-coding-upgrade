@@ -33,3 +33,9 @@ def test_no_targets_stay():
     e = Elevator(10, 2)
     e.step()
     assert e.current == 1
+
+def test_tie_break_down():
+    e = Elevator(10, 4)
+    e.call(2); e.call(4)
+    e.step()  # с 1: до 2 и 4 одинаково (1 этаж); при равенстве - вниз
+    assert e.current == 2

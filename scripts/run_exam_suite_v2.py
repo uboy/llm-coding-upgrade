@@ -28,13 +28,14 @@ DEFAULT_SUITE = ROOT / "evals" / "exam-suite-v2" / "suite.json"
 DEFAULT_OUT = ROOT / "runs" / "exam-suite-v2"
 
 CODE_SUFFIX = "Выведи ТОЛЬКО код файла целиком, без markdown-разметки и без пояснений."
+KN_SUFFIX = "Ответь кратко и точно (до 25 слов), без рассуждений."
 FENCE_RE = re.compile(r"```[a-zA-Z]*\n(.*?)```", re.DOTALL)
 
 
 def strip_code_fences(text: str) -> str:
-    m = FENCE_RE.search(text)
-    if m:
-        return m.group(1).strip()
+    matches = FENCE_RE.findall(text)
+    if matches:
+        return matches[-1].strip()
     lines = [l for l in text.splitlines() if not l.strip().startswith("```")]
     return "\n".join(lines).strip()
 
@@ -108,11 +109,19 @@ def run_executable_task(task: dict, ask) -> dict:
         return {"id": task["id"], "passed": False, "error": f"model call: {e}",
                 "wall_s": round(time.time() - t0, 1)}
     code = strip_code_fences(raw)
+    task_root = ROOT / "evals" / "exam-suite-v2" / "tasks" / task["id"]
+    broken = task_root / "broken" / target.name
+    if broken.exists():
+        norm = lambda t: re.sub(r"\s+", "", t)
+        if norm(code) == norm(broken.read_text(encoding="utf-8")):
+            return {"id": task["id"], "passed": False,
+                    "error": "identical to broken",
+                    "wall_s": round(time.time() - t0, 1)}
     target.write_text(code, encoding="utf-8")
     try:
         proc = subprocess.run(
             task["test_cmd"], cwd=str(ROOT / "evals" / "exam-suite-v2"),
-            capture_output=True, text=True, timeout=60, encoding="utf-8", errors="replace",
+            capture_output=True, text=True, timeout=300, encoding="utf-8", errors="replace",
         )
         summary = next(
             (l.strip() for l in (proc.stdout + proc.stderr).splitlines()
@@ -133,18 +142,27 @@ def norm(s: str) -> str:
     return re.sub(r"\s+", " ", s.lower()).strip()
 
 
+def contains_phrase(answer: str, phrase: str) -> bool:
+    """Вхождение как целого слова/фразы (границы не-букв), не подстроки."""
+    pat = r"(?<![\wЀ-ӿ])" + re.escape(norm(phrase)) + r"(?![\wЀ-ӿ])"
+    return re.search(pat, norm(answer)) is not None
+
+
 def run_knowledge_task(task: dict, ask) -> dict:
     t0 = time.time()
     try:
-        raw = ask(task["question"])
+        raw = ask(task["question"] + " " + KN_SUFFIX)
     except Exception as e:  # noqa: BLE001
         return {"id": task["id"], "passed": False, "error": f"model call: {e}",
                 "wall_s": round(time.time() - t0, 1)}
     answer = norm(raw)
-    main_ok = any(norm(a) in answer for a in task["accepted_answers"])
+    main_ok = any(contains_phrase(answer, a) for a in task["accepted_answers"])
+    # extras - подстрока: морфологические варианты (замаскирована/маскируется);
+    # ложный extra сам по себе не спасает: main строгий
     extras_ok = all(norm(a) in answer for a in task.get("answer_extra_required", []))
+    rejected = any(contains_phrase(answer, r) for r in task.get("reject_if", []))
     return {
-        "id": task["id"], "passed": main_ok and extras_ok,
+        "id": task["id"], "passed": main_ok and extras_ok and not rejected,
         "wall_s": round(time.time() - t0, 1),
         "answer_excerpt": raw[:200],
     }
@@ -184,11 +202,20 @@ def main() -> int:
     for task in suite["tasks"]:
         if only and not only.search(task["id"]):
             continue
-        if task["kind"] == "executable":
-            r = run_executable_task(task, ask)
-        else:
-            r = run_knowledge_task(task, ask)
+        try:
+            if task["kind"] == "executable":
+                r = run_executable_task(task, ask)
+            else:
+                r = run_knowledge_task(task, ask)
+        except Exception as e:  # noqa: BLE001
+            r = {"id": task["id"], "passed": False, "error": f"harness: {e}"}
         results.append(r)
+        report = {"suite": suite["suite"], "suite_version": suite["version"],
+                  "backend": args.backend, "model": args.model,
+                  "timestamp": stamp, "results": results,
+                  "score": f"{sum(1 for x in results if x['passed'])}/{len(results)}"}
+        (out_dir / "results.json").write_text(
+            json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
         status = "PASS" if r["passed"] else "FAIL"
         print(f"[{task['id']}] {status} ({r.get('wall_s')}s) {r.get('summary', r.get('answer_excerpt', '') or r.get('error', ''))[:80]}")
 

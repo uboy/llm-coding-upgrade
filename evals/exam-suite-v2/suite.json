@@ -12,6 +12,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-algo-01/README.md",
+      "attach": [
+        "tasks/cpp-algo-01/solution.h"
+      ],
       "target_file": "tasks/cpp-algo-01/solution.cpp",
       "test_cmd": [
         "python",
@@ -29,6 +32,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-algo-02/README.md",
+      "attach": [
+        "tasks/cpp-algo-02/solution.h"
+      ],
       "target_file": "tasks/cpp-algo-02/solution.cpp",
       "test_cmd": [
         "python",
@@ -46,6 +52,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-algo-03/README.md",
+      "attach": [
+        "tasks/cpp-algo-03/solution.h"
+      ],
       "target_file": "tasks/cpp-algo-03/solution.cpp",
       "test_cmd": [
         "python",
@@ -63,6 +72,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-algo-04/README.md",
+      "attach": [
+        "tasks/cpp-algo-04/solution.h"
+      ],
       "target_file": "tasks/cpp-algo-04/solution.cpp",
       "test_cmd": [
         "python",
@@ -80,6 +92,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-api-01/README.md",
+      "attach": [
+        "tasks/cpp-api-01/solution.h"
+      ],
       "target_file": "tasks/cpp-api-01/solution.cpp",
       "test_cmd": [
         "python",
@@ -97,6 +112,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-api-02/README.md",
+      "attach": [
+        "tasks/cpp-api-02/solution.h"
+      ],
       "target_file": "tasks/cpp-api-02/solution.cpp",
       "test_cmd": [
         "python",
@@ -114,6 +132,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-api-03/README.md",
+      "attach": [
+        "tasks/cpp-api-03/solution.h"
+      ],
       "target_file": "tasks/cpp-api-03/solution.cpp",
       "test_cmd": [
         "python",
@@ -131,6 +152,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-api-04/README.md",
+      "attach": [
+        "tasks/cpp-api-04/solution.h"
+      ],
       "target_file": "tasks/cpp-api-04/solution.cpp",
       "test_cmd": [
         "python",
@@ -148,6 +172,10 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-bug-01/README.md",
+      "attach": [
+        "tasks/cpp-bug-01/solution.h",
+        "tasks/cpp-bug-01/broken/solution.cpp"
+      ],
       "target_file": "tasks/cpp-bug-01/solution.cpp",
       "test_cmd": [
         "python",
@@ -165,6 +193,10 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-bug-02/README.md",
+      "attach": [
+        "tasks/cpp-bug-02/solution.h",
+        "tasks/cpp-bug-02/broken/solution.cpp"
+      ],
       "target_file": "tasks/cpp-bug-02/solution.cpp",
       "test_cmd": [
         "python",
@@ -182,6 +214,10 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-bug-03/README.md",
+      "attach": [
+        "tasks/cpp-bug-03/solution.h",
+        "tasks/cpp-bug-03/broken/solution.cpp"
+      ],
       "target_file": "tasks/cpp-bug-03/solution.cpp",
       "test_cmd": [
         "python",
@@ -199,6 +235,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-lang-01/README.md",
+      "attach": [
+        "tasks/cpp-lang-01/solution.h"
+      ],
       "target_file": "tasks/cpp-lang-01/solution.cpp",
       "test_cmd": [
         "python",
@@ -216,6 +255,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-lang-02/README.md",
+      "attach": [
+        "tasks/cpp-lang-02/solution.h"
+      ],
       "target_file": "tasks/cpp-lang-02/solution.cpp",
       "test_cmd": [
         "python",
@@ -233,6 +275,10 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-ref-01/README.md",
+      "attach": [
+        "tasks/cpp-ref-01/solution.h",
+        "tasks/cpp-ref-01/broken/solution.cpp"
+      ],
       "target_file": "tasks/cpp-ref-01/solution.cpp",
       "test_cmd": [
         "python",
@@ -250,6 +296,10 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-ref-02/README.md",
+      "attach": [
+        "tasks/cpp-ref-02/solution.h",
+        "tasks/cpp-ref-02/broken/solution.cpp"
+      ],
       "target_file": "tasks/cpp-ref-02/solution.cpp",
       "test_cmd": [
         "python",
@@ -267,6 +317,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-state-01/README.md",
+      "attach": [
+        "tasks/cpp-state-01/solution.h"
+      ],
       "target_file": "tasks/cpp-state-01/solution.cpp",
       "test_cmd": [
         "python",
@@ -284,6 +337,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-state-02/README.md",
+      "attach": [
+        "tasks/cpp-state-02/solution.h"
+      ],
       "target_file": "tasks/cpp-state-02/solution.cpp",
       "test_cmd": [
         "python",
@@ -301,6 +357,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/cpp-state-03/README.md",
+      "attach": [
+        "tasks/cpp-state-03/solution.h"
+      ],
       "target_file": "tasks/cpp-state-03/solution.cpp",
       "test_cmd": [
         "python",
@@ -318,6 +377,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-algo-01/README.md",
+      "attach": [],
       "target_file": "tasks/java-algo-01/Task.java",
       "test_cmd": [
         "python",
@@ -335,6 +395,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-algo-02/README.md",
+      "attach": [],
       "target_file": "tasks/java-algo-02/Task.java",
       "test_cmd": [
         "python",
@@ -352,6 +413,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-algo-03/README.md",
+      "attach": [],
       "target_file": "tasks/java-algo-03/Task.java",
       "test_cmd": [
         "python",
@@ -369,6 +431,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-algo-04/README.md",
+      "attach": [],
       "target_file": "tasks/java-algo-04/Task.java",
       "test_cmd": [
         "python",
@@ -386,6 +449,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-api-01/README.md",
+      "attach": [],
       "target_file": "tasks/java-api-01/Task.java",
       "test_cmd": [
         "python",
@@ -403,6 +467,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-api-02/README.md",
+      "attach": [],
       "target_file": "tasks/java-api-02/Task.java",
       "test_cmd": [
         "python",
@@ -420,6 +485,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-api-03/README.md",
+      "attach": [],
       "target_file": "tasks/java-api-03/Task.java",
       "test_cmd": [
         "python",
@@ -437,6 +503,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-api-04/README.md",
+      "attach": [],
       "target_file": "tasks/java-api-04/Task.java",
       "test_cmd": [
         "python",
@@ -454,6 +521,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-bug-01/README.md",
+      "attach": [
+        "tasks/java-bug-01/broken/Task.java"
+      ],
       "target_file": "tasks/java-bug-01/Task.java",
       "test_cmd": [
         "python",
@@ -471,6 +541,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-bug-02/README.md",
+      "attach": [
+        "tasks/java-bug-02/broken/Task.java"
+      ],
       "target_file": "tasks/java-bug-02/Task.java",
       "test_cmd": [
         "python",
@@ -488,6 +561,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-bug-03/README.md",
+      "attach": [
+        "tasks/java-bug-03/broken/Task.java"
+      ],
       "target_file": "tasks/java-bug-03/Task.java",
       "test_cmd": [
         "python",
@@ -505,6 +581,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-lang-01/README.md",
+      "attach": [],
       "target_file": "tasks/java-lang-01/Task.java",
       "test_cmd": [
         "python",
@@ -522,6 +599,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-lang-02/README.md",
+      "attach": [],
       "target_file": "tasks/java-lang-02/Task.java",
       "test_cmd": [
         "python",
@@ -539,6 +617,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-ref-01/README.md",
+      "attach": [
+        "tasks/java-ref-01/broken/Task.java"
+      ],
       "target_file": "tasks/java-ref-01/Task.java",
       "test_cmd": [
         "python",
@@ -556,6 +637,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-ref-02/README.md",
+      "attach": [
+        "tasks/java-ref-02/broken/Task.java"
+      ],
       "target_file": "tasks/java-ref-02/Task.java",
       "test_cmd": [
         "python",
@@ -573,6 +657,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-state-01/README.md",
+      "attach": [],
       "target_file": "tasks/java-state-01/Task.java",
       "test_cmd": [
         "python",
@@ -590,6 +675,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-state-02/README.md",
+      "attach": [],
       "target_file": "tasks/java-state-02/Task.java",
       "test_cmd": [
         "python",
@@ -607,6 +693,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/java-state-03/README.md",
+      "attach": [],
       "target_file": "tasks/java-state-03/Task.java",
       "test_cmd": [
         "python",
@@ -624,6 +711,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-algo-01/README.md",
+      "attach": [],
       "target_file": "tasks/js-algo-01/solution.mjs",
       "test_cmd": [
         "node",
@@ -640,6 +728,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-algo-02/README.md",
+      "attach": [],
       "target_file": "tasks/js-algo-02/solution.mjs",
       "test_cmd": [
         "node",
@@ -656,6 +745,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-algo-03/README.md",
+      "attach": [],
       "target_file": "tasks/js-algo-03/solution.mjs",
       "test_cmd": [
         "node",
@@ -672,6 +762,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-algo-04/README.md",
+      "attach": [],
       "target_file": "tasks/js-algo-04/solution.mjs",
       "test_cmd": [
         "node",
@@ -688,6 +779,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-api-01/README.md",
+      "attach": [],
       "target_file": "tasks/js-api-01/solution.mjs",
       "test_cmd": [
         "node",
@@ -704,6 +796,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-api-02/README.md",
+      "attach": [],
       "target_file": "tasks/js-api-02/solution.mjs",
       "test_cmd": [
         "node",
@@ -720,6 +813,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-api-03/README.md",
+      "attach": [],
       "target_file": "tasks/js-api-03/solution.mjs",
       "test_cmd": [
         "node",
@@ -736,6 +830,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-api-04/README.md",
+      "attach": [],
       "target_file": "tasks/js-api-04/solution.mjs",
       "test_cmd": [
         "node",
@@ -752,6 +847,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-bug-01/README.md",
+      "attach": [
+        "tasks/js-bug-01/broken/solution.mjs"
+      ],
       "target_file": "tasks/js-bug-01/solution.mjs",
       "test_cmd": [
         "node",
@@ -768,6 +866,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-bug-02/README.md",
+      "attach": [
+        "tasks/js-bug-02/broken/solution.mjs"
+      ],
       "target_file": "tasks/js-bug-02/solution.mjs",
       "test_cmd": [
         "node",
@@ -784,6 +885,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-bug-03/README.md",
+      "attach": [
+        "tasks/js-bug-03/broken/solution.mjs"
+      ],
       "target_file": "tasks/js-bug-03/solution.mjs",
       "test_cmd": [
         "node",
@@ -800,6 +904,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-lang-01/README.md",
+      "attach": [],
       "target_file": "tasks/js-lang-01/solution.mjs",
       "test_cmd": [
         "node",
@@ -816,6 +921,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-lang-02/README.md",
+      "attach": [],
       "target_file": "tasks/js-lang-02/solution.mjs",
       "test_cmd": [
         "node",
@@ -832,6 +938,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-ref-01/README.md",
+      "attach": [
+        "tasks/js-ref-01/broken/solution.mjs"
+      ],
       "target_file": "tasks/js-ref-01/solution.mjs",
       "test_cmd": [
         "node",
@@ -848,6 +957,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-ref-02/README.md",
+      "attach": [
+        "tasks/js-ref-02/broken/solution.mjs"
+      ],
       "target_file": "tasks/js-ref-02/solution.mjs",
       "test_cmd": [
         "node",
@@ -864,6 +976,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-state-01/README.md",
+      "attach": [],
       "target_file": "tasks/js-state-01/solution.mjs",
       "test_cmd": [
         "node",
@@ -880,6 +993,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-state-02/README.md",
+      "attach": [],
       "target_file": "tasks/js-state-02/solution.mjs",
       "test_cmd": [
         "node",
@@ -896,6 +1010,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/js-state-03/README.md",
+      "attach": [],
       "target_file": "tasks/js-state-03/solution.mjs",
       "test_cmd": [
         "node",
@@ -912,6 +1027,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-algo-01/README.md",
+      "attach": [],
       "target_file": "tasks/py-algo-01/solution.py",
       "test_cmd": [
         "python",
@@ -931,6 +1047,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-algo-02/README.md",
+      "attach": [],
       "target_file": "tasks/py-algo-02/solution.py",
       "test_cmd": [
         "python",
@@ -950,6 +1067,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-algo-03/README.md",
+      "attach": [],
       "target_file": "tasks/py-algo-03/solution.py",
       "test_cmd": [
         "python",
@@ -969,6 +1087,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-algo-04/README.md",
+      "attach": [],
       "target_file": "tasks/py-algo-04/solution.py",
       "test_cmd": [
         "python",
@@ -988,6 +1107,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-api-02/README.md",
+      "attach": [],
       "target_file": "tasks/py-api-02/solution.py",
       "test_cmd": [
         "python",
@@ -1007,6 +1127,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-api-03/README.md",
+      "attach": [],
       "target_file": "tasks/py-api-03/solution.py",
       "test_cmd": [
         "python",
@@ -1026,6 +1147,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-api-04/README.md",
+      "attach": [],
       "target_file": "tasks/py-api-04/solution.py",
       "test_cmd": [
         "python",
@@ -1045,6 +1167,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-apicontract-kvlite/README.md",
+      "attach": [],
       "target_file": "tasks/py-apicontract-kvlite/kvlite.py",
       "test_cmd": [
         "python",
@@ -1064,6 +1187,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-bug-01/README.md",
+      "attach": [
+        "tasks/py-bug-01/broken/solution.py"
+      ],
       "target_file": "tasks/py-bug-01/solution.py",
       "test_cmd": [
         "python",
@@ -1083,6 +1209,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-bug-02/README.md",
+      "attach": [
+        "tasks/py-bug-02/broken/solution.py"
+      ],
       "target_file": "tasks/py-bug-02/solution.py",
       "test_cmd": [
         "python",
@@ -1102,6 +1231,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-bug-03/README.md",
+      "attach": [
+        "tasks/py-bug-03/broken/solution.py"
+      ],
       "target_file": "tasks/py-bug-03/solution.py",
       "test_cmd": [
         "python",
@@ -1121,6 +1253,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-lang-01/README.md",
+      "attach": [],
       "target_file": "tasks/py-lang-01/solution.py",
       "test_cmd": [
         "python",
@@ -1140,6 +1273,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-lang-02/README.md",
+      "attach": [],
       "target_file": "tasks/py-lang-02/solution.py",
       "test_cmd": [
         "python",
@@ -1159,6 +1293,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-ref-01/README.md",
+      "attach": [
+        "tasks/py-ref-01/broken/solution.py"
+      ],
       "target_file": "tasks/py-ref-01/solution.py",
       "test_cmd": [
         "python",
@@ -1178,6 +1315,9 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-ref-02/README.md",
+      "attach": [
+        "tasks/py-ref-02/broken/solution.py"
+      ],
       "target_file": "tasks/py-ref-02/solution.py",
       "test_cmd": [
         "python",
@@ -1197,6 +1337,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-state-01/README.md",
+      "attach": [],
       "target_file": "tasks/py-state-01/solution.py",
       "test_cmd": [
         "python",
@@ -1216,6 +1357,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-state-02/README.md",
+      "attach": [],
       "target_file": "tasks/py-state-02/solution.py",
       "test_cmd": [
         "python",
@@ -1235,6 +1377,7 @@
       "difficulty": "medium",
       "created": "2026-08-28",
       "prompt_file": "tasks/py-state-03/README.md",
+      "attach": [],
       "target_file": "tasks/py-state-03/solution.py",
       "test_cmd": [
         "python",
@@ -1498,7 +1641,8 @@
       "created": "2026-08-28",
       "question": "ISO 8601: какая одиночная буква-разделитель обязательна между датой и временем?",
       "accepted_answers": [
-        "t"
+        "t",
+        "буква t"
       ],
       "answer_note": "T; ISO 8601",
       "contamination_check": "T; ISO 8601"
@@ -1514,7 +1658,9 @@
       "accepted_answers": [
         "1, 3",
         "1 и 3",
-        "1 3"
+        "1 3",
+        "1 and 3",
+        "one and three"
       ],
       "answer_note": "1 и 3 (чередование, слева, x10 mod 10); ISO 2108",
       "contamination_check": "1 и 3 (чередование, слева, x10 mod 10); ISO 2108"
@@ -1603,13 +1749,15 @@
       "class": "longtail-knowledge",
       "difficulty": "medium",
       "created": "2026-08-28",
-      "question": "WebSocket (RFC 6455): какие фреймы ОБЯЗАТЕЛЬНО маскируются - от клиента к серверу или от сервера к клиенту?",
+      "question": "WebSocket (RFC 6455): какой бит заголовка фрейма обязательно установлен у фреймов от клиента к серверу и что этот бит означает? Ответ: имя бита + краткое действие.",
       "accepted_answers": [
-        "клиент",
-        "client"
+        "mask"
       ],
-      "answer_note": "клиентские (client-to-server) фреймы маскируются обязательно; RFC 6455 §5.1",
-      "contamination_check": "клиентские (client-to-server) фреймы маскируются обязательно; RFC 6455 §5.1"
+      "answer_extra_required": [
+        "маскир"
+      ],
+      "answer_note": "MASK=1, полезная нагрузка маскируется; RFC 6455 §5.1-5.3",
+      "contamination_check": "MASK=1, полезная нагрузка маскируется; RFC 6455 §5.1-5.3"
     },
     {
       "id": "kn-25-http2-settings",

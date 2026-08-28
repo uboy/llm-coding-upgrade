@@ -11,6 +11,6 @@ def decode(stream):
         n = int(num) + len(bangs)
         total += int(num) + len(bangs)
         out.append(sym * n)
-    if total % 97 != cs % 97:
+    if total % 97 != cs:
         raise ValueError("checksum mismatch")
     return "".join(out)

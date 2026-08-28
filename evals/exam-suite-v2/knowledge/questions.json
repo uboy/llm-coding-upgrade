@@ -3,33 +3,294 @@
   "created": "2026-08-28",
   "note": "28 вопросов на редкие/нишевые знания с коротким проверяемым ответом. Каждый пункт снабжён источником (RFC/стандарт/офиц. документация). Скоринг: вхождение любого элемента accepted_answers (нормализовано: lower, пробелы); при наличии answer_extra_required требуется и их вхождение; лишние элементы НЕ штрафуются (решение владельца 2026-08-28).",
   "items": [
-    {"id": "kn-01-dot-undirected", "difficulty": "easy", "question": "В языке разметки Graphviz DOT: каким токеном соединяются узлы НЕнаправленного ребра? Ответ ровно этим токеном.", "accepted_answers": ["--"], "answer_note": "-- (двойное тире); направленное -> ; источник: Graphviz DOT grammar"},
-    {"id": "kn-02-mqtt-packetid", "difficulty": "medium", "question": "MQTT v5: какой Reason Code означает 'Packet Identifier not found' (шестнадцатеричный код) и в каких двух типах пакетов он возвращается?", "accepted_answers": ["0x92", "146"], "answer_extra_required": ["PUBREL", "PUBCOMP"], "answer_note": "0x92 (146), PUBREL/PUBCOMP; источник: OASIS MQTT v5.0, Reason Code table"},
-    {"id": "kn-03-http-425", "difficulty": "medium", "question": "HTTP: какая фраза-название у статус-кода 425 и в каком RFC он определён?", "accepted_answers": ["too early"], "answer_extra_required": ["8470"], "answer_note": "Too Early, RFC 8470 (Using Early Data in HTTP)"},
-    {"id": "kn-04-smtp-421", "difficulty": "medium", "question": "SMTP: код 421 означает, что служба недоступна и соединение закрывается. Продиктуйте стандартную фразу-расшифровку этого кода (английский оригинал).", "accepted_answers": ["service not available"], "answer_extra_required": ["closing transmission channel"], "answer_note": "Service not available, closing transmission channel; RFC 5321"},
-    {"id": "kn-05-dns-type33", "difficulty": "medium", "question": "DNS: какой тип записи имеет числовой код TYPE=33?", "accepted_answers": ["srv"], "answer_note": "SRV (RFC 2782)"},
-    {"id": "kn-06-unicode-nbsp", "difficulty": "easy", "question": "Unicode: назовите кодовую точку неразрывного пробела (NO-BREAK SPACE) в формате U+XXXX.", "accepted_answers": ["u+00a0", "00a0"], "answer_note": "U+00A0"},
-    {"id": "kn-07-elf-etexec", "difficulty": "medium", "question": "ELF: поле e_type со значением 2 соответствует какому типу файла (имя константы)?", "accepted_answers": ["et_exec"], "answer_note": "ET_EXEC; System V ABI / elf.h"},
-    {"id": "kn-08-git-blob-header", "difficulty": "medium", "question": "Git: sha1 хеша blob-объекта считается от байтовой строки, начинающейся с какого префикса (до нулевого байта)? Приведите префикс для файла размером 12 байт.", "accepted_answers": ["blob 12"], "answer_note": "'blob 12\\0<content>'; Git Internals"},
-    {"id": "kn-09-tar-pax", "difficulty": "hard", "question": "tar: формат pax (pax_interchange) определён каким стандартом POSIX (номер стандарта)?", "accepted_answers": ["posix.1-2001", "1003.1-2001"], "answer_note": "POSIX.1-2001 (позже переиздан в POSIX.1-2012)"},
-    {"id": "kn-10-ffmpeg-vn", "difficulty": "easy", "question": "ffmpeg: какой флаг полностью отключает обработку видео (видеопоток не декодируется)?", "accepted_answers": ["-vn"], "answer_note": "-vn (disable video)"},
-    {"id": "kn-11-sqlite-fk", "difficulty": "medium", "question": "SQLite: enforcement внешних ключей по умолчанию выключен; какая PRAGMA и какое значение включает его на соединение?", "accepted_answers": ["foreign_keys"], "answer_extra_required": ["on"], "answer_note": "PRAGMA foreign_keys = ON; sqlite.orgpragma.html"},
-    {"id": "kn-12-pcre-atomic", "difficulty": "medium", "question": "PCRE: как записывается атомарная группа (не допускающая бэктрекинг внутрь)? Приведите синтаксис на примере группы без содержимого.", "accepted_answers": ["(?>", "(?>)"], "answer_note": "(?> ... ); pcre.org"},
-    {"id": "kn-13-bt-spp", "difficulty": "medium", "question": "Bluetooth: короткий UUID (16-бит) базового сервиса Serial Port Profile?", "accepted_answers": ["0x1101", "1101"], "answer_note": "0x1101; Bluetooth SIG assigned numbers"},
-    {"id": "kn-14-usb-hid-class", "difficulty": "medium", "question": "USB: какой класс устройства (bInterfaceClass, 16-рично) у HID (клавиатуры/мыши)?", "accepted_answers": ["0x03", "03"], "answer_note": "0x03 HID; USB assigned class codes"},
-    {"id": "kn-15-modbus-fc06", "difficulty": "medium", "question": "Modbus: функция 0x06 - что она делает (английское имя из спецификации)?", "accepted_answers": ["write single register"], "answer_note": "Write Single Register; MODBUS Application Protocol spec"},
-    {"id": "kn-16-can-extid", "difficulty": "medium", "question": "CAN bus: сколько бит в идентификаторе расширенного кадра (extended frame)?", "accepted_answers": ["29"], "answer_note": "29 бит (базовый - 11); ISO 11898"},
-    {"id": "kn-17-iso8601-t", "difficulty": "easy", "question": "ISO 8601: какая одиночная буква-разделитель обязательна между датой и временем?", "accepted_answers": ["t"], "answer_note": "T; ISO 8601"},
-    {"id": "kn-18-isbn13-weights", "difficulty": "medium", "question": "ISBN-13: контрольная цифра считается с какими двумя чередующимися весами?", "accepted_answers": ["1, 3", "1 и 3", "1 3"], "answer_note": "1 и 3 (чередование, слева, x10 mod 10); ISO 2108"},
-    {"id": "kn-19-e164-max", "difficulty": "easy", "question": "E.164: максимальное число цифр в номере (включая код страны)?", "accepted_answers": ["15"], "answer_note": "15 цифр; ITU-T E.164"},
-    {"id": "kn-20-ada-gnat", "difficulty": "medium", "question": "Ada: название основного свободного компилятора (проект GNU)?", "accepted_answers": ["gnat"], "answer_note": "GNAT (GNU Ada)"},
-    {"id": "kn-21-apl-comment", "difficulty": "hard", "question": "APL: какой символ начинает комментарий в строке кода (назовите его имя по-английски)?", "accepted_answers": ["lamp", "⍝"], "answer_note": "⍝ lamp; APL standard"},
-    {"id": "kn-22-cobol-divisions", "difficulty": "hard", "question": "COBOL: сколько DIVISION (разделов) в структуре программы и назовите их.", "accepted_answers": ["4"], "answer_extra_required": ["identification", "environment", "data", "procedure"], "answer_note": "IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE - 4"},
-    {"id": "kn-23-erlang-cookie", "difficulty": "medium", "question": "Erlang: файл какого имени (домашний каталог) хранит секрет распределённого узла для аутентификации между нодами?", "accepted_answers": [".erlang.cookie"], "answer_note": "~/.erlang.cookie; Erlang distribution doc"},
-    {"id": "kn-24-websocket-mask", "difficulty": "medium", "question": "WebSocket (RFC 6455): какие фреймы ОБЯЗАТЕЛЬНО маскируются - от клиента к серверу или от сервера к клиенту?", "accepted_answers": ["клиент", "client"], "answer_note": "клиентские (client-to-server) фреймы маскируются обязательно; RFC 6455 §5.1"},
-    {"id": "kn-25-http2-settings", "difficulty": "hard", "question": "HTTP/2: какой тип фрейма (hex) несёт SETTINGS и какова длина заголовка фрейма в байтах?", "accepted_answers": ["0x4"], "answer_extra_required": ["9"], "answer_note": "SETTINGS type=0x4, header 9 байт; RFC 7540 §4.1/§6.5"},
-    {"id": "kn-26-quic-transport", "difficulty": "easy", "question": "QUIC работает поверх какого транспортного протокола?", "accepted_answers": ["udp"], "answer_note": "UDP; RFC 9000"},
-    {"id": "kn-27-posix-alpha", "difficulty": "medium", "question": "POSIX-регулярки: как называется класс букв и как он записывается (синтаксис с двойными скобками)?", "accepted_answers": ["[:alpha:]"], "answer_note": "[[:alpha:]]; POSIX.1-2008"},
-    {"id": "kn-28-pg-serial", "difficulty": "medium", "question": "PostgreSQL: устоявшееся имя SQL-типа-псевдонима для автоинкрементного 4-байтного целого (до IDENTITY)?", "accepted_answers": ["serial"], "answer_note": "serial; PostgreSQL docs"}
+    {
+      "id": "kn-01-dot-undirected",
+      "difficulty": "easy",
+      "question": "В языке разметки Graphviz DOT: каким токеном соединяются узлы НЕнаправленного ребра? Ответ ровно этим токеном.",
+      "accepted_answers": [
+        "--"
+      ],
+      "answer_note": "-- (двойное тире); направленное -> ; источник: Graphviz DOT grammar"
+    },
+    {
+      "id": "kn-02-mqtt-packetid",
+      "difficulty": "medium",
+      "question": "MQTT v5: какой Reason Code означает 'Packet Identifier not found' (шестнадцатеричный код) и в каких двух типах пакетов он возвращается?",
+      "accepted_answers": [
+        "0x92",
+        "146"
+      ],
+      "answer_extra_required": [
+        "PUBREL",
+        "PUBCOMP"
+      ],
+      "answer_note": "0x92 (146), PUBREL/PUBCOMP; источник: OASIS MQTT v5.0, Reason Code table"
+    },
+    {
+      "id": "kn-03-http-425",
+      "difficulty": "medium",
+      "question": "HTTP: какая фраза-название у статус-кода 425 и в каком RFC он определён?",
+      "accepted_answers": [
+        "too early"
+      ],
+      "answer_extra_required": [
+        "8470"
+      ],
+      "answer_note": "Too Early, RFC 8470 (Using Early Data in HTTP)"
+    },
+    {
+      "id": "kn-04-smtp-421",
+      "difficulty": "medium",
+      "question": "SMTP: код 421 означает, что служба недоступна и соединение закрывается. Продиктуйте стандартную фразу-расшифровку этого кода (английский оригинал).",
+      "accepted_answers": [
+        "service not available"
+      ],
+      "answer_extra_required": [
+        "closing transmission channel"
+      ],
+      "answer_note": "Service not available, closing transmission channel; RFC 5321"
+    },
+    {
+      "id": "kn-05-dns-type33",
+      "difficulty": "medium",
+      "question": "DNS: какой тип записи имеет числовой код TYPE=33?",
+      "accepted_answers": [
+        "srv"
+      ],
+      "answer_note": "SRV (RFC 2782)"
+    },
+    {
+      "id": "kn-06-unicode-nbsp",
+      "difficulty": "easy",
+      "question": "Unicode: назовите кодовую точку неразрывного пробела (NO-BREAK SPACE) в формате U+XXXX.",
+      "accepted_answers": [
+        "u+00a0",
+        "00a0"
+      ],
+      "answer_note": "U+00A0"
+    },
+    {
+      "id": "kn-07-elf-etexec",
+      "difficulty": "medium",
+      "question": "ELF: поле e_type со значением 2 соответствует какому типу файла (имя константы)?",
+      "accepted_answers": [
+        "et_exec"
+      ],
+      "answer_note": "ET_EXEC; System V ABI / elf.h"
+    },
+    {
+      "id": "kn-08-git-blob-header",
+      "difficulty": "medium",
+      "question": "Git: sha1 хеша blob-объекта считается от байтовой строки, начинающейся с какого префикса (до нулевого байта)? Приведите префикс для файла размером 12 байт.",
+      "accepted_answers": [
+        "blob 12"
+      ],
+      "answer_note": "'blob 12\\0<content>'; Git Internals"
+    },
+    {
+      "id": "kn-09-tar-pax",
+      "difficulty": "hard",
+      "question": "tar: формат pax (pax_interchange) определён каким стандартом POSIX (номер стандарта)?",
+      "accepted_answers": [
+        "posix.1-2001",
+        "1003.1-2001"
+      ],
+      "answer_note": "POSIX.1-2001 (позже переиздан в POSIX.1-2012)"
+    },
+    {
+      "id": "kn-10-ffmpeg-vn",
+      "difficulty": "easy",
+      "question": "ffmpeg: какой флаг полностью отключает обработку видео (видеопоток не декодируется)?",
+      "accepted_answers": [
+        "-vn"
+      ],
+      "answer_note": "-vn (disable video)"
+    },
+    {
+      "id": "kn-11-sqlite-fk",
+      "difficulty": "medium",
+      "question": "SQLite: enforcement внешних ключей по умолчанию выключен; какая PRAGMA и какое значение включает его на соединение?",
+      "accepted_answers": [
+        "foreign_keys"
+      ],
+      "answer_extra_required": [
+        "on"
+      ],
+      "answer_note": "PRAGMA foreign_keys = ON; sqlite.orgpragma.html"
+    },
+    {
+      "id": "kn-12-pcre-atomic",
+      "difficulty": "medium",
+      "question": "PCRE: как записывается атомарная группа (не допускающая бэктрекинг внутрь)? Приведите синтаксис на примере группы без содержимого.",
+      "accepted_answers": [
+        "(?>",
+        "(?>)"
+      ],
+      "answer_note": "(?> ... ); pcre.org"
+    },
+    {
+      "id": "kn-13-bt-spp",
+      "difficulty": "medium",
+      "question": "Bluetooth: короткий UUID (16-бит) базового сервиса Serial Port Profile?",
+      "accepted_answers": [
+        "0x1101",
+        "1101"
+      ],
+      "answer_note": "0x1101; Bluetooth SIG assigned numbers"
+    },
+    {
+      "id": "kn-14-usb-hid-class",
+      "difficulty": "medium",
+      "question": "USB: какой класс устройства (bInterfaceClass, 16-рично) у HID (клавиатуры/мыши)?",
+      "accepted_answers": [
+        "0x03",
+        "03"
+      ],
+      "answer_note": "0x03 HID; USB assigned class codes"
+    },
+    {
+      "id": "kn-15-modbus-fc06",
+      "difficulty": "medium",
+      "question": "Modbus: функция 0x06 - что она делает (английское имя из спецификации)?",
+      "accepted_answers": [
+        "write single register"
+      ],
+      "answer_note": "Write Single Register; MODBUS Application Protocol spec"
+    },
+    {
+      "id": "kn-16-can-extid",
+      "difficulty": "medium",
+      "question": "CAN bus: сколько бит в идентификаторе расширенного кадра (extended frame)?",
+      "accepted_answers": [
+        "29"
+      ],
+      "answer_note": "29 бит (базовый - 11); ISO 11898"
+    },
+    {
+      "id": "kn-17-iso8601-t",
+      "difficulty": "easy",
+      "question": "ISO 8601: какая одиночная буква-разделитель обязательна между датой и временем?",
+      "accepted_answers": [
+        "t",
+        "буква t"
+      ],
+      "answer_note": "T; ISO 8601"
+    },
+    {
+      "id": "kn-18-isbn13-weights",
+      "difficulty": "medium",
+      "question": "ISBN-13: контрольная цифра считается с какими двумя чередующимися весами?",
+      "accepted_answers": [
+        "1, 3",
+        "1 и 3",
+        "1 3",
+        "1 and 3",
+        "one and three"
+      ],
+      "answer_note": "1 и 3 (чередование, слева, x10 mod 10); ISO 2108"
+    },
+    {
+      "id": "kn-19-e164-max",
+      "difficulty": "easy",
+      "question": "E.164: максимальное число цифр в номере (включая код страны)?",
+      "accepted_answers": [
+        "15"
+      ],
+      "answer_note": "15 цифр; ITU-T E.164"
+    },
+    {
+      "id": "kn-20-ada-gnat",
+      "difficulty": "medium",
+      "question": "Ada: название основного свободного компилятора (проект GNU)?",
+      "accepted_answers": [
+        "gnat"
+      ],
+      "answer_note": "GNAT (GNU Ada)"
+    },
+    {
+      "id": "kn-21-apl-comment",
+      "difficulty": "hard",
+      "question": "APL: какой символ начинает комментарий в строке кода (назовите его имя по-английски)?",
+      "accepted_answers": [
+        "lamp",
+        "⍝"
+      ],
+      "answer_note": "⍝ lamp; APL standard"
+    },
+    {
+      "id": "kn-22-cobol-divisions",
+      "difficulty": "hard",
+      "question": "COBOL: сколько DIVISION (разделов) в структуре программы и назовите их.",
+      "accepted_answers": [
+        "4"
+      ],
+      "answer_extra_required": [
+        "identification",
+        "environment",
+        "data",
+        "procedure"
+      ],
+      "answer_note": "IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE - 4"
+    },
+    {
+      "id": "kn-23-erlang-cookie",
+      "difficulty": "medium",
+      "question": "Erlang: файл какого имени (домашний каталог) хранит секрет распределённого узла для аутентификации между нодами?",
+      "accepted_answers": [
+        ".erlang.cookie"
+      ],
+      "answer_note": "~/.erlang.cookie; Erlang distribution doc"
+    },
+    {
+      "id": "kn-24-websocket-mask",
+      "difficulty": "medium",
+      "question": "WebSocket (RFC 6455): какой бит заголовка фрейма обязательно установлен у фреймов от клиента к серверу и что этот бит означает? Ответ: имя бита + краткое действие.",
+      "accepted_answers": [
+        "mask"
+      ],
+      "answer_note": "MASK=1, полезная нагрузка маскируется; RFC 6455 §5.1-5.3",
+      "answer_extra_required": [
+        "маскир"
+      ]
+    },
+    {
+      "id": "kn-25-http2-settings",
+      "difficulty": "hard",
+      "question": "HTTP/2: какой тип фрейма (hex) несёт SETTINGS и какова длина заголовка фрейма в байтах?",
+      "accepted_answers": [
+        "0x4"
+      ],
+      "answer_extra_required": [
+        "9"
+      ],
+      "answer_note": "SETTINGS type=0x4, header 9 байт; RFC 7540 §4.1/§6.5"
+    },
+    {
+      "id": "kn-26-quic-transport",
+      "difficulty": "easy",
+      "question": "QUIC работает поверх какого транспортного протокола?",
+      "accepted_answers": [
+        "udp"
+      ],
+      "answer_note": "UDP; RFC 9000"
+    },
+    {
+      "id": "kn-27-posix-alpha",
+      "difficulty": "medium",
+      "question": "POSIX-регулярки: как называется класс букв и как он записывается (синтаксис с двойными скобками)?",
+      "accepted_answers": [
+        "[:alpha:]"
+      ],
+      "answer_note": "[[:alpha:]]; POSIX.1-2008"
+    },
+    {
+      "id": "kn-28-pg-serial",
+      "difficulty": "medium",
+      "question": "PostgreSQL: устоявшееся имя SQL-типа-псевдонима для автоинкрементного 4-байтного целого (до IDENTITY)?",
+      "accepted_answers": [
+        "serial"
+      ],
+      "answer_note": "serial; PostgreSQL docs"
+    }
   ]
 }

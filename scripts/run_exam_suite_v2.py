@@ -41,12 +41,18 @@ def strip_code_fences(text: str) -> str:
 
 # --- бекенды -----------------------------------------------------------------
 
-def ask_opencode(model: str, prompt: str, timeout: int) -> str:
+def ask_opencode(model: str, prompt: str, timeout: int, proxy: str = "") -> str:
     opencode_bin = shutil.which("opencode")  # на Windows это npm-шим .cmd
     if not opencode_bin:
         raise RuntimeError("opencode не найден в PATH")
+    env = None
+    if proxy:
+        env = {**__import__("os").environ,
+               "HTTP_PROXY": proxy, "HTTPS_PROXY": proxy,
+               "http_proxy": proxy, "https_proxy": proxy}
     proc = subprocess.run(
         [opencode_bin, "run", "-m", model, prompt],
+        env=env,
         capture_output=True, text=True, timeout=timeout, encoding="utf-8", errors="replace",
         cwd=str(ROOT),
     )
@@ -152,13 +158,14 @@ def main() -> int:
     ap.add_argument("--base-url", default="")
     ap.add_argument("--timeout", type=int, default=600)
     ap.add_argument("--out-dir", default=str(DEFAULT_OUT))
+    ap.add_argument("--proxy", default="", help="http://host:port, для гео-запертых моделей opencode")
     args = ap.parse_args()
 
     if args.backend == "http" and not args.base_url:
         ap.error("--base-url обязателен для --backend http")
 
     if args.backend == "opencode":
-        ask = lambda p: ask_opencode(args.model, p, args.timeout)  # noqa: E731
+        ask = lambda p: ask_opencode(args.model, p, args.timeout, args.proxy)  # noqa: E731
     else:
         def ask(p: str) -> str:
             content, _ = ask_http(args.base_url, args.model, p, args.timeout)

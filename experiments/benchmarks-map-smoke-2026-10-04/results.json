@@ -1,0 +1,40 @@
+{
+  "suite": "exam-suite-v2",
+  "suite_version": "1.0.0",
+  "backend": "http",
+  "model": "gemma4-26b-base",
+  "timestamp": "20261004T201619",
+  "results": [
+    {
+      "id": "py-algo-01",
+      "passed": false,
+      "wall_s": 5.7,
+      "code_chars": 1533,
+      "summary": ""
+    },
+    {
+      "id": "py-bug-01",
+      "passed": false,
+      "wall_s": 3.2,
+      "code_chars": 664,
+      "summary": ""
+    },
+    {
+      "id": "kn-01-dot-undirected",
+      "passed": true,
+      "wall_s": 0.3,
+      "answer_excerpt": "--"
+    },
+    {
+      "id": "kn-02-mqtt-packetid",
+      "passed": false,
+      "wall_s": 50.6,
+      "answer_excerpt": "Reason Code: `0x86` (Packet Identifier not found).\nВозвращается в пакетах: `PUBACK`, `PUBREC`, `PUBREL`, `PUBCOMP`, `AUTH`.\n\nWait, the prompt asks for *two* types of packets. Let's re-check the MQTT v"
+    }
+  ],
+  "score": "1/4",
+  "per_language": {
+    "python": "0/2",
+    "text": "1/2"
+  }
+}

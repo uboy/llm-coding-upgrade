@@ -140,6 +140,20 @@
 ### Мониторинг вакансий (домены C, F): извлечение полей + классификация + GUI/API-агенты -
 свой eval на реальных карточках (прецедент hh-фильтров).
 
+## Внешние бенчмарки на сервере: локальный прогон (проверено 2026-10-04)
+
+Клоны: `/data/home/<user>/proj/external-benchmarks/` (вне репо): MMLU-Pro,
+google-research (IFEval), LiveCodeBench, gorilla (BFCL). Цепочка «локальная
+модель → официальный бенчмарк → официальные метрики» проверена вживую
+(gemma4-26B base на GPU2): MMLU-Pro **работает** (форк evaluate_from_apiX:
+`--url http://127.0.0.1:8033/v1`; патчи: API_KEY из env, лимит `MMLUPRO_LIMIT`
+на категорию; инкрементальный мердж результатов в eval_results/), IFEval
+**работает** (генератор наш `scripts/run_ifeval_api.py` + родной скоринг;
+gemma4-26B: strict/loose 0.880 на 50 промптах). LCB и BFCL склонированы, для
+прогона нужны HF-датасет и зависимости (см.
+`experiments/external-benchmarks-smoke-2026-10-04/README.md`). Лаунчер:
+`external-benchmarks/run-mmlupro-local.sh`.
+
 ## Живые мета-источники (кто где сейчас)
 
 - [Artificial Analysis - методология](https://artificialanalysis.ai/methodology): Intelligence

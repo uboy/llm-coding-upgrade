@@ -1,0 +1,14 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Assigned subjects: math, computer science, health
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for math: 38.32% (64/167)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for computer science: 60.00% (3/5)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for health: 80.00% (4/5)

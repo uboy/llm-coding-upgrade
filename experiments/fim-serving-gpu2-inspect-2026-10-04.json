@@ -1,0 +1,400 @@
+[
+    {
+        "Id": "7a9c326e52e1f47cfa41767c8114e1654a415abb35ceeff868fb485ead7ab86c",
+        "Created": "2026-09-23T13:22:34.972082973Z",
+        "Path": "/app/llama-server",
+        "Args": [
+            "-m",
+            "/models/fim-qwen25-coder-7b-v2-Q4_K_M.gguf",
+            "--host",
+            "0.0.0.0",
+            "--port",
+            "8080",
+            "-ngl",
+            "999",
+            "-c",
+            "16384",
+            "-ub",
+            "2048"
+        ],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-09-23T13:22:35.005073889Z",
+            "FinishedAt": "2026-10-04T09:19:11.630709971Z",
+            "Health": {
+                "Status": "unhealthy",
+                "FailingStreak": 0,
+                "Log": [
+                    {
+                        "Start": "2026-10-04T12:16:48.759886959+03:00",
+                        "End": "2026-10-04T12:16:48.808285649+03:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    15  100    15    0     0  18450      0 --:--:-- --:--:-- --:--:-- 15000\n{\"status\":\"ok\"}"
+                    },
+                    {
+                        "Start": "2026-10-04T12:17:18.809652006+03:00",
+                        "End": "2026-10-04T12:17:18.862159421+03:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    15  100    15    0     0  15839      0 --:--:-- --:--:-- --:--:-- 15000\n{\"status\":\"ok\"}"
+                    },
+                    {
+                        "Start": "2026-10-04T12:17:48.865262577+03:00",
+                        "End": "2026-10-04T12:17:48.914382858+03:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    15  100    15    0     0  19206      0 --:--:-- --:--:-- --:--:-- 15000\n{\"status\":\"ok\"}"
+                    },
+                    {
+                        "Start": "2026-10-04T12:18:18.917582013+03:00",
+                        "End": "2026-10-04T12:18:18.966591379+03:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    15  100    15    0     0  17261      0 --:--:-- --:--:-- --:--:-- 15000\n{\"status\":\"ok\"}"
+                    },
+                    {
+                        "Start": "2026-10-04T12:18:48.968992024+03:00",
+                        "End": "2026-10-04T12:18:49.016717876+03:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    15  100    15    0     0  18226      0 --:--:-- --:--:-- --:--:-- 15000\n{\"status\":\"ok\"}"
+                    }
+                ]
+            }
+        },
+        "Image": "sha256:6cdc151ecd6e4503cffaebfe4ed1cdb1c4a975e9ae22fcbd6726ece043d08923",
+        "ResolvConfPath": "/data/docker/containers/7a9c326e52e1f47cfa41767c8114e1654a415abb35ceeff868fb485ead7ab86c/resolv.conf",
+        "HostnamePath": "/data/docker/containers/7a9c326e52e1f47cfa41767c8114e1654a415abb35ceeff868fb485ead7ab86c/hostname",
+        "HostsPath": "/data/docker/containers/7a9c326e52e1f47cfa41767c8114e1654a415abb35ceeff868fb485ead7ab86c/hosts",
+        "LogPath": "/data/docker/containers/7a9c326e52e1f47cfa41767c8114e1654a415abb35ceeff868fb485ead7ab86c/7a9c326e52e1f47cfa41767c8114e1654a415abb35ceeff868fb485ead7ab86c-json.log",
+        "Name": "/fim-serving-gpu2",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "/data/home/<user>/proj/1c-ml-artifacts/fim-serving-20260923/gguf:/models:ro"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "bridge",
+            "PortBindings": {
+                "8080/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "8190"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": [
+                {
+                    "Driver": "",
+                    "Count": 0,
+                    "DeviceIDs": [
+                        "2"
+                    ],
+                    "Capabilities": [
+                        [
+                            "gpu"
+                        ]
+                    ],
+                    "Options": {}
+                }
+            ],
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware",
+                "/sys/devices/system/cpu/cpu0/thermal_throttle",
+                "/sys/devices/system/cpu/cpu1/thermal_throttle",
+                "/sys/devices/system/cpu/cpu2/thermal_throttle",
+                "/sys/devices/system/cpu/cpu3/thermal_throttle",
+                "/sys/devices/system/cpu/cpu4/thermal_throttle",
+                "/sys/devices/system/cpu/cpu5/thermal_throttle",
+                "/sys/devices/system/cpu/cpu6/thermal_throttle",
+                "/sys/devices/system/cpu/cpu7/thermal_throttle",
+                "/sys/devices/system/cpu/cpu8/thermal_throttle",
+                "/sys/devices/system/cpu/cpu9/thermal_throttle",
+                "/sys/devices/system/cpu/cpu10/thermal_throttle",
+                "/sys/devices/system/cpu/cpu11/thermal_throttle",
+                "/sys/devices/system/cpu/cpu12/thermal_throttle",
+                "/sys/devices/system/cpu/cpu13/thermal_throttle",
+                "/sys/devices/system/cpu/cpu14/thermal_throttle",
+                "/sys/devices/system/cpu/cpu15/thermal_throttle",
+                "/sys/devices/system/cpu/cpu16/thermal_throttle",
+                "/sys/devices/system/cpu/cpu17/thermal_throttle",
+                "/sys/devices/system/cpu/cpu18/thermal_throttle",
+                "/sys/devices/system/cpu/cpu19/thermal_throttle",
+                "/sys/devices/system/cpu/cpu20/thermal_throttle",
+                "/sys/devices/system/cpu/cpu21/thermal_throttle",
+                "/sys/devices/system/cpu/cpu22/thermal_throttle",
+                "/sys/devices/system/cpu/cpu23/thermal_throttle",
+                "/sys/devices/system/cpu/cpu24/thermal_throttle",
+                "/sys/devices/system/cpu/cpu25/thermal_throttle",
+                "/sys/devices/system/cpu/cpu26/thermal_throttle",
+                "/sys/devices/system/cpu/cpu27/thermal_throttle",
+                "/sys/devices/system/cpu/cpu28/thermal_throttle",
+                "/sys/devices/system/cpu/cpu29/thermal_throttle",
+                "/sys/devices/system/cpu/cpu30/thermal_throttle",
+                "/sys/devices/system/cpu/cpu31/thermal_throttle",
+                "/sys/devices/system/cpu/cpu32/thermal_throttle",
+                "/sys/devices/system/cpu/cpu33/thermal_throttle",
+                "/sys/devices/system/cpu/cpu34/thermal_throttle",
+                "/sys/devices/system/cpu/cpu35/thermal_throttle",
+                "/sys/devices/system/cpu/cpu36/thermal_throttle",
+                "/sys/devices/system/cpu/cpu37/thermal_throttle",
+                "/sys/devices/system/cpu/cpu38/thermal_throttle",
+                "/sys/devices/system/cpu/cpu39/thermal_throttle",
+                "/sys/devices/system/cpu/cpu40/thermal_throttle",
+                "/sys/devices/system/cpu/cpu41/thermal_throttle",
+                "/sys/devices/system/cpu/cpu42/thermal_throttle",
+                "/sys/devices/system/cpu/cpu43/thermal_throttle",
+                "/sys/devices/system/cpu/cpu44/thermal_throttle",
+                "/sys/devices/system/cpu/cpu45/thermal_throttle",
+                "/sys/devices/system/cpu/cpu46/thermal_throttle",
+                "/sys/devices/system/cpu/cpu47/thermal_throttle",
+                "/sys/devices/system/cpu/cpu48/thermal_throttle",
+                "/sys/devices/system/cpu/cpu49/thermal_throttle",
+                "/sys/devices/system/cpu/cpu50/thermal_throttle",
+                "/sys/devices/system/cpu/cpu51/thermal_throttle",
+                "/sys/devices/system/cpu/cpu52/thermal_throttle",
+                "/sys/devices/system/cpu/cpu53/thermal_throttle",
+                "/sys/devices/system/cpu/cpu54/thermal_throttle",
+                "/sys/devices/system/cpu/cpu55/thermal_throttle",
+                "/sys/devices/system/cpu/cpu56/thermal_throttle",
+                "/sys/devices/system/cpu/cpu57/thermal_throttle",
+                "/sys/devices/system/cpu/cpu58/thermal_throttle",
+                "/sys/devices/system/cpu/cpu59/thermal_throttle",
+                "/sys/devices/system/cpu/cpu60/thermal_throttle",
+                "/sys/devices/system/cpu/cpu61/thermal_throttle",
+                "/sys/devices/system/cpu/cpu62/thermal_throttle",
+                "/sys/devices/system/cpu/cpu63/thermal_throttle",
+                "/sys/devices/system/cpu/cpu64/thermal_throttle",
+                "/sys/devices/system/cpu/cpu65/thermal_throttle",
+                "/sys/devices/system/cpu/cpu66/thermal_throttle",
+                "/sys/devices/system/cpu/cpu67/thermal_throttle",
+                "/sys/devices/system/cpu/cpu68/thermal_throttle",
+                "/sys/devices/system/cpu/cpu69/thermal_throttle",
+                "/sys/devices/system/cpu/cpu70/thermal_throttle",
+                "/sys/devices/system/cpu/cpu71/thermal_throttle",
+                "/sys/devices/system/cpu/cpu72/thermal_throttle",
+                "/sys/devices/system/cpu/cpu73/thermal_throttle",
+                "/sys/devices/system/cpu/cpu74/thermal_throttle",
+                "/sys/devices/system/cpu/cpu75/thermal_throttle",
+                "/sys/devices/system/cpu/cpu76/thermal_throttle",
+                "/sys/devices/system/cpu/cpu77/thermal_throttle",
+                "/sys/devices/system/cpu/cpu78/thermal_throttle",
+                "/sys/devices/system/cpu/cpu79/thermal_throttle"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "7a9c326e52e1f47cfa41767c8114e1654a415abb35ceeff868fb485ead7ab86c",
+                "LowerDir": "/data/docker/overlay2/74080307dc29bdaf54f9f3d02575bcd0c8dad80e579fd90537427c27f3637695-init/diff:/data/docker/overlay2/428588f8261664630eec530dd3760f2ad787a484fe23e292434a35f8c012a651/diff:/data/docker/overlay2/cd7e9bbad2ccd37f7df5b1610c2db084f1991462112436d38dc364a9f47af006/diff:/data/docker/overlay2/9189d8fc048a90d68af76c4a7c0ab55f3b17d648923ecb22e94d32acdbeeb886/diff:/data/docker/overlay2/650edb6f4ac248ed0b83443d16edd651164397375c87138a347c011eb1cd4344/diff:/data/docker/overlay2/8eece6e899d835e7de2e5ea1b2dd535716ecd07570e47cda26c5b1f383eed3c8/diff:/data/docker/overlay2/955ad2e1e5f7218dc5647f75808cf393c47e71cdc0be18ec6e4bd71fb35fbaa8/diff:/data/docker/overlay2/ac149097ce786bcbc753a5e21d95c087142b22072ce76d81cff1a397de59e76e/diff:/data/docker/overlay2/f0a22e432917f1fc9855a4ca3ee2b5980397a8fb4f1c60eba36edac82131e449/diff:/data/docker/overlay2/6eb3c70b92b6139ee356edde7c3a0f1260b65e083a198b63eb9462d03aaaedb2/diff:/data/docker/overlay2/2389da334240d26b731b7a4845e97ec8402e0a3ff06560347f285bec8b79e7b8/diff:/data/docker/overlay2/bbd738fd6c7fe7a939eacc793e393b286bea984e011ac5d94ab3def5005fda1e/diff:/data/docker/overlay2/75d4ee16ce599427142ddafb616d0e4f6948aaa1c93c7a88debaf38fd1944229/diff:/data/docker/overlay2/c4d48f18f97265c218b40ae45ec18a7e52b50e538e019c346a528c26324cda89/diff",
+                "MergedDir": "/data/docker/overlay2/74080307dc29bdaf54f9f3d02575bcd0c8dad80e579fd90537427c27f3637695/merged",
+                "UpperDir": "/data/docker/overlay2/74080307dc29bdaf54f9f3d02575bcd0c8dad80e579fd90537427c27f3637695/diff",
+                "WorkDir": "/data/docker/overlay2/74080307dc29bdaf54f9f3d02575bcd0c8dad80e579fd90537427c27f3637695/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/data/home/<user>/proj/1c-ml-artifacts/fim-serving-20260923/gguf",
+                "Destination": "/models",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "7a9c326e52e1",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "8080/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NVARCH=x86_64",
+                "NVIDIA_REQUIRE_CUDA=cuda>=12.8 brand=unknown,driver>=470,driver<471 brand=grid,driver>=470,driver<471 brand=tesla,driver>=470,driver<471 brand=nvidia,driver>=470,driver<471 brand=quadro,driver>=470,driver<471 brand=quadrortx,driver>=470,driver<471 brand=nvidiartx,driver>=470,driver<471 brand=vapps,driver>=470,driver<471 brand=vpc,driver>=470,driver<471 brand=vcs,driver>=470,driver<471 brand=vws,driver>=470,driver<471 brand=cloudgaming,driver>=470,driver<471 brand=unknown,driver>=535,driver<536 brand=grid,driver>=535,driver<536 brand=tesla,driver>=535,driver<536 brand=nvidia,driver>=535,driver<536 brand=quadro,driver>=535,driver<536 brand=quadrortx,driver>=535,driver<536 brand=nvidiartx,driver>=535,driver<536 brand=vapps,driver>=535,driver<536 brand=vpc,driver>=535,driver<536 brand=vcs,driver>=535,driver<536 brand=vws,driver>=535,driver<536 brand=cloudgaming,driver>=535,driver<536 brand=unknown,driver>=550,driver<551 brand=grid,driver>=550,driver<551 brand=tesla,driver>=550,driver<551 brand=nvidia,driver>=550,driver<551 brand=quadro,driver>=550,driver<551 brand=quadrortx,driver>=550,driver<551 brand=nvidiartx,driver>=550,driver<551 brand=vapps,driver>=550,driver<551 brand=vpc,driver>=550,driver<551 brand=vcs,driver>=550,driver<551 brand=vws,driver>=550,driver<551 brand=cloudgaming,driver>=550,driver<551 brand=unknown,driver>=560,driver<561 brand=grid,driver>=560,driver<561 brand=tesla,driver>=560,driver<561 brand=nvidia,driver>=560,driver<561 brand=quadro,driver>=560,driver<561 brand=quadrortx,driver>=560,driver<561 brand=nvidiartx,driver>=560,driver<561 brand=vapps,driver>=560,driver<561 brand=vpc,driver>=560,driver<561 brand=vcs,driver>=560,driver<561 brand=vws,driver>=560,driver<561 brand=cloudgaming,driver>=560,driver<561 brand=unknown,driver>=565,driver<566 brand=grid,driver>=565,driver<566 brand=tesla,driver>=565,driver<566 brand=nvidia,driver>=565,driver<566 brand=quadro,driver>=565,driver<566 brand=quadrortx,driver>=565,driver<566 brand=nvidiartx,driver>=565,driver<566 brand=vapps,driver>=565,driver<566 brand=vpc,driver>=565,driver<566 brand=vcs,driver>=565,driver<566 brand=vws,driver>=565,driver<566 brand=cloudgaming,driver>=565,driver<566",
+                "NV_CUDA_CUDART_VERSION=12.8.90-1",
+                "CUDA_VERSION=12.8.1",
+                "LD_LIBRARY_PATH=/usr/local/cuda/lib64",
+                "NVIDIA_VISIBLE_DEVICES=all",
+                "NVIDIA_DRIVER_CAPABILITIES=compute,utility",
+                "NV_CUDA_LIB_VERSION=12.8.1-1",
+                "NV_NVTX_VERSION=12.8.90-1",
+                "NV_LIBNPP_VERSION=12.3.3.100-1",
+                "NV_LIBNPP_PACKAGE=libnpp-12-8=12.3.3.100-1",
+                "NV_LIBCUSPARSE_VERSION=12.5.8.93-1",
+                "NV_LIBCUBLAS_PACKAGE_NAME=libcublas-12-8",
+                "NV_LIBCUBLAS_VERSION=12.8.4.1-1",
+                "NV_LIBCUBLAS_PACKAGE=libcublas-12-8=12.8.4.1-1",
+                "NV_LIBNCCL_PACKAGE_NAME=libnccl2",
+                "NV_LIBNCCL_PACKAGE_VERSION=2.25.1-1",
+                "NCCL_VERSION=2.25.1-1",
+                "NV_LIBNCCL_PACKAGE=libnccl2=2.25.1-1+cuda12.8",
+                "NVIDIA_PRODUCT_NAME=CUDA",
+                "LLAMA_ARG_HOST=0.0.0.0"
+            ],
+            "Cmd": [
+                "-m",
+                "/models/fim-qwen25-coder-7b-v2-Q4_K_M.gguf",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "8080",
+                "-ngl",
+                "999",
+                "-c",
+                "16384",
+                "-ub",
+                "2048"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD",
+                    "curl",
+                    "-f",
+                    "http://localhost:8080/health"
+                ]
+            },
+            "Image": "ghcr.io/ggml-org/llama.cpp:server-cuda",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "/app/llama-server"
+            ],
+            "Labels": {
+                "maintainer": "NVIDIA CORPORATION <cudatools@nvidia.com>",
+                "org.opencontainers.image.created": "2026-06-16T06:16:36Z",
+                "org.opencontainers.image.description": "LLM inference in C/C++",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.revision": "ac79caa7ce61dbd800451ce43adb3dd9bf2f633b",
+                "org.opencontainers.image.source": "https://github.com/ggml-org/llama.cpp",
+                "org.opencontainers.image.title": "llama.cpp",
+                "org.opencontainers.image.url": "https://github.com/ggml-org/llama.cpp",
+                "org.opencontainers.image.version": "b9664"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "",
+            "SandboxKey": "",
+            "Ports": {},
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "be0610682dffd5c8180605b2afe24ecdbb4078939aeb77ae9b56a0878ffd095f",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "MacAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": null
+                }
+            }
+        }
+    }
+]

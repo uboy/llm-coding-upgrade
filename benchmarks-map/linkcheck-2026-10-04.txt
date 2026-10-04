@@ -5,13 +5,18 @@
 200 https://github.com/beir-cellar/beir
 200 https://github.com/bigcode-project/bigcodebench
 200 https://github.com/embeddings-benchmark/mteb
+200 https://github.com/facebookresearch/flores
 200 https://github.com/google-research/google-research/tree/master/instruction_following_eval
+200 https://github.com/guidance-ai/jsonschemabench
 200 https://github.com/hendrycks/test
 200 https://github.com/laude-institute/terminal-bench
 200 https://github.com/openai/human-eval
+200 https://github.com/opendatalab/OmniDocBench
 200 https://github.com/princeton-nlp/HELMET
+200 https://github.com/shmsw25/FActScore
 200 https://github.com/sierra-research/tau-bench
 200 https://github.com/TIGER-AI-Lab/MMLU-Pro
+200 https://github.com/vectara/hallucination-leaderboard
 200 https://gorilla.cs.berkeley.edu/leaderboard.html
 200 https://huggingface.co/datasets/cais/hle
 200 https://huggingface.co/datasets/THUDM/LongBench-v2
@@ -19,6 +24,7 @@
 200 https://huggingface.co/mradermacher
 200 https://huggingface.co/spaces/gaia-benchmark/leaderboard
 200 https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard
+200 https://huggingface.co/tasks
 200 https://huggingface.co/unsloth
 200 https://livebench.ai
 200 https://livecodebench.github.io
@@ -27,4 +33,5 @@
 200 https://openrouter.ai/api/v1/models
 200 https://openrouter.ai/rankings
 200 https://os-world.github.io
+200 https://www.anthropic.com/economic-index
 200 https://www.swebench.com

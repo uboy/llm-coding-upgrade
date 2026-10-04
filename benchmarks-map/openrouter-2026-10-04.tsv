@@ -405,7 +405,7 @@ anthropic/claude-opus-4.7:batch	1000000	2.500	12.500
 anthropic/claude-opus-4.8:batch	1000000	2.500	12.500
 anthropic/claude-opus-5:batch	1000000	2.500	12.500
 moonshotai/kimi-k3	1048576	0.720	13.000
-~moonshotai/kimi-latest	1048576	0.639	13.000
+~moonshotai/kimi-latest	1048576	0.637	13.000
 openai/gpt-5.2	400000	1.750	14.000
 openai/gpt-5.2-chat	128000	1.750	14.000
 openai/gpt-5.2-codex	400000	1.750	14.000

@@ -1,0 +1,60 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Assigned subjects: business, law, psychology, biology, chemistry, history, 
+other, health, economics, math, physics, computer science, philosophy, 
+engineering
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for business: 87.20% (688/789)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for law: 62.85% (692/1101)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for psychology: 82.33% (657/798)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for biology: 91.91% (659/717)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for chemistry: 86.04% (974/1132)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for history: 69.55% (265/381)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for other: 73.81% (682/924)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for health: 77.38% (633/818)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for economics: 87.44% (738/844)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for math: 94.45% (1276/1351)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for physics: 88.38% (1148/1299)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for computer science: 86.83% (356/410)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for philosophy: 71.94% (359/499)
+
+Terminal not available - running in non-interactive mode
+
+  Final Accuracy for engineering: 76.37% (740/969)

@@ -1,0 +1,15 @@
+🦍 Model: google_gemma-3-27b-it
+🔍 Running test: parallel
+✅ Test completed: parallel. 🎯 Accuracy: 80.00%
+🔍 Running test: simple_python
+✅ Test completed: simple_python. 🎯 Accuracy: 94.00%
+🔍 Running test: parallel_multiple
+✅ Test completed: parallel_multiple. 🎯 Accuracy: 69.00%
+🔍 Running test: irrelevance
+✅ Test completed: irrelevance. 🎯 Accuracy: 88.33%
+🔍 Running test: multiple
+✅ Test completed: multiple. 🎯 Accuracy: 87.00%
+
+📈 Aggregating data to generate leaderboard score table...
+🏁 Evaluation completed. See /data/home/<user>/proj/external-benchmarks/gorilla/berkeley-function-call-leaderboard/score/data_overall.csv for overall evaluation results on BFCL V4.
+See /data/home/<user>/proj/external-benchmarks/gorilla/berkeley-function-call-leaderboard/score/data_live.csv, /data/home/<user>/proj/external-benchmarks/gorilla/berkeley-function-call-leaderboard/score/data_non_live.csv, /data/home/<user>/proj/external-benchmarks/gorilla/berkeley-function-call-leaderboard/score/data_multi_turn.csv, /data/home/<user>/proj/external-benchmarks/gorilla/berkeley-function-call-leaderboard/score/data_agentic.csv and /data/home/<user>/proj/external-benchmarks/gorilla/berkeley-function-call-leaderboard/score/data_format_sensitivity.csv for detailed evaluation results on each sub-section categories respectively.

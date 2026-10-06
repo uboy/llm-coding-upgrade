@@ -1,0 +1,5 @@
+Generating results for ['google/gemma-3-27b-it']
+Running full test cases for categories: ['multiple', 'parallel', 'parallel_multiple'].
+Max context length: 131072
+server is ready!
+

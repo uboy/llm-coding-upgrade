@@ -258,8 +258,10 @@ def test_prefix_share(
 
     print(f"\n    {ANSI_BOLD}Summary:{ANSI_RESET}")
     print(f"      Wall mean/min/max:   {result['wall_mean_s']:.2f}s / {result['wall_min_s']:.2f}s / {result['wall_max_s']:.2f}s")
-    print(f"      Cache hit (mean):    {colorize(f\"{result['cache_hit_mean_pct']:.0f}%\", ANSI_GREEN)}")
-    print(f"      Cache hit (max):     {colorize(f\"{result['cache_hit_max_pct']:.0f}%\", ANSI_GREEN)}")
+    hit_pct = f"{result['cache_hit_mean_pct']:.0f}%"
+    print(f"      Cache hit (mean):    {colorize(hit_pct, ANSI_GREEN)}")
+    max_pct = f"{result['cache_hit_max_pct']:.0f}%"
+    print(f"      Cache hit (max):     {colorize(max_pct, ANSI_GREEN)}")
 
     return result
 

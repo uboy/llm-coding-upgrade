@@ -376,9 +376,10 @@ def main():
             mem_pct = g["mem_used"] / g["mem_total"] * 100
             mem_color = ANSI_RED if mem_pct > 90 else ANSI_YELLOW if mem_pct > 75 else ANSI_GREEN
             clk_pct = g["clk_cur"] / g["clk_max"] * 100 if g["clk_max"] else 0
+            vram_str = f"{g['mem_used']:>6,}/{g['mem_total']:>6,} MiB ({mem_pct:.0f}%)"
             print(
                 f"  GPU {g['index']}: {g['name']:30s}  "
-                f"VRAM {colorize(f'{g[\"mem_used\"]:>6,}/{g[\"mem_total\"]:>6,} MiB ({mem_pct:.0f}%)', mem_color)}  "
+                f"VRAM {colorize(vram_str, mem_color)}  "
                 f"Util {g['gpu_util']:>3d}%  "
                 f"Temp {g['temp_c']:>3d}°C  "
                 f"Clk {g['clk_cur']}/{g['clk_max']} MHz"
@@ -394,9 +395,10 @@ def main():
     if pcie_list:
         for p in pcie_list:
             bw_color = ANSI_RED if not p["at_max_gen"] or not p["at_max_width"] else ANSI_GREEN
+            bw_str = f"{p['bw_theoretical_gb_s']:.0f} GB/s"
             print(
                 f"  GPU {p['index']}: PCIe Gen{p['gen_current']} x{p['width_current']}  "
-                f"→ {colorize(f'{p[\"bw_theoretical_gb_s\"]:.0f} GB/s', bw_color)}  "
+                f"→ {colorize(bw_str, bw_color)}  "
                 f"(max: Gen{p['gen_max']} x{p['width_max']} = {p['bw_max_gb_s']:.0f} GB/s)"
             )
         report["pcie"] = pcie_list
@@ -411,9 +413,11 @@ def main():
     if quick["ok"]:
         pp_color = ANSI_GREEN if quick["pp_tps"] > 300 else ANSI_YELLOW
         dec_color = ANSI_GREEN if quick["dec_tps"] > 35 else ANSI_YELLOW if quick["dec_tps"] > 15 else ANSI_RED
+        pp_str = f"{quick['pp_tps']:.0f}"
+        dec_str = f"{quick['dec_tps']:.1f}"
         print(
-            f"PP {colorize(f'{quick[\"pp_tps\"]:.0f}', pp_color)} tok/s  "
-            f"Decode {colorize(f'{quick[\"dec_tps\"]:.1f}', dec_color)} tok/s  "
+            f"PP {colorize(pp_str, pp_color)} tok/s  "
+            f"Decode {colorize(dec_str, dec_color)} tok/s  "
             f"Prompt {quick['prompt_tokens']} tok  "
             f"Decode {quick['completion_tokens']} tok  "
             f"Wall {quick['wall_s']}s"

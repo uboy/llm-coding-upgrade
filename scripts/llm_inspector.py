@@ -279,12 +279,13 @@ def log_request(req_id: int, method: str, path: str, req_body: bytes,
             )
 
             cumul_cache_color = ANSI_GREEN if cumulative["cache_rate_pct"] > 30 else ANSI_YELLOW
+            cache_rate_str = f"{cumulative['cache_rate_pct']:.0f}%"
             print(
                 f"  {c('Σ', ANSI_DIM)} session: "
                 f"req={cumulative['requests']}  "
                 f"prompt={cumulative['prompt_tokens']:,}  "
                 f"compl={cumulative['completion_tokens']:,}  "
-                f"cache_rate={c(f\"{cumulative['cache_rate_pct']:.0f}%\", cumul_cache_color)}"
+                f"cache_rate={c(cache_rate_str, cumul_cache_color)}"
             )
 
     # Save to log file
@@ -475,7 +476,8 @@ def main():
         print(f"  Prompt tokens:      {summary['prompt_tokens']:,}")
         print(f"  Completion tokens:  {summary['completion_tokens']:,}")
         print(f"  Cached tokens:      {summary['cached_tokens']:,}")
-        print(f"  Cache hit rate:     {c(f\"{summary['cache_rate_pct']:.1f}%\", ANSI_GREEN)}")
+        rate_str = f"{summary['cache_rate_pct']:.1f}%"
+        print(f"  Cache hit rate:     {c(rate_str, ANSI_GREEN)}")
         if LOG_DIR:
             # Save session summary
             summary_file = LOG_DIR / "session-summary.json"

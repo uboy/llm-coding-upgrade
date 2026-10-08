@@ -6,7 +6,7 @@ import time
 import sys
 import os
 
-OUT_DIR = "<repo>/runs/qwen38_vs_opus_benchmark"
+OUT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "runs", "qwen38_vs_opus_benchmark")
 os.makedirs(OUT_DIR, exist_ok=True)
 
 TASKS = [
@@ -90,7 +90,7 @@ def query_qwen38(prompt, timeout=600):
 def query_claude_opus(prompt, timeout=600):
     start = time.time()
     env = os.environ.copy()
-    env["CLAUDE_CONFIG_DIR"] = "<config-dir>"
+    env["CLAUDE_CONFIG_DIR"] = os.environ.get("CLAUDE_CONFIG_DIR", os.path.join(os.path.expanduser("~"), ".claude"))
     
     cmd = [
         "claude.exe", "-p",

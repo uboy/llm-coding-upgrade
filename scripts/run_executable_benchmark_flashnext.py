@@ -7,7 +7,7 @@ import re
 import os
 import sys
 
-PROJECT_ROOT = "<repo>"
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SUITE_FILE = os.path.join(PROJECT_ROOT, "evals/exec-benchmark-suite.json")
 OUT_DIR = os.path.join(PROJECT_ROOT, "runs/exec_benchmark_flashnext")
 os.makedirs(OUT_DIR, exist_ok=True)

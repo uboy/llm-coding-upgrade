@@ -8,7 +8,7 @@ import re
 import os
 import sys
 
-PROJECT_ROOT = "<repo>"
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_DIR = os.path.join(PROJECT_ROOT, "runs/humaneval_plus_benchmark")
 os.makedirs(OUT_DIR, exist_ok=True)
 
@@ -65,7 +65,7 @@ def query_qwen38(prompt_text):
 
 def query_opus(prompt_text):
     env = os.environ.copy()
-    env["CLAUDE_CONFIG_DIR"] = "<config-dir>"
+    env["CLAUDE_CONFIG_DIR"] = os.environ.get("CLAUDE_CONFIG_DIR", os.path.join(os.path.expanduser("~"), ".claude"))
     cmd = [
         "claude.exe", "-p",
         "--model", "opus",

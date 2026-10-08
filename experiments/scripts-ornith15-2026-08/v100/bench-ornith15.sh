@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # bench-ornith15.sh <port> [label]
-# Скоростной прогон по методике эпика (<internal> local-llm-inference):
+# Скоростной прогон стенда:
 #  - короткий ASCII-промпт (код) x3, замер wall time по стриму;
 #  - тайминги берутся также из docker-лога llama-server (prompt eval time / eval time).
 # Сервер должен быть поднят serve-ornith15.sh; имя контейнера ornith15-run.

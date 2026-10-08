@@ -2,7 +2,7 @@
 # serve-ornith15.sh <quant> <ctx> [gpu] [extra llama-server flags...]
 #   quant: q4km | q6k | q8 | q9 (файл в /models/ornith15/; q9 = 9B бонус)
 # Поднимает Ornith-1.5-35B-A3B-GGUF на одной V100 (по умолчанию GPU2),
-# порт 8081, health-wait, печатает VRAM. Эксперимент фазы 11 <internal>
+# порт 8081, health-wait, печатает VRAM.
 # (local-llm-inference), прод-стек не трогает.
 # Пример: bash serve-ornith15.sh q4km 32768 2 --cache-type-k q4_0 --cache-type-v q4_0
 set -euo pipefail

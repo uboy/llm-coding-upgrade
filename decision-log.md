@@ -1038,5 +1038,4 @@ bash scripts/deploy.sh smoke
 - 284B-класс (DeepSeek-V4-Flash) остаётся на V100-хосте как «консультант»
   (prefill 71 т/с - не драйвер), FreeToken на cc 7.0 не работает.
 
-Ссылка: `experiments/bigmodel-smallvram-2026-08-22.md`, `config-card.md` -> BM/big-model,
-<internal>: work/local-llm-inference/ (карточки фаз 6-10, отчёт, gotchas G-A1..G-D3).
+Ссылка: `experiments/bigmodel-smallvram-2026-08-22.md`, `config-card.md` -> BM/big-model.

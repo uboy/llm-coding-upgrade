@@ -1,7 +1,6 @@
-# Ornith-1.5 vs модели стенда - эксперимент (фаза 11 <internal> local-llm-inference)
+# Ornith-1.5 vs модели стенда - эксперимент
 
 > Статус: подготовка (2026-08-24). Замеры - после освобождения V100 (владелец сигнализирует).
-> Карточка: <internal> `work/local-llm-inference/task-local-llm-inference-ornith15-compare.md`.
 > Скрипты: `experiments/scripts-ornith15-2026-08/v100/{serve,bench}-ornith15.sh`.
 
 ## Что сравниваем

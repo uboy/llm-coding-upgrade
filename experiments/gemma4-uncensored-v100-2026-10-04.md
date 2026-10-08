@@ -1,8 +1,7 @@
 # Gemma-4 uncensored на V100: выбор версий и A/B прогоны (2026-10-04)
 
 Заказ владельца 2026-10-04: подобрать пригодную uncensored-версию gemma-4 под
-V100 и прогнать эксперимент. Карточка: <internal>
-`work/local-llm-inference/task-local-llm-inference-gemma4-uncensored.md`.
+V100 и прогнать эксперимент.
 
 ## Модели
 

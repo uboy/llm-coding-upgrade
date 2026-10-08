@@ -4,11 +4,11 @@ Self-hosted LLM stack across three servers for coding and general AI workloads.
 
 ## Architecture
 
-| Server | IP | Model | Alias | Port | Decode Speed | Context Slot |
-|--------|-----|-------|-------|------|-------------|--------------|
-| V100 (v100-host) | v100-host | Qwen3.5-122B-A10B UD-Q4_K_XL | `qwen` | 4001/8001 | 42-48 tok/s | 262,144 |
-| bm1 | bm1 | Gemma 4 26B-A4B Q4_K_M | `gemma4` | 4002 | ~80 tok/s | 262,144 |
-| bm2 | bm2 | Gemma 4 26B-A4B Q4_K_M | `gemma4` | 4002 | ~80 tok/s | 262,144 |
+| Server | GPUs | Model | Alias | Port | Decode Speed | Context Slot |
+|--------|------|-------|-------|------|-------------|--------------|
+| v100-host | 3x Tesla V100 32GB | Qwen3.5-122B-A10B UD-Q4_K_XL | `qwen` | 4001/8001 | 42-48 tok/s | 262,144 |
+| bm1 | RTX 3090 24GB | Gemma 4 26B-A4B Q4_K_M | `gemma4` (via LB) | 4002 | ~80 tok/s | 262,144 |
+| bm2 | RTX 3090 24GB | Gemma 4 26B-A4B Q4_K_M | `gemma4` (via LB) | 4002 | ~80 tok/s | 262,144 |
 
 LB proxy (round-robin with health check): `:4002` -> BM1 + BM2
 
@@ -476,3 +476,25 @@ See `automation.md` for model-suite automation:
 - `scripts/model-suite.ps1` — Windows wrapper
 - `eval-fixtures/` — tracked formal fixtures with auto-tests for Python, C++, JS, and TS
 - `runs/` — run results
+
+## Credits & Provenance
+
+The external benchmark results in `experiments/` and `runs/` were produced with
+open benchmark suites, run locally against self-hosted models over HTTP by this
+project's own client scripts. No upstream vendor code is redistributed here -
+the repo stores only run outputs (scores, logs, summaries) and this project's
+own scripts and configs:
+
+| Benchmark | Upstream | Upstream license | What is stored here |
+|-----------|----------|------------------|---------------------|
+| BFCL (Berkeley Function Calling Leaderboard) | [ShishirPatil/gorilla](https://github.com/ShishirPatil/gorilla) | Apache-2.0 | run results/logs + local API client with a vendor-patch workaround |
+| MMLU-Pro | [TIGER-AI-Lab/MMLU-Pro](https://github.com/TIGER-AI-Lab/MMLU-Pro) | Apache-2.0 | run results/logs + API-mode runner config |
+| LiveCodeBench | [LiveCodeBench/LiveCodeBench](https://github.com/LiveCodeBench/LiveCodeBench) | MIT | run results/logs + local API runner |
+| HumanEval+ | [evalplus/evalplus](https://github.com/evalplus/evalplus) | Apache-2.0 | run results/logs + local API runner |
+
+Benchmark datasets/questions themselves are not redistributed; refer to the
+upstream repositories for the actual suites.
+
+## License
+
+MIT - see [LICENSE](LICENSE).
